@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <% var rootPath = './'; %>
+<% var rootPath = './'; %>
 
 <head>
   <%- include('./partials/head'); %>
@@ -16,43 +16,71 @@
         <div class="container-fluid">
           <div class="row">
             <div class="col-md-12">
-              <div class="card">
+              <div class="card card-nav-tabs card-plain">
                 <div class="card-header card-header-primary">
-                  <h4 class="card-title "><%= panelTitle %></h4>
-                  <p class="card-category"> Please Select a Door</p>
-                </div>
-                <div class="card-body">
-                  <div class="col-md-5">
-                    <a href="<%= rootPath %>doors/add"><button class="btn btn-primary">Add New Door</button></a>
+                  <!-- colors: "header-primary", "header-info", "header-success", "header-warning", "header-danger" -->
+                  <div class="nav-tabs-navigation">
+                    <div class="nav-tabs-wrapper">
+                      <ul class="nav nav-tabs" data-tabs="tabs">
+                        <% tabBar.forEach(function(tab) { %>
+                          <li class="nav-item">
+                            <% if (tab.status) { %>
+                              <a class="nav-link active show" href=<%= tab.url %>>
+                            <% } else { %>
+                              <a class="nav-link show" href=<%= tab.url %>>
+                            <% } %>
+                                <i class="material-icons"><%= tab.icon %></i>
+                                <%= tab.text %>
+                                <div class="ripple-container"></div>
+                              </a>
+                          </li>
+                        <% }); %>
+                      </ul>
+                    </div>
                   </div>
                 </div>
-                <div class="card-body">
-                  <div class="table-responsive">
-                    <table class="table">
-                      <thead class=" text-primary">
-                        <th>
-                          ID
-                        </th>
-                        <th>
-                          Door
-                        </th>
-                        <th>
-                          Location
-                        </th>
-                        <th>
-                          IP Address
-                        </th>
-                        <th>
-                          Status
-                        </th>
-                        <th>
-                          Alarm
-                        </th>
-                        <th>
-                        </th>
-                      </thead>
-                      <tbody>
-                        <% doors.forEach(function(door) { %>
+              </div>
+            </div>
+          </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="card">
+                  <div class="card-header card-header-primary">
+                    <h4 class="card-title "><%= panelTitle %></h4>
+                    <p class="card-category">Please Select a Door</p>
+                  </div>
+                  <div class="card-body">
+                    <div class="col-md-5">
+                      <a href="<%= rootPath %>doors/add"><button class="btn btn-primary">Add New Door</button></a>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table">
+                        <thead class=" text-primary">
+                          <th>
+                            ID
+                          </th>
+                          <th>
+                            Door
+                          </th>
+                          <th>
+                            Location
+                          </th>
+                          <th>
+                            IP Address
+                          </th>
+                          <th>
+                            Status
+                          </th>
+                          <th>
+                            Alarm
+                          </th>
+                          <th>
+                          </th>
+                        </thead>
+                        <tbody>
+                          <% doors.forEach(function(door) { %>
                           <tr>
                             <td>
                               <%= door.id %>
@@ -76,22 +104,22 @@
                               <a href="/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>/doors/<%= door.id %>"><button class="btn btn-primary">Select</button></a>
                             </td>
                           </tr>
-                        <% }); %>
-                      </tbody>
-                    </table>
+                          <% }); %>
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
+        <%- include('./partials/footer') %>
       </div>
-
-      <%- include('./partials/footer') %>
     </div>
-  </div>
 
-  <%- include('./partials/foot') %>
+    <%- include('./partials/foot') %>
 </body>
 
 </html>

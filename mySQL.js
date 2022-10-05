@@ -1,4 +1,6 @@
-function executeQuery(query, callback) {
+let SQLfun = {};
+
+SQLfun.executeQuery = function(query, callback) {
     pool.getConnection(function (err, connection) {
       if (err) {
           return callback(err, null);
@@ -16,10 +18,10 @@ function executeQuery(query, callback) {
           return callback(true, "No Connection");
       }
     });
-  }
+  };
   
   
-  function getResult(query,callback) {
+SQLfun.getResult = function(query,callback) {
     executeQuery(query, function (err, rows) {
        if (!err) {
           callback(null,rows);
@@ -28,9 +30,9 @@ function executeQuery(query, callback) {
           callback(true,err);
        }
     });
-  }
+  };
   
-  function getServers() {
+SQLfun.getServers = function() {
     getResult("select * from table",function(err,rows){
       if(!err){
           return rows;
@@ -38,9 +40,9 @@ function executeQuery(query, callback) {
           console.log(err);
       }
     });   
-  }
+  };
 
-  const aSQL = async function asyncSQL(db, sql, insertARR) {
+SQLfun.aSQL = async function(db, sql, insertARR) {
 
     await db.query(sql, [insertARR], function(err) {
       if (err) throw err;
@@ -48,6 +50,58 @@ function executeQuery(query, callback) {
     });
   }
 
-  module.export = aSQL;
+SQLfun.getSites = async function(db, companyID) {
+
+  return new Promise(function(resolve, reject){
+    db.query(
+      `
+      SELECT * FROM sites
+      WHERE company_id_sites = ${companyID};
+      `,
+        function(err, result){                                                
+            if(result === undefined){
+                reject(new Error("Error result is undefined"));
+            }else{
+                resolve(result);
+            }
+        }
+    )}
+  )};
+
+    // try {
+    // await db.query(
+    //   `
+    //   SELECT * FROM sites
+    //   WHERE company_id_sites = ${companyID};
+    //   `,
+    //   async function (err, result, fields) {
+
+    //     if (err){ 
+    //         console.log(typeof(err));
+    //         for (var k in err){
+    //           console.log(`${k}: ${err[k]}`);
+    //         }
+    //         // throw err
+    //       };
+          
+    //       // console.log(result);
+    //       let data = result;
+    //       // return data;
+    //     });
+
+
+    //   }catch ( err ) {
+    //     console.log(err)
+    //   } finally {
+    //     //await db.close();
+    //   }
+  // };
+
+SQLfun.test = async function(number) {
+  console.log("Test");
+    return number;
+  };
+
+module.exports = SQLfun;
   
   //exports.getList = getList;

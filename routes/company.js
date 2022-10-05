@@ -94,9 +94,9 @@ companyRouter.get('/:companyID', async function(req, res, next) {
       
 
       var sidebarList = [
-        {status: 0, url: `/org/${req.params.companyID}`, icon: "home", text: "Home"},
-        {status: 1, url: `/org/${req.params.companyID}/company/${req.params.companyID}`, icon: "business", text: `${companyName}`},
-        {status: 0, url: `/org/${req.params.companyID}/company/${req.params.companyID}/users`, icon: "people_alt", text: `Company Users`},
+        {status: 0, url: `/org/${req.params.companyID}`, icon: "home", text: "Home", justText: "text-left"},
+        {status: 1, url: `/org/${req.params.companyID}/company/${req.params.companyID}`, icon: "business", text: `${companyName}`, justText: "text-left"},
+        {status: 0, url: `/org/${req.params.companyID}/company/${req.params.companyID}/users`, icon: "people_alt", text: `Company Users`, justText: "text-right"},
       ];
       console.log(companyName);
       console.log(orgName);

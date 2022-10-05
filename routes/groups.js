@@ -1,5 +1,6 @@
 var express = require('express');
 const asyncify = require('express-asyncify');
+const mySQLFun = require('../mySQL');
 const groupsRouter = asyncify(express.Router({mergeParams: true}));
 
 
@@ -14,11 +15,17 @@ groupsRouter.get('/', async function(req, res, next) {
    var db = req.app.get('db');
 
    // /* load data from database */
+
+   
+  // var funSites = await mySQLFun.test(1);
+
    
  
   var companyName;
   var orgName;
   try {
+
+    
     
     console.log('Pulling data from company table on groups route');
     await db.query(
@@ -93,7 +100,7 @@ groupsRouter.get('/', async function(req, res, next) {
       WHERE site_id_door_group = ${req.params.siteID} 
       ORDER BY name ASC`, 
       
-      function (err, result, fields) {
+      async function (err, result, fields) {
 
       if (err){ 
           console.log(typeof(err));
@@ -110,20 +117,36 @@ groupsRouter.get('/', async function(req, res, next) {
       }
 
       
+      const funSites = await mySQLFun.getSites(db, req.params.companyID)
+
       var sidebarList = [
         {status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home"},
-        {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${companyName}`},
-        {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}`, icon: "store", text: `${siteName}`},
+        {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${companyName}`}
+      ];
+      for (i in funSites){
+        if (funSites[i].id == req.params.siteID)
+          {
+            sidebarList.push({status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}`});
+          }
+          else 
+          {
+            sidebarList.push({status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}`});
+          }
+      }
+
+      var tabBarList = [
         {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/doors`, icon: "meeting_room", text: "Doors"},
         {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`, icon: "person", text: "Users"},
         {status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/groups`, icon: "supervisor_account", text: "Groups"},
-        {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports"},
-      ];
+        {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports"}
+        ]
     
       var varName;
       varName = "CCSI Door Access" //optional title override
 
-      res.render('groups', { groups: groupList, sidebar: sidebarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: `${siteName} - Groups`, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID } );
+      // console.log(funSites);
+
+      res.render('groups', { groups: groupList, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: `${siteName} - Groups`, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID } );
 
     });
 
@@ -252,21 +275,36 @@ groupsRouter.get('/add', async function(req, res, next) {
          console.log(groupData);
          let companyName = groupData.companyName;
          let siteName = groupData.siteName;
+
+        const funSites = await mySQLFun.getSites(db, req.params.companyID)
  
-          var sidebarList = [
-           {status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home"},
-           {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${companyName}`},
-           {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}`, icon: "store", text: `${siteName}`},
-           {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/doors`, icon: "meeting_room", text: "Doors"},
-           {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`, icon: "person", text: "Users"},
-           {status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/groups`, icon: "supervisor_account", text: "Groups"},
-           {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports"},
-         ];
+        var sidebarList = [
+          {status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home"},
+          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${companyName}`}
+        ];
+        for (i in funSites){
+          if (funSites[i].id == req.params.siteID)
+          {
+            sidebarList.push({status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}`});
+          }
+          else 
+          {
+            sidebarList.push({status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}`});
+          }
+        }
+  
+        var tabBarList = [
+          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/doors`, icon: "meeting_room", text: "Doors"},
+          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`, icon: "person", text: "Users"},
+          {status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/groups`, icon: "supervisor_account", text: "Groups"},
+          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports"}
+          ];
        
          var varName;
          varName = "CCSI Door Access" //optional title override
+
  
-         res.render('groups_add', { group: groupData, sidebar: sidebarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: `Add Group`, panelSubtext: "Please add some Doors and Users", orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID } );
+         res.render('groups_add', { group: groupData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: `Add Group`, panelSubtext: "Please add some Doors and Users", orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID } );
  
  
       });
@@ -591,20 +629,34 @@ groupsRouter.get('/:groupID', async function(req, res, next) {
         let companyName = groupData.companyName;
         let siteName = groupData.siteName;
 
-         var sidebarList = [
+        const funSites = await mySQLFun.getSites(db, req.params.companyID)
+ 
+        var sidebarList = [
           {status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home"},
-          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${companyName}`},
-          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}`, icon: "store", text: `${siteName}`},
+          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${companyName}`}
+        ];
+        for (i in funSites){
+          if (funSites[i].id == req.params.siteID)
+          {
+            sidebarList.push({status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}`});
+          }
+          else 
+          {
+            sidebarList.push({status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}`});
+          }
+        }
+  
+        var tabBarList = [
           {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/doors`, icon: "meeting_room", text: "Doors"},
           {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`, icon: "person", text: "Users"},
           {status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/groups`, icon: "supervisor_account", text: "Groups"},
-          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports"},
+          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports"}
         ];
       
         var varName;
         varName = "CCSI Door Access" //optional title override
 
-        res.render('group', { group: groupData, sidebar: sidebarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: `Access Group - ${groupData.name}`, panelSubtext: `${groupData.doorIDs.length} - Doors | ${groupData.userIDs.length} - Users`, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID} );
+        res.render('group', { group: groupData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: `Access Group - ${groupData.name}`, panelSubtext: `${groupData.doorIDs.length} - Doors | ${groupData.userIDs.length} - Users`, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID} );
 
 
      });
@@ -773,20 +825,34 @@ groupsRouter.get('/:groupID/edit', async function(req, res, next) {
        let companyName = groupData.companyName;
        let siteName = groupData.siteName;
 
+       const funSites = await mySQLFun.getSites(db, req.params.companyID)
+ 
         var sidebarList = [
-         {status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home"},
-         {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${companyName}`},
-         {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}`, icon: "store", text: `${siteName}`},
-         {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/doors`, icon: "meeting_room", text: "Doors"},
-         {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`, icon: "person", text: "Users"},
-         {status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/groups`, icon: "supervisor_account", text: "Groups"},
-         {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports"},
-       ];
+          {status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home"},
+          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${companyName}`}
+        ];
+        for (i in funSites){
+          if (funSites[i].id == req.params.siteID)
+          {
+            sidebarList.push({status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}`});
+          }
+          else 
+          {
+            sidebarList.push({status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}`});
+          }
+        }
+  
+        var tabBarList = [
+          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/doors`, icon: "meeting_room", text: "Doors"},
+          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`, icon: "person", text: "Users"},
+          {status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/groups`, icon: "supervisor_account", text: "Groups"},
+          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports"}
+          ];
      
        var varName;
        varName = "CCSI Door Access" //optional title override
 
-       res.render('group_edit', { group: groupData, sidebar: sidebarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: `Edit Access Group - ${groupData.name}`, panelSubtext: `${groupData.doorIDs.length} - Doors | ${groupData.userIDs.length} - Users`, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID} );
+       res.render('group_edit', { group: groupData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: `Edit Access Group - ${groupData.name}`, panelSubtext: `${groupData.doorIDs.length} - Doors | ${groupData.userIDs.length} - Users`, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID} );
 
 
     });

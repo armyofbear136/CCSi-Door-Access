@@ -1,5 +1,6 @@
 var express = require('express');
 const asyncify = require('express-asyncify');
+const mySQLFun = require('../mySQL');
 const siteUsersRouter = asyncify(express.Router({mergeParams: true}));
 
 /* GET users page. */
@@ -81,7 +82,7 @@ siteUsersRouter.get('/', async function(req, res, next) {
     GROUP BY u.id
     ORDER BY last_name ASC`, 
 
-      function (err, result, fields) {
+      async function (err, result, fields) {
       if (err){ 
           console.log(typeof(err));
           for (var k in err){
@@ -91,7 +92,6 @@ siteUsersRouter.get('/', async function(req, res, next) {
             {status: 0, url: `/`, icon: "logout", text: "Portal"}], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"});
           // throw err
         };
-        console.log(result);
       var userList = [];
       for (let i = 0; i < result.length; i++) {
         userList.push({ id: result[i].id, fob: result[i].fob_id, eid: result[i].employee_id, first: result[i].first_name, last: result[i].last_name, groups: result[i].doorgroups});
@@ -99,14 +99,28 @@ siteUsersRouter.get('/', async function(req, res, next) {
 
       
       
+      const funSites = await mySQLFun.getSites(db, req.params.companyID)
+ 
       var sidebarList = [
         {status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home"},
-        {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${companyName}`},
-        {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}`, icon: "store", text: `${siteName}`},
+        {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${companyName}`}
+      ];
+      for (i in funSites){
+        if (funSites[i].id == req.params.siteID)
+          {
+            sidebarList.push({status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}`});
+          }
+          else 
+          {
+            sidebarList.push({status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}`});
+          }
+      }
+
+      var tabBarList = [
         {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/doors`, icon: "meeting_room", text: "Doors"},
         {status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`, icon: "person", text: "Users"},
         {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/groups`, icon: "supervisor_account", text: "Groups"},
-        {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports"},
+        {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports"}
       ];
 
 
@@ -129,7 +143,7 @@ siteUsersRouter.get('/', async function(req, res, next) {
         panelSubtextT = "Please Add a User";
       }
 
-      res.render('site_users', { users: userList, sidebar: sidebarList, sideTitle: orgName, navTitle: `${companyName} - ${siteName}`, panelTitle: panelTitleT, panelSubtext: panelSubtextT, companyID: req.params.companyID, siteID: req.params.siteID, orgID: req.params.orgID});
+      res.render('site_users', { users: userList, sidebar: sidebarList, tabBar: tabBarList, sideTitle: orgName, navTitle: `${companyName} - ${siteName}`, panelTitle: panelTitleT, panelSubtext: panelSubtextT, companyID: req.params.companyID, siteID: req.params.siteID, orgID: req.params.orgID});
 
 
     });
@@ -202,7 +216,7 @@ siteUsersRouter.get('/add', async function(req, res, next) {
       ORDER BY name ASC
       `, 
       
-      function (err, result, fields) {
+      async function (err, result, fields) {
         if (err){ 
           console.log(typeof(err));
           for (var k in err){
@@ -213,24 +227,38 @@ siteUsersRouter.get('/add', async function(req, res, next) {
           // throw err
         };
 
-        console.log(result);
         let groupsList = result;
         companyName = result[0].companyName;
         siteName = result[0].siteName;
 
-        var sidebarList = [
-          {status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home"},
-          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${companyName}`},
-          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}`, icon: "store", text: `${siteName}`},
-          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/doors`, icon: "meeting_room", text: "Doors"},
-          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`, icon: "person", text: "Users"},
-          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/groups`, icon: "supervisor_account", text: "Groups"},
-          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports"},
-        ];
+        const funSites = await mySQLFun.getSites(db, req.params.companyID)
+ 
+      var sidebarList = [
+        {status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home"},
+        {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${companyName}`}
+      ];
+      for (i in funSites){
+        if (funSites[i].id == req.params.siteID)
+          {
+            sidebarList.push({status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}`});
+          }
+          else 
+          {
+            sidebarList.push({status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}`});
+          }
+      }
+
+      var tabBarList = [
+        {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/doors`, icon: "meeting_room", text: "Doors"},
+        {status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`, icon: "person", text: "Users"},
+        {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/groups`, icon: "supervisor_account", text: "Groups"},
+        {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports"}
+      ];
+
         var varName;
         varName = "CCSI Door Access" //optional title override
         
-        res.render('new_user', { groups: groupsList, sidebar: sidebarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, company: companyName, site: siteName, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID});
+        res.render('new_user', { groups: groupsList, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, company: companyName, site: siteName, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID});
 
     });
 
@@ -304,7 +332,6 @@ try {
       try {
     
         console.log('Posting data to access_groups table on new_user route');
-        console.log(values);
         if (values.length > 0){
           await db.query(
     
@@ -420,7 +447,7 @@ try {
     
     
       
-    function (err, result, fields) {
+    async function (err, result, fields) {
       let userData = result[0];
 
       if (userData.groupNamesList){
@@ -443,7 +470,6 @@ try {
       }
       userData.groups = groupings;
 
-      console.log(userData);
 
       if (err){ 
           console.log(typeof(err));
@@ -454,21 +480,35 @@ try {
           // throw err
         };
 
-      var sidebarList = [
-        {status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home"},
-        {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${userData.companyName}`},
-        {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}`, icon: "store", text: `${userData.siteName}`},
-        {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/doors`, icon: "meeting_room", text: "Doors"},
-        {status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`, icon: "person", text: "Users"},
-        {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/groups`, icon: "supervisor_account", text: "Groups"},
-        {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports"},
-      ];
+        const funSites = await mySQLFun.getSites(db, req.params.companyID)
+ 
+        var sidebarList = [
+          {status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home"},
+          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${userData.companyName}`}
+        ];
+        for (i in funSites){
+          if (funSites[i].id == req.params.siteID)
+          {
+            sidebarList.push({status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}`});
+          }
+          else 
+          {
+            sidebarList.push({status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}`});
+          }
+        }
+  
+        var tabBarList = [
+          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/doors`, icon: "meeting_room", text: "Doors"},
+          {status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`, icon: "person", text: "Users"},
+          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/groups`, icon: "supervisor_account", text: "Groups"},
+          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports"}
+        ];
 
       var panelTitleT = `${userData.last_name}, ${userData.first_name} - ${userData.employee_id}`;
       var panelSubtextT = "User Info";
       var varName = "CCSI DOOR ACCESS"
 
-      res.render('user', { user: userData, sidebar: sidebarList, sideTitle: `${varName}`, navTitle: `${userData.companyName} - ${userData.siteName}`, panelTitle: panelTitleT, panelSubtext: panelSubtextT, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID});
+      res.render('user', { user: userData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: `${varName}`, navTitle: `${userData.companyName} - ${userData.siteName}`, panelTitle: panelTitleT, panelSubtext: panelSubtextT, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID});
 
         
       });
@@ -551,7 +591,7 @@ try {
     
     
       
-    function (err, result, fields) {
+    async function (err, result, fields) {
       let userData = result[0];
 
       console.log(result);
@@ -585,21 +625,35 @@ try {
           // throw err
         };
 
-      var sidebarList = [
-        {status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home"},
-        {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${userData.companyName}`},
-        {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}`, icon: "store", text: `${userData.siteName}`},
-        {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/doors`, icon: "meeting_room", text: "Doors"},
-        {status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`, icon: "person", text: "Users"},
-        {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/groups`, icon: "supervisor_account", text: "Groups"},
-        {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports"},
-      ];
+        const funSites = await mySQLFun.getSites(db, req.params.companyID)
+ 
+        var sidebarList = [
+          {status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home"},
+          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${userData.companyName}`}
+        ];
+        for (i in funSites){
+          if (funSites[i].id == req.params.siteID)
+          {
+            sidebarList.push({status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}`});
+          }
+          else 
+          {
+            sidebarList.push({status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}`});
+          }
+        }
+  
+        var tabBarList = [
+          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/doors`, icon: "meeting_room", text: "Doors"},
+          {status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`, icon: "person", text: "Users"},
+          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/groups`, icon: "supervisor_account", text: "Groups"},
+          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports"}
+        ];
 
       var panelTitleT = `${userData.last_name}, ${userData.first_name} - ${userData.employee_id} (Editing)`;
       var panelSubtextT = "Edit User";
       var varName = "CCSI DOOR ACCESS"
 
-      res.render('user_edit', { user: userData, sidebar: sidebarList, sideTitle: `${varName}`, navTitle: `${userData.companyName} - ${userData.siteName}`, panelTitle: panelTitleT, panelSubtext: panelSubtextT, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID});
+      res.render('user_edit', { user: userData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: `${varName}`, navTitle: `${userData.companyName} - ${userData.siteName}`, panelTitle: panelTitleT, panelSubtext: panelSubtextT, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID});
 
         
       });

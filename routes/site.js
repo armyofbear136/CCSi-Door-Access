@@ -2,6 +2,7 @@ require('../mySQL');
 
 var express = require('express');
 const asyncify = require('express-asyncify');
+const mySQLFun = require('../mySQL');
 const siteRouter = asyncify(express.Router({mergeParams: true}));
 
 
@@ -77,7 +78,7 @@ siteRouter.get('/:siteID', async function(req, res, next) {
       FROM sites 
       WHERE id = ${req.params.siteID}`, 
       
-      function (err, result, fields) {
+      async function (err, result, fields) {
         if (err){ 
           console.log(typeof(err));
           for (var k in err){
@@ -90,21 +91,36 @@ siteRouter.get('/:siteID', async function(req, res, next) {
         siteName = result[0].name;
 
 
-      var sidebarList = [
-        {status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home"},
-        {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${companyName}`},
-        {status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}`, icon: "store", text: `${siteName}`},
-        {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/doors`, icon: "meeting_room", text: "Doors"},
-        {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`, icon: "person", text: "Users"},
-        {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/groups`, icon: "supervisor_account", text: "Groups"},
-        {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports"},
-      ];
+        const funSites = await mySQLFun.getSites(db, req.params.companyID)
+ 
+        var sidebarList = [
+          {status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home"},
+          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${companyName}`}
+        ];
+        for (i in funSites){
+          if (funSites[i].id == req.params.siteID)
+          {
+            sidebarList.push({status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}`});
+          }
+          else 
+          {
+            sidebarList.push({status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}`});
+          }
+        }
+  
+        var tabBarList = [
+          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/doors`, icon: "meeting_room", text: "Doors"},
+          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`, icon: "person", text: "Users"},
+          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/groups`, icon: "supervisor_account", text: "Groups"},
+          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports"}
+        ];
+
 
     
 
       orgName = "CCSI Door Access" //optional title override      
     
-      res.render('site', {sidebar: sidebarList, sideTitle: orgName, navTitle: `${companyName} - ${siteName}`, panelTitle: `${siteName}` });
+      res.render('site', {sidebar: sidebarList, sideTitle: orgName, tabBar: tabBarList, navTitle: `${companyName} - ${siteName}`, panelTitle: `${siteName}` });
 
 
     });

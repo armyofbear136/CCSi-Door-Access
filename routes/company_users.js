@@ -64,9 +64,9 @@ companyUsersRouter.get('/', async function(req, res, next) {
       
 
       var sidebarList = [
-        {status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home"},
-        {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${companyName}`},
-        {status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/users`, icon: "people_alt", text: `Company Users`},
+        {status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home", justText: "text-left"},
+        {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${companyName}`, justText: "text-left"},
+        {status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/users`, icon: "people_alt", text: `Company Users`, justText: "text-center"},
       ];
 
       console.log(companyName);
