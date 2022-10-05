@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <% var rootPath = './'; %>
+
+  <head>
+    <%- include('./partials/head'); %>
+  </head>
+  
+  <body class="dark-edition">
+    <div class="wrapper ">
+      <%- include('./partials/sidebar', {links: sidebar, logo: sideTitle}) %>
+      <div class="main-panel">
+      <%- include('./partials/navbar', {title: navTitle}) %>
+      <div class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header card-header-primary">
+                  <h4 class="card-title "><%= panelTitle %></h4>
+                  <p class="card-category"><%= panelSubtext %></p>
+                </div>
+                <div class="card-body">
+                  <div class="col-md-5">
+                    <a href="<%= rootPath %>users/add"><button class="btn btn-primary">Add New User</button></a>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead class=" text-primary">
+                        <th>
+                          ID
+                        </th>
+                        <th>
+                          Last Name
+                        </th>
+                        <th>
+                          First Name
+                        </th>
+                        <th>
+                          FOB
+                        </th>
+                        <th>
+                          Employee ID
+                        </th>
+                        <th>
+                          Groups
+                        </th>
+                        <th>
+                        </th>
+                      </thead>
+                      <tbody>
+                        <% users.forEach(function(user) { %>
+                          <tr>
+                            <td>
+                              <%= user.id %>
+                            </td>
+                            <td>
+                              <%= user.last %>
+                            </td>
+                            <td>
+                              <%= user.first %>
+                            </td>
+                            <td>
+                              <%= user.fob %>
+                            </td>
+                            <td>
+                              <%= user.eid %>
+                            </td>
+                            <td>
+                              <%= user.groups %>
+                            </td>
+                            <td>
+                              <a href="<% rootPath%>users/<%= user.id %>"><button class="btn btn-primary">Select</button></a>
+                            </td>
+                          </tr>
+                        <% }); %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <%- include('./partials/footer'); %>
+    </div>
+  </div>
+
+  <%- include('./partials/foot'); %>
+</body>
+
+</html>

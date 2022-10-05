@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<% var rootPath = './'; %>
+
+<head>
+  <%- include('./partials/head'); %>
+</head>
+
+<body class="dark-edition">
+  <div class="wrapper ">
+    <%- include('./partials/sidebar', {links: sidebar, logo: sideTitle}) %>
+    <div class="main-panel">
+      <%- include('./partials/navbar', {title: navTitle}) %>
+      <div class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-8">
+              <div class="card">
+                <div class="card-header card-header-primary">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <h4 class="card-title"><%= panelTitle %></h4>
+                    </div>
+                    <div class="col-md-6">
+                      <a href="/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>/users/<%= user.id %>"><button class="btn btn-primary pull-right">Cancel</button></a>
+                      <button type="submit" class="btn btn-primary pull-right" onclick="tryAdding()" value="Submit">Submit</button>
+                    </div>
+                  </div>
+                  <p class="card-category"><%= panelSubtext %></p>
+                </div>
+                <form id="addUserForm" method="post">
+                  <div class="card text-right">
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-md-2">
+                          <div class="form-group">
+                            <label for="fname">First Name</label>
+                            <% if (user.first_name && user.first_name != "null") { %>
+                            <input type="text" class="form-control" id="fname" name="fname" value="<%= user.first_name %>" placeholder="John">
+                            <% } else { %>
+                            <input type="text" class="form-control" id="fname" name="fname" placeholder="John">
+                            <% } %>
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <div class="form-group">
+                            <label for="lname">Last Name</label>
+                            <% if (user.last_name && user.last_name != "null") { %>
+                            <input type="text" class="form-control" id="lname" name="lname" value="<%= user.last_name %>" placeholder="Doe">
+                            <% } else { %>
+                            <input type="text" class="form-control" id="lname" name="lname" placeholder="Doe">
+                            <% } %>
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <div class="form-group">
+                            <label for="fob">Fob Number</label>
+                            <% if (user.fob_id) { %>
+                            <input type="text" class="form-control" id="fob" name="fob" value="<%= user.fob_id %>" placeholder="#####">
+                            <% } else { %>
+                            <input type="text" class="form-control" id="fob" name="fob" placeholder="#####">
+                            <% } %>
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <div class="form-group">
+                            <label for="eid">Employee ID</label>
+                            <% if (user.employee_id) { %>
+                            <input type="text" class="form-control" id="eid" name="eid" value="<%= user.employee_id %>" placeholder="#####">
+                            <% } else { %>
+                            <input type="text" class="form-control" id="eid" name="eid" placeholder="#####">
+                            <% } %>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <% if (user.email && user.email != "null") {%>
+                            <input type="email" class="form-control" id="email" name="email" value="<%= user.email %>" placeholder="User@Email.com">
+                            <% } else { %>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="User@Email.com">
+                            <% } %>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-header card-header-primary col-md-11">
+                    <div class="card-title">
+                      <h4>Groups</h4>
+                    </div>
+                  </div>
+                  <div class="card">
+                    <div class="card-body">
+                      <div class="row">
+                        <% user.groups.forEach(function(group) { %>
+                        <div class="col-md-2">
+                          <div class="form-group">
+                            <div class="form-check">
+                              <label class="form-check-label">
+                                <% if (user.doorgroupIDs.includes(group.id)) { %>
+                                <input class="form-check-input" type="checkbox" value="<%= group.id %>" name="groups" checked>
+                                <%} else { %>
+                                <input class="form-check-input" type="checkbox" value="<%= group.id %>" name="groups">
+                                <% } %>
+                                <span class="form-check-sign">
+                                  <span class="check"></span>
+                                </span>
+                                <%= group.name %>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                        <% }); %>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="clearfix"></div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%- include('./partials/footer'); %>
+  </div>
+  </div>
+
+  <%- include('./partials/foot'); %>
+  <script>
+    function tryAdding() {
+      document.getElementById("addUserForm").submit();
+    }
+  </script>
+
+</body>
+
+</html>

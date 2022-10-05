@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<% var rootPath = './'; %>
+
+<head>
+  <%- include('./partials/head'); %>
+</head>
+
+<body class="dark-edition">
+  <div class="wrapper ">
+    <%- include('./partials/sidebar', {links: sidebar, logo: sideTitle}) %>
+    <div class="main-panel">
+      <%- include('./partials/navbar', {title: navTitle}) %>
+      <div class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-8">
+              <div class="card">
+                <div class="card-header card-header-primary">
+                  <div class="row">
+                    <div class="col-md-3">
+                      <h4 class="card-title">
+                        <%= panelTitle %>
+                      </h4>
+                    </div>
+                    <div class="col-md-9">
+                      <a href="/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>/doors/<%= door.id %>"><button class="btn btn-primary pull-right">Cancel</button></a>
+                      <button type="submit" class="btn btn-primary pull-right" onclick="tryAdding()" value="Submit">Submit</button>
+                    </div>
+                  </div>
+                  <p class="card-category">
+                    <%= panelSubtext %>
+                  </p>
+                </div>
+                <form id="addDoorForm" method="post">
+                  <div class="card text-right">
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-md-3">
+                          <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Door Name" value="<%= door.name %>">
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="form-group">
+                            <label for="ip">IP Address</label>
+                            <input type="text" class="form-control" id="ip" name="ip" placeholder="XXX.XXX.XXX" value=<%= door.ip %>>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-header card-header-primary col-md-11">
+                    <div class="card-title">
+                      <h4>Groups</h4>
+                    </div>
+                  </div>
+                  <div class="card">
+                    <div class="card-body">
+                      <div class="row">
+                        <% door.groups.forEach(function(group) { %>
+                        <div class="col-md-2">
+                          <div class="form-group">
+                            <div class="form-check">
+                              <label class="form-check-label">
+                                <% if (door.doorgroupIDs.includes(group.id)) { %>
+                                <input class="form-check-input" type="checkbox" value="<%= group.id %>" name="groups" checked>
+                                <%} else { %>
+                                <input class="form-check-input" type="checkbox" value="<%= group.id %>" name="groups">
+                                <% } %>
+                                <span class="form-check-sign">
+                                  <span class="check"></span>
+                                </span>
+                                <%= group.name %>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                        <% }); %>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="clearfix"></div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%- include('./partials/footer'); %>
+
+  <%- include('./partials/foot') %>
+  <script>
+    function tryAdding() {
+      document.getElementById("addDoorForm").submit();
+    }
+  </script>
+</body>
+
+</html>

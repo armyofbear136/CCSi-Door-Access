@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+  <div class="sidebar" data-color="purple" data-background-color="black" data-image="">
+    <div class="logo"><a href="/" class="simple-text logo-normal">
+      <%= logo %>
+      </a>
+    </div>
+    <div class="sidebar-wrapper">
+      <ul class="nav">
+        <% links.forEach(function(link) { %> 
+          <% if(link.status === 1) { %>
+            <li class="nav-item active">
+          <% } else { %>
+            <li class="nav-item">
+          <% } %>
+          <a class="nav-link" href=<%= link.url %>>
+            <i class="material-icons"><%= link.icon %></i>
+            <p><%= link.text %></p>
+          </a>
+        </li>
+        <% }); %>
+      </ul>
+    </div>
+  </div>

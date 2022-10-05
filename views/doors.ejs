@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <% var rootPath = './'; %>
+
+<head>
+  <%- include('./partials/head'); %>
+</head>
+
+<body class="dark-edition">
+  <div class="wrapper ">
+    <%- include('./partials/sidebar', {links: sidebar, logo: sideTitle}) %>
+    <div class="main-panel">
+      <%- include('./partials/navbar', {title: navTitle}) %>
+      <div class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header card-header-primary">
+                  <h4 class="card-title "><%= panelTitle %></h4>
+                  <p class="card-category"> Please Select a Door</p>
+                </div>
+                <div class="card-body">
+                  <div class="col-md-5">
+                    <a href="<%= rootPath %>doors/add"><button class="btn btn-primary">Add New Door</button></a>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead class=" text-primary">
+                        <th>
+                          ID
+                        </th>
+                        <th>
+                          Door
+                        </th>
+                        <th>
+                          Location
+                        </th>
+                        <th>
+                          IP Address
+                        </th>
+                        <th>
+                          Status
+                        </th>
+                        <th>
+                          Alarm
+                        </th>
+                        <th>
+                        </th>
+                      </thead>
+                      <tbody>
+                        <% doors.forEach(function(door) { %>
+                          <tr>
+                            <td>
+                              <%= door.id %>
+                            </td>
+                            <td>
+                              <%= door.name %>
+                            </td>
+                            <td>
+                              <%= door.location %>
+                            </td>
+                            <td>
+                              <%= door.ip %>
+                            </td>
+                            <td class=<%= door.statusTextStyle %>>
+                              <%= door.statusText %>
+                            </td>
+                            <td class=<%= door.alarmTextStyle %>>
+                              <%= door.alarmText %>
+                            </td>
+                            <td>
+                              <a href="/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>/doors/<%= door.id %>"><button class="btn btn-primary">Select</button></a>
+                            </td>
+                          </tr>
+                        <% }); %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <%- include('./partials/footer') %>
+    </div>
+  </div>
+
+  <%- include('./partials/foot') %>
+</body>
+
+</html>

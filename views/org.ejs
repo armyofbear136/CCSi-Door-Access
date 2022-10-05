@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <% var rootPath = './'; %>
+
+<head>
+  <%- include('./partials/head'); %>
+</head>
+
+<body class="dark-edition">
+  <div class="wrapper ">
+    <%- include('./partials/sidebar', {links: sidebar, logo: sideTitle}) %>
+    <div class="main-panel">
+      <%- include('./partials/navbar', {title: navTitle}) %>
+      <div class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header card-header-primary">
+                  <h4 class="card-title ">Companies</h4>
+                  <p class="card-category"> Please select which company you would like to Access</p>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead class=" text-primary">
+                        <th>
+                          Location
+                        </th>
+                        <th>
+                          Status
+                        </th>
+                        <th>
+                        </th>
+                      </thead>
+                      <tbody>
+                          <% companies.forEach(function(company) { %> 
+                              <tr>
+                                  <td>
+                                      <%= company.name %>
+                                  </td>
+                                   <td class=<%= company.statusTextStyle %>> 
+                                    <strong><%= company.statusText %></strong>
+                                   </td> 
+                                  <td> 
+                                     <a  href="/org/<%= orgID %>/company/<%= company.id %>"><button class=<%= company.statusButtonStyle %>>Enter</button></a> 
+                                   </td> 
+                                  
+                              </tr>
+                            <% }); %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <%- include('./partials/footer') %>
+    </div>
+  </div>
+  <%- include('./partials/foot') %>
+</body>
+
+</html>

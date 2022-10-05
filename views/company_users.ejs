@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <% var rootPath = './'; %>
+
+  <head>
+    <%- include('./partials/head'); %>
+  </head>
+  
+  <body class="dark-edition">
+    <div class="wrapper ">
+      <%- include('./partials/sidebar', {links: sidebar, logo: sideTitle}) %>
+      <div class="main-panel">
+      <%- include('./partials/navbar', {title: navTitle}) %>
+      <div class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header card-header-primary">
+                  <h4 class="card-title "><%= panelTitle %></h4>
+                  <p class="card-category"><%= panelSubtext %></p>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead class=" text-primary">
+                        <th>
+                          Last Name
+                        <th>
+                          First Name
+                        </th>
+                        <th>
+                          Site
+                        </th>
+                        <th>
+                          Fob
+                        </th>
+                        <th>
+                          Employee ID
+                        </th>
+                        <th>
+                          Groups
+                        </th>
+                        <th>
+                        </th>
+                      </thead>
+                      <tbody>
+                        <% users.forEach(function(user) { %>
+                          <tr>
+                            <td>
+                              <%= user.last_name %>
+                            </td>
+                            <td>
+                              <%= user.first_name %>
+                            </td>
+                            <td>
+                              <%= user.siteName %>
+                            </td>
+                            <td>
+                              <%= user.fob_id %>
+                            </td>
+                            <td>
+                              <%= user.employee_id %>
+                            </td>
+                            <td>
+                              <%= user.doorgroups %>
+                            </td>
+                            <td>
+                              <a href="</org/<%= orgID %>/company/<%= user.company_id_users %>/site/<%= user.site_id_users %>/users/><%= user.id %>"><button class="btn btn-primary">Select</button></a>
+                            </td>
+                          </tr>
+                        <% }); %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <%- include('./partials/footer'); %>
+    </div>
+  </div>
+
+  <%- include('./partials/foot'); %>
+</body>
+
+</html>

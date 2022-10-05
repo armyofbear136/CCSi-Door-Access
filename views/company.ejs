@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <% var rootPath = './'; %>
+
+<head>
+  <%- include('./partials/head'); %>
+</head>
+
+<body class="dark-edition">
+  <div class="wrapper ">
+    <%- include('./partials/sidebar', {links: sidebar, logo: sideTitle}) %>
+    <div class="main-panel">
+      <%- include('./partials/navbar', {title: navTitle}) %>
+      <div class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header card-header-primary">
+                  <h4 class="card-title ">Sites</h4>
+                  <p class="card-category"> Please select which site you would like to Access</p>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead class=" text-primary">
+                        <th>
+                          Location
+                        </th>
+                        <th>
+                          Status
+                        </th>
+                        <th>
+                        </th>
+                      </thead>
+                      <tbody>
+                            <% sites.forEach(function(site) { %> 
+                              <tr>
+                                  <td>
+                                      <%= site.name %>
+                                  </td>
+                                   <td class=<%= site.statusTextStyle %>> 
+                                    <strong><%= site.statusText %></strong>
+                                   </td> 
+                                  <td> 
+                                     <a  href="<%= rootPath %><%= companyID %>/site/<%= site.id %>"><button class=<%= site.statusButtonStyle %>>Enter</button></a> 
+                                   </td> 
+                              </tr>
+                            <% }); %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <%- include('./partials/footer') %>
+    </div>
+  </div>
+  <%- include('./partials/foot') %>
+</body>
+
+</html>

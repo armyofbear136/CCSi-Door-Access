@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <% var rootPath = './'; %>
+
+<head>
+  <%- include('./partials/head'); %>
+</head>
+
+<body class="dark-edition">
+  <div class="wrapper ">
+    <%- include('./partials/sidebar', {links: sidebar, logo: sideTitle}) %>
+    <div class="main-panel">
+      <%- include('./partials/navbar', {title: navTitle}) %>
+      <div class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-8">
+              <div class="card">
+                <div class="card-header card-header-primary">
+                  <h4 class="card-title"><%= panelTitle %></h4>
+                  <p class="card-category"><%= panelSubtext %></p>
+                </div>
+                <div class="card-body">
+                  <div class="col-md-5">
+                    <button type="submit" class="btn btn-primary" onclick="tryAdding()" value="Submit">Submit</button>
+                    <a href="/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>/groups"><button class="btn btn-primary">Cancel</button></a>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <form id="addGroupForm" method="post">
+                    <div class="row">
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <label class="bmd-label-floating" >Group Name</label>
+                          <input type="text" class="form-control" name="name">
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <label class="bmd-label-floating" >Start Time HH:MM:SS</label>
+                          <input type="text" class="form-control" name="stime">
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">End Time HH:MM:SS</label>
+                          <input type="text" class="form-control" name="etime">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <h5>Doors</h5>
+                    </div>
+                    <div class="row">
+                      <% group.allDoors.forEach(function(door) { %>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <div class="form-check">
+                              <label class="form-check-label">
+                                <input class="form-check-input" type="checkbox" value="<%= door.id %>" name="doorgroups">
+                                <span class="form-check-sign">
+                                  <span class="check"></span>
+                                </span>
+                                <%= door.name %>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      <% }); %>
+                    </div>
+                    <div class="card-body">
+                      <h5>Users</h5>
+                    </div>
+                    <div class="row">
+                      <% group.allUsers.forEach(function(user) { %>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <div class="form-check">
+                              <label class="form-check-label">
+                                <input class="form-check-input" type="checkbox" value="<%= user.id %>" name="usergroups">
+                                <span class="form-check-sign">
+                                  <span class="check"></span>
+                                </span>
+                                <%= user.name %>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      <% }); %>
+                    </div>
+                    <div class="clearfix"></div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <%- include('./partials/footer'); %>
+    </div>
+  </div>
+  
+  <%- include('./partials/foot'); %>
+  <script>
+    function tryAdding() {
+      document.getElementById("addGroupForm").submit();
+    }
+  </script>
+
+
+</body>
+
+</html>

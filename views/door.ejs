@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<% var rootPath='./' ; %>
+
+<head>
+  <%- include('./partials/head'); %>
+</head>
+
+<body class="dark-edition">
+  <div class="wrapper ">
+    <%- include('./partials/sidebar', {links: sidebar, logo: sideTitle}) %>
+    <div class="main-panel">
+      <%- include('./partials/navbar', {title: navTitle}) %>
+      <div class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-8">
+              <div class="card">
+                <div class="card-header card-header-primary">
+                  <div class="row">
+                    <div class="col-md-3">
+                      <h4 class="card-title">
+                        <%= panelTitle %>
+                      </h4>
+                    </div>
+                    <div class="col-md-9">
+                      <button class="btn btn-primary pull-right">Delete</button></a>
+                      <a href="<%= rootPath %><%= door.id %>/controls"><button class="btn btn-primary pull-right">Door
+                          Controls</button></a>
+                      <a href="<%= rootPath %><%= door.id %>/edit"><button class="btn btn-primary pull-right">Edit
+                          Door</button></a>
+                      <button type="submit" class="btn btn-primary pull-right">Unlock Door</button>
+                      <button type="submit" class="btn btn-primary pull-right">Lock Door</button>
+                    </div>
+                  </div>
+                  <p class="card-category">
+                    <%= panelSubtext %>
+                  </p>
+                </div>
+                <form>
+                  <div class="card text-right">
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-md-2">
+                          <div class="form-group">
+                            <label for="ip">IP Address</label>
+                            <input type="text" class="form-control" id="ip" placeholder=<%=door.ip %> disabled>
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <div class="form-group">
+                            <label for="status">Status</label>
+                            <input type="text" class="form-control" id="status" placeholder=<%=door.status %> disabled>
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <div class="form-group">
+                            <label for="alarm">Alarm State</label>
+                            <input type="email" class="form-control" id="alarm" placeholder=<%=door.alarm %> disabled>
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <div class="form-group">
+                            <label for="access">Last Access</label>
+                            <input type="text" class="form-control" id="access" placeholder="5/17/2022 3:55:04PM" disabled>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-header card-header-primary col-md-11">
+                    <div class="card-title">
+                      <h4>Groups</h4>
+                    </div>
+                  </div>
+                  <div class="card">
+                    <div class="card-body">
+                      <div class="row">
+                        <% door.groups.forEach(function(group) { %>
+                        <div class="col-md-2">
+                          <div class="form-group">
+                            <div class="form-check">
+                              <label class="form-check-label">
+                                <% if (door.doorgroupIDs.includes(group.id)) { %>
+                                <input class="form-check-input" type="checkbox" value="<%= group.id %>" name="groups" disabled checked>
+                                <%} else { %>
+                                <input class="form-check-input" type="checkbox" value="<%= group.id %>" name="groups" disabled>
+                                <% } %>
+                                <span class="form-check-sign">
+                                  <span class="check"></span>
+                                </span>
+                                <%= group.name %>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                        <% }); %>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="clearfix"></div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%- include('./partials/footer'); %>
+
+  <%- include('./partials/foot') %>
+</body>
+
+</html>
