@@ -481,6 +481,65 @@ usersRouter.get('/:userID', async function (req, res, next) {
 });
 
 
+
+
+/* GET user page. */
+usersRouter.post('/:userID', async function (req, res, next) {
+
+  console.log("hitting user delete route");
+
+
+
+  /* link to database */
+
+  var db = req.app.get('db');
+  console.log(req.body);
+
+  // /* load data from database */
+
+  if (req.body.command == "delete") {
+    try {
+
+      console.log('Pulling user data from tables on userID route');
+      await db.query(
+
+        `
+        DELETE
+          users,
+          access_groups
+        FROM users
+        LEFT JOIN
+          access_groups ON users.id = access_groups.user_id
+        WHERE users.id = ${req.body.uID};
+        `,
+
+
+
+        async function (err, result, fields) {
+          
+
+          if (err) {
+            console.log(typeof (err));
+            for (var k in err) {
+              console.log(`${k}: ${err[k]}`);
+            }
+            res.render('error', { error: "Server Error", message: "Please try again", sidebar: [{ status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Server Error 500" });
+            // throw err
+          };
+
+          
+
+        });
+    } catch (err) {
+      console.log(err)
+    } finally {
+      //await db.close();
+    }
+  }
+  res.redirect(`/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`);
+});
+
+
 /* GET user edit page. */
 usersRouter.get('/:userID/edit', async function (req, res, next) {
 
