@@ -51,8 +51,21 @@ groupsRouter.get('/', async function (req, res, next) {
         };
 
         let groupsData = result;
-        let companyName = groupsData[0].companyName;
-        let siteName = groupsData[0].siteName;
+        var companyName;
+        var siteName;
+
+        if (groupsData.length)
+        {
+          companyName = groupsData[0].companyName;
+          siteName = groupsData[0].siteName;
+        }
+        else
+        {
+          let siteInfo = await mySQLFun.getSiteInfo(db, req.params.siteID);
+          console.log(siteInfo);
+          companyName = siteInfo[0].companyName;
+          siteName = siteInfo[0].name;
+        }
 
         const funSites = await mySQLFun.getSites(db, req.params.companyID)
 

@@ -1,7 +1,7 @@
-require('../mySQL');
-
 var express = require('express');
 const asyncify = require('express-asyncify');
+const SQLfun = require('../mySQL');
+const mySQLFun = require('../mySQL');
 const companyRouter = asyncify(express.Router({ mergeParams: true }));
 
 
@@ -122,7 +122,7 @@ companyRouter.get('/:companyID/users', async function (req, res, next) {
     ORDER BY last_name ASC`,
 
 
-      function (err, result, fields) {
+      async function (err, result, fields) {
         if (err) {
           console.log(typeof (err));
           for (var k in err) {
@@ -135,10 +135,30 @@ companyRouter.get('/:companyID/users', async function (req, res, next) {
           // throw err
         };
 
-        let userList = result;
-        let companyName = result[0].companyName;
+        let usersData = result;
+        var companyName;
 
+        var panelTitleT;
+        var panelSubtextT;
 
+        if (usersData.length) {
+          companyName = usersData[0].companyName;
+          if (usersData.length === 1) {
+            panelTitleT = `${usersData.length} User at ${companyName}`;
+          }
+          else {
+            panelTitleT = `${usersData.length} Users at ${companyName}`;
+          }
+          panelSubtextT = "Please Select a User";
+        }
+        else {
+          let company = await mySQLFun.getCompanyInfo(db, req.params.companyID);
+          companyName = company[0].name;
+          
+          panelTitleT = `No Users at ${companyName}`;
+          panelSubtextT = "Please Add a User";
+          
+        }
 
         var sidebarList = [
           { status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home", justText: "text-left" },
@@ -149,24 +169,9 @@ companyRouter.get('/:companyID/users', async function (req, res, next) {
 
         varName = "CCSI Door Access"; //optional title override
 
-        var panelTitleT;
-        var panelSubtextT;
+        
 
-        if (userList.length) {
-          if (userList.length === 1) {
-            panelTitleT = `${userList.length} User at ${companyName}`;
-          }
-          else {
-            panelTitleT = `${userList.length} Users at ${companyName}`;
-          }
-          panelSubtextT = "Please Select a User";
-        }
-        else {
-          panelTitleT = `No Users at ${companyName}`;
-          panelSubtextT = "Please Add a User";
-        }
-
-        res.render('company_users', { users: userList, sidebar: sidebarList, sideTitle: varName, navTitle: `${companyName}`, panelTitle: panelTitleT, panelSubtext: panelSubtextT, orgID: req.params.orgID });
+        res.render('company_users', { users: usersData, sidebar: sidebarList, sideTitle: varName, navTitle: `${companyName}`, panelTitle: panelTitleT, panelSubtext: panelSubtextT, orgID: req.params.orgID });
 
 
       });

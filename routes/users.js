@@ -51,8 +51,20 @@ usersRouter.get('/', async function (req, res, next) {
           // throw err
         };
         let usersData = result;
-        let companyName = usersData[0].companyName;
-        let siteName = usersData[0].siteName;
+        var companyName;
+        var siteName;
+
+        if (usersData.length)
+        {
+          companyName = usersData[0].companyName;
+          siteName = usersData[0].siteName;
+        }
+        else
+        {
+          let siteInfo = await mySQLFun.getSiteInfo(db, req.params.siteID);
+          companyName = siteInfo[0].companyName;
+          siteName = siteInfo[0].name;
+        }
 
 
 

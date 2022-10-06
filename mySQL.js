@@ -68,39 +68,49 @@ SQLfun.getSites = async function(db, companyID) {
     )}
   )};
 
-    // try {
-    // await db.query(
-    //   `
-    //   SELECT * FROM sites
-    //   WHERE company_id_sites = ${companyID};
-    //   `,
-    //   async function (err, result, fields) {
+SQLfun.getCompanyInfo = async function(db, companyID) {
 
-    //     if (err){ 
-    //         console.log(typeof(err));
-    //         for (var k in err){
-    //           console.log(`${k}: ${err[k]}`);
-    //         }
-    //         // throw err
-    //       };
-          
-    //       // console.log(result);
-    //       let data = result;
-    //       // return data;
-    //     });
+  return new Promise(function(resolve, reject){
+    db.query(
+      `
+      SELECT * FROM companies
+      WHERE id = ${companyID};
+      `,
+        function(err, result){                                                
+            if(result === undefined){
+                reject(new Error("Error result is undefined"));
+            }else{
+                resolve(result);
+            }
+        }
+    )}
+  )};
 
+  SQLfun.getSiteInfo = async function(db, siteID) {
 
-    //   }catch ( err ) {
-    //     console.log(err)
-    //   } finally {
-    //     //await db.close();
-    //   }
-  // };
-
-SQLfun.test = async function(number) {
-  console.log("Test");
-    return number;
-  };
+    return new Promise(function(resolve, reject){
+      db.query(
+        `
+        SELECT
+          si.*,
+          d.companyName,
+          d.orgName
+        FROM sites si
+        JOIN (
+          SELECT c.id as id, c.name as companyName, c.org as orgName
+          FROM companies c
+        ) d ON (si.company_id_sites = d.id)
+        WHERE si.id = ${siteID}
+        ORDER BY name ASC`,
+          function(err, result){                                                
+              if(result === undefined){
+                  reject(new Error("Error result is undefined"));
+              }else{
+                  resolve(result);
+              }
+          }
+      )}
+    )};
 
 module.exports = SQLfun;
   

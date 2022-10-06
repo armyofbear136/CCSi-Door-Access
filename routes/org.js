@@ -65,7 +65,7 @@ orgRouter.get('/:orgID', async function (req, res, next) {
         varName = "CCSI Door Access" //optional title override
 
 
-        res.render('org', { companies: companiesData, sidebar: sidebarList, sideTitle: varName, navTitle: `${varName} - Available Companies`, orgID: req.params.orgID });
+        res.render('org', { companies: companiesData, sidebar: sidebarList, sideTitle: varName, navTitle: `${orgName} - Available Companies`, orgID: req.params.orgID });
 
 
       });

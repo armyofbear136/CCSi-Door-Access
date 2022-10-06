@@ -47,10 +47,23 @@ doorsRouter.get('/', async function (req, res, next) {
         };
 
         let doorsData = result;
+        var companyName;
+        var siteName;
+
+        if (doorsData.length)
+        {
+          companyName = doorsData[0].companyName;
+          siteName = doorsData[0].siteName;
+        }
+        else
+        {
+          let siteInfo = await mySQLFun.getSiteInfo(db, req.params.siteID);
+          companyName = siteInfo[0].companyName;
+          siteName = siteInfo[0].name;
+        }
 
 
-        let companyName = doorsData[0].companyName;
-        let siteName = doorsData[0].siteName;
+        
 
 
         for (i in doorsData) {
