@@ -24,7 +24,62 @@
                 <div class="card-body">
                   <div class="table-responsive">
                     <table class="table">
-                      <thead class=" text-primary">
+                      <thead>
+                        <th>
+                          <button onclick="sortLastNameDescending()">
+                            <i class="material-icons">arrow_drop_down</i>
+                          </button>
+                          <button onclick="sortLastNameAscending()">
+                            <i class="material-icons">arrow_drop_up</i>
+                          </button>
+                        </th>
+                        <th>
+                          <button onclick="sortFirstNameDescending()">
+                            <i class="material-icons">arrow_drop_down</i>
+                          </button>
+                          <button onclick="sortFirstNameAscending()">
+                            <i class="material-icons">arrow_drop_up</i>
+                          </button>
+                        </th>
+                        <th>
+                          <button onclick="sortCompanyNameDescending()">
+                            <i class="material-icons">arrow_drop_down</i>
+                          </button>
+                          <button onclick="sortCompanyNameAscending()">
+                            <i class="material-icons">arrow_drop_up</i>
+                          </button>
+                        </th>
+                        <th>
+                          <button onclick="sortSiteNameDescending()">
+                            <i class="material-icons">arrow_drop_down</i>
+                          </button>
+                          <button onclick="sortSiteNameAscending()">
+                            <i class="material-icons">arrow_drop_up</i>
+                          </button>
+                        </th>
+                        <th>
+                          <button onclick="sortFOBDescending()">
+                            <i class="material-icons">arrow_drop_down</i>
+                          </button>
+                          <button onclick="sortFOBAscending()">
+                            <i class="material-icons">arrow_drop_up</i>
+                          </button>
+                        </th>
+                        <th>
+                          <button onclick="sortEIDDescending()">
+                            <i class="material-icons">arrow_drop_down</i>
+                          </button>
+                          <button onclick="sortEIDAscending()">
+                            <i class="material-icons">arrow_drop_up</i>
+                          </button>
+                        </th>
+                        <th>
+                          
+                        </th>
+                        <th>
+                        </th>
+                      </thead>
+                      <tbody class=" text-primary">
                         <th>
                           First Name
                         </th>
@@ -38,9 +93,16 @@
                           Site
                         </th>
                         <th>
+                          Fob
                         </th>
-                      </thead>
-                      <tbody>
+                        <th>
+                          Employee ID
+                        </th>
+                        <th>
+
+                        </th>
+                      </tbody>
+                      <tbody id="usersData">
                         <% users.forEach(function(user) { %>
                           <tr>
                             <td>
@@ -54,6 +116,12 @@
                             </td>
                             <td>
                               <%= user.siteName %>
+                            </td>
+                            <td>
+                              <%= user.fob_id %>
+                            </td>
+                            <td>
+                              <%= user.employee_id %>
                             </td>
                             <td>
                               <a href="/org/<%= orgID %>/company/<%= user.company_id_users %>/site/<%= user.site_id_users %>/users/<%= user.id %>"><button class="btn btn-primary">Select</button></a>
@@ -76,5 +144,64 @@
 
   <%- include('./partials/foot'); %>
 </body>
+
+<script>
+  const tbody = document.getElementById("usersData");
+
+// Helper function for sorting on a given column, with a given comparator
+function tableSort(colNum, cmp) {
+  let rows = [...tbody.rows];
+  rows.sort((a, b) => cmp(a.cells[colNum].textContent, b.cells[colNum].textContent))
+    .map(row => tbody.appendChild(row));
+}
+
+function sortLastNameAscending() {
+  tableSort(0, (a, b) => a.localeCompare(b)); // assuming that school column has number representations
+}
+
+function sortLastNameDescending() {
+  tableSort(0, (a, b) => b.localeCompare(a)); // assuming that school column has number representations
+}
+
+function sortFirstNameAscending() {
+  tableSort(1, (a, b) => a.localeCompare(b)); // assuming that location column has strings
+}
+
+function sortFirstNameDescending() {
+  tableSort(1, (a, b) => b.localeCompare(a)); // assuming that location column has strings
+}
+
+function sortCompanyNameAscending() {
+  tableSort(2, (a, b) => a.localeCompare(b)); // assuming that location column has strings
+}
+
+function sortCompanyNameDescending() {
+  tableSort(2, (a, b) => b.localeCompare(a)); // assuming that location column has strings
+}
+
+function sortSiteNameAscending() {
+  tableSort(3, (a, b) => a.localeCompare(b)); // assuming that location column has strings
+}
+
+function sortSiteNameDescending() {
+  tableSort(3, (a, b) => b.localeCompare(a)); // assuming that location column has strings
+}
+
+function sortFOBAscending() {
+  tableSort(4, (a, b) => a - b); // assuming that school column has number representations
+}
+
+function sortFOBDescending() {
+  tableSort(4, (a, b) => b - a); // assuming that school column has number representations
+}
+
+function sortEIDAscending() {
+  tableSort(5, (a, b) => a - b); // assuming that school column has number representations
+}
+
+function sortEIDDescending() {
+  tableSort(5, (a, b) => b - a); // assuming that school column has number representations
+}
+</script>
 
 </html>

@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <% var rootPath = './'; %>
+<% var rootPath = './'; %>
 
-  <head>
-    <%- include('./partials/head'); %>
-  </head>
-  
-  <body class="dark-edition">
-    <div class="wrapper ">
-      <%- include('./partials/sidebar', {links: sidebar, logo: sideTitle}) %>
+<head>
+  <%- include('./partials/head'); %>
+</head>
+
+<body class="dark-edition">
+  <div class="wrapper ">
+    <%- include('./partials/sidebar', {links: sidebar, logo: sideTitle}) %>
     <div class="main-panel">
       <%- include('./partials/navbar', {title: navTitle}) %>
       <div class="content">
@@ -23,17 +23,17 @@
                     <div class="nav-tabs-wrapper">
                       <ul class="nav nav-tabs" data-tabs="tabs">
                         <% tabBar.forEach(function(tab) { %>
-                          <li class="nav-item">
-                            <% if (tab.status) { %>
-                              <a class="nav-link active show" href=<%= tab.url %>>
+                        <li class="nav-item">
+                          <% if (tab.status) { %>
+                          <a class="nav-link active show" href=<%= tab.url %>>
                             <% } else { %>
-                              <a class="nav-link show" href=<%= tab.url %>>
-                            <% } %>
-                                <i class="material-icons"><%= tab.icon %></i>
-                                <%= tab.text %>
-                                <div class="ripple-container"></div>
-                              </a>
-                          </li>
+                            <a class="nav-link show" href=<%= tab.url %>>
+                              <% } %>
+                              <i class="material-icons"><%= tab.icon %></i>
+                              <%= tab.text %>
+                              <div class="ripple-container"></div>
+                            </a>
+                        </li>
                         <% }); %>
                       </ul>
                     </div>
@@ -57,7 +57,34 @@
                 <div class="card-body">
                   <div class="table-responsive">
                     <table class="table">
-                      <thead class=" text-primary">
+                      <thead>
+                        <th>
+                          <button onclick="sortIDDescending()">
+                            <i class="material-icons">arrow_drop_down</i>
+                          </button>
+                          <button onclick="sortIDAscending()">
+                            <i class="material-icons">arrow_drop_up</i>
+                          </button>
+                        </th>
+                        <th>
+                          <button onclick="sortGroupNameDescending()">
+                            <i class="material-icons">arrow_drop_down</i>
+                          </button>
+                          <button onclick="sortGroupNameAscending()">
+                            <i class="material-icons">arrow_drop_up</i>
+                          </button>
+                        </th>
+                        <th>
+
+                        </th>
+                        <th>
+
+                        </th>
+                        <th>
+
+                        </th>
+                      </thead>
+                      <tbody class=" text-primary">
                         <th>
                           ID
                         </th>
@@ -71,28 +98,28 @@
                           Users
                         </th>
                         <th>
-                          
+
                         </th>
-                      </thead>
-                      <tbody>
+                      </tbody>
+                      <tbody id ="groupsData">
                         <% groups.forEach(function(group) { %>
-                          <tr>
-                            <td>
-                              <%= group.id %>
-                            </td>
-                            <td>
-                              <%= group.name %>
-                            </td>
-                            <td>
-                              <%= group.start_time %> - <%= group.end_time %>
-                            </td>
-                            <td>
-                              <%= group.users %>
-                            </td>
-                            <td>
-                              <a href="/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>/groups/<%= group.id %>"><button class="btn btn-primary">Select</button></a>
-                            </td>
-                          </tr>
+                        <tr>
+                          <td>
+                            <%= group.id %>
+                          </td>
+                          <td>
+                            <%= group.name %>
+                          </td>
+                          <td>
+                            <%= group.start_time %> - <%= group.end_time %>
+                          </td>
+                          <td>
+                            <%= group.users %>
+                          </td>
+                          <td>
+                            <a href="/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>/groups/<%= group.id %>"><button class="btn btn-primary">Select</button></a>
+                          </td>
+                        </tr>
                         <% }); %>
                       </tbody>
                     </table>
@@ -110,5 +137,32 @@
 
   <%- include('./partials/foot'); %>
 </body>
+
+<script>
+  const tbody = document.getElementById("groupsData");
+
+  // Helper function for sorting on a given column, with a given comparator
+  function tableSort(colNum, cmp) {
+    let rows = [...tbody.rows];
+    rows.sort((a, b) => cmp(a.cells[colNum].textContent, b.cells[colNum].textContent))
+      .map(row => tbody.appendChild(row));
+  }
+
+  function sortIDAscending() {
+    tableSort(0, (a, b) => a - b); // assuming that school column has number representations
+  }
+
+  function sortIDDescending() {
+    tableSort(0, (a, b) => b - a); // assuming that school column has number representations
+  }
+
+  function sortGroupNameAscending() {
+    tableSort(1, (a, b) => a.localeCompare(b)); // assuming that school column has number representations
+  }
+
+  function sortGroupNameDescending() {
+    tableSort(1, (a, b) => b.localeCompare(a)); // assuming that school column has number representations
+  }
+</script>
 
 </html>
