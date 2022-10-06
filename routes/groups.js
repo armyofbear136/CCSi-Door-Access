@@ -1,169 +1,13 @@
 var express = require('express');
 const asyncify = require('express-asyncify');
 const mySQLFun = require('../mySQL');
-const groupsRouter = asyncify(express.Router({mergeParams: true}));
+const groupsRouter = asyncify(express.Router({ mergeParams: true }));
 
 
 
 
 /* GET access groups page. */
-groupsRouter.get('/', async function(req, res, next) {
-
-
-   /* link to database */
-
-   var db = req.app.get('db');
-
-   // /* load data from database */
-
-   
-  // var funSites = await mySQLFun.test(1);
-
-   
- 
-  var companyName;
-  var orgName;
-  try {
-
-    
-    
-    console.log('Pulling data from company table on groups route');
-    await db.query(
-      
-      `SELECT name, org 
-      FROM companies 
-      WHERE id = ${req.params.companyID}`, 
-      
-      function (err, result, fields) {
-        if (err){ 
-          console.log(typeof(err));
-          for (var k in err){
-            console.log(`${k}: ${err[k]}`);
-          }
-          res.render('error', { error: "Server Error", message: "Please try again", sidebar: [
-            {status: 0, url: `/`, icon: "logout", text: "Portal"}], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"});
-          // throw err
-        };
-        companyName = result[0].name;
-        console.log(companyName);
-        orgName = result[0].org;
-    });
-  }catch ( err ) {
-    console.log(err)
-  } finally {
-    //await db.close();
-  }
- 
- 
-  var siteName;
- 
-  try {
-    
-    console.log('Pulling data from sites table on groups route');
-    await db.query(
-      
-      `SELECT name 
-      FROM sites 
-      WHERE id = ${req.params.siteID}`, 
-      
-      function (err, result, fields) {
-        if (err){ 
-          console.log(typeof(err));
-          for (var k in err){
-            console.log(`${k}: ${err[k]}`);
-          }
-          res.render('error', { error: "Server Error", message: "Please try again", sidebar: [
-            {status: 0, url: `/`, icon: "logout", text: "Portal"}], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"});
-          // throw err
-        };
-        siteName = result[0].name;
-
-    });
-
-   
-  }catch ( err ) {
-    console.log(err)
-  } finally {
-    //await db.close();
-  }
-
-
-  var groupList = [];
-
- try {
-
-  console.log('Pulling data from door_groups table on groups route');
-    await db.query(
-      
-      `SELECT * 
-      FROM door_groups 
-      WHERE site_id_door_group = ${req.params.siteID} 
-      ORDER BY name ASC`, 
-      
-      async function (err, result, fields) {
-
-      if (err){ 
-          console.log(typeof(err));
-          for (var k in err){
-            console.log(`${k}: ${err[k]}`);
-          }
-          res.render('error', { error: "Server Error", message: "Please try again", sidebar: [
-            {status: 0, url: `/`, icon: "logout", text: "Portal"}], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"});
-          // throw err
-        };
-
-      for (let i = 0; i < result.length; i++) {
-        groupList.push({ id: result[i].id, name: result[i].name, start_time: result[i].start_time, end_time: result[i].end_time, users: result[i].users});
-      }
-
-      
-      const funSites = await mySQLFun.getSites(db, req.params.companyID)
-
-      var sidebarList = [
-        {status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home"},
-        {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${companyName}`}
-      ];
-      for (i in funSites){
-        if (funSites[i].id == req.params.siteID)
-          {
-            sidebarList.push({status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}`});
-          }
-          else 
-          {
-            sidebarList.push({status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}`});
-          }
-      }
-
-      var tabBarList = [
-        {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/doors`, icon: "meeting_room", text: "Doors"},
-        {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`, icon: "person", text: "Users"},
-        {status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/groups`, icon: "supervisor_account", text: "Groups"},
-        {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports"}
-        ]
-    
-      var varName;
-      varName = "CCSI Door Access" //optional title override
-
-      // console.log(funSites);
-
-      res.render('groups', { groups: groupList, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: `${siteName} - Groups`, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID } );
-
-    });
-
-
-}catch ( err ) {
-  console.log(err)
-} finally {
-  //await db.close();
-}
-
-  
-});
-
-
-
-/* GET access group add page. */
-groupsRouter.get('/add', async function(req, res, next) {
+groupsRouter.get('/', async function (req, res, next) {
 
 
   /* link to database */
@@ -171,16 +15,107 @@ groupsRouter.get('/add', async function(req, res, next) {
   var db = req.app.get('db');
 
   // /* load data from database */
-  
+
+
+  try {
+
+    console.log('Pulling data from door_groups table on groups route');
+    await db.query(
+
+      ` SELECT dg.*, d.companyName, d.orgName, d.siteName
+      FROM door_groups dg
+      JOIN (
+        SELECT c.id as id, c.name as companyName, c.org as orgName, s.id as siteID, s.name as siteName
+        FROM companies c
+        JOIN (
+          SELECT sit.id as id, sit.name as name, sit.company_id_sites as company_id_sites
+          FROM sites sit
+        ) s ON (c.id = s.company_id_sites)
+      ) d ON (dg.site_id_door_group = d.siteID)
+      WHERE dg.site_id_door_group = ${req.params.siteID}
+      ORDER BY name ASC`,
+
+
+      async function (err, result, fields) {
+
+        if (err) {
+          console.log(typeof (err));
+          for (var k in err) {
+            console.log(`${k}: ${err[k]}`);
+          }
+          res.render('error', {
+            error: "Server Error", message: "Please try again", sidebar: [
+              { status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"
+          });
+          // throw err
+        };
+
+        let groupsData = result;
+        let companyName = groupsData[0].companyName;
+        let siteName = groupsData[0].siteName;
+
+        const funSites = await mySQLFun.getSites(db, req.params.companyID)
+
+        var sidebarList = [
+          { status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home" },
+          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${companyName}` }
+        ];
+        for (i in funSites) {
+          if (funSites[i].id == req.params.siteID) {
+            sidebarList.push({ status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}` });
+          }
+          else {
+            sidebarList.push({ status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}` });
+          }
+        }
+
+        var tabBarList = [
+          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/doors`, icon: "meeting_room", text: "Doors" },
+          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`, icon: "person", text: "Users" },
+          { status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/groups`, icon: "supervisor_account", text: "Groups" },
+          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports" }
+        ]
+
+        var varName;
+        varName = "CCSI Door Access" //optional title override
+
+        // console.log(funSites);
+
+        res.render('groups', { groups: groupsData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: `${siteName} - Groups`, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID });
+
+      });
+
+
+  } catch (err) {
+    console.log(err)
+  } finally {
+    //await db.close();
+  }
+
+
+});
+
+
+
+/* GET access group add page. */
+groupsRouter.get('/add', async function (req, res, next) {
+
+
+  /* link to database */
+
+  var db = req.app.get('db');
+
+  // /* load data from database */
+
 
   try {
 
     console.log('Pulling data from door_groups table on group route');
-      await db.query(
-        
- 
- 
-       `SELECT
+    await db.query(
+
+
+
+      `SELECT
           c.id as id,
           c.name as companyName,
           c.org as orgName,
@@ -233,129 +168,129 @@ groupsRouter.get('/add', async function(req, res, next) {
         WHERE s.id = ${req.params.siteID}
         GROUP BY s.id
         `,
-        
-        async function (err, result, fields) {
- 
-        if (err){ 
-            console.log(typeof(err));
-            for (var k in err){
-              console.log(`${k}: ${err[k]}`);
-            }
-            res.render('error', { error: "Server Error", message: "Please try again", sidebar: [
-              {status: 0, url: `/`, icon: "logout", text: "Portal"}], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"});
-            // throw err
-          };
- 
-          console.log(result);
- 
-          let groupData = result[0];
-          groupData.allDoors = [];
-          groupData.allUsers = [];
- 
-          if (groupData.doorNamesList){
-           let doorNamesArray = groupData.doorNamesList.split(", ");
-           let doorIDsArray = groupData.doorIDsList.split(", ");
- 
-           groupData.allDoors = [];
-           for (i in doorNamesArray)
-           {
-             groupData.allDoors.push({name: doorNamesArray[i], id: doorIDsArray[i]});
-           }
-         }
- 
-         if (groupData.userFullNamesList){
-           let userNamesArray = groupData.userFullNamesList.split(", ");
-           let userIDsArray = groupData.userIDsList.split(", ");
-           for (i in userNamesArray)
-           {
-             groupData.allUsers.push({name: userNamesArray[i], id: userIDsArray[i]});
-           }
-         }
- 
-         console.log(groupData);
-         let companyName = groupData.companyName;
-         let siteName = groupData.siteName;
 
-        const funSites = await mySQLFun.getSites(db, req.params.companyID)
- 
-        var sidebarList = [
-          {status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home"},
-          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${companyName}`}
-        ];
-        for (i in funSites){
-          if (funSites[i].id == req.params.siteID)
-          {
-            sidebarList.push({status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}`});
+      async function (err, result, fields) {
+
+        if (err) {
+          console.log(typeof (err));
+          for (var k in err) {
+            console.log(`${k}: ${err[k]}`);
           }
-          else 
-          {
-            sidebarList.push({status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}`});
+          res.render('error', {
+            error: "Server Error", message: "Please try again", sidebar: [
+              { status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"
+          });
+          // throw err
+        };
+
+        console.log(result);
+
+        let groupData = result[0];
+        groupData.allDoors = [];
+        groupData.allUsers = [];
+
+        if (groupData.doorNamesList) {
+          let doorNamesArray = groupData.doorNamesList.split(", ");
+          let doorIDsArray = groupData.doorIDsList.split(", ");
+
+          groupData.allDoors = [];
+          for (i in doorNamesArray) {
+            groupData.allDoors.push({ name: doorNamesArray[i], id: doorIDsArray[i] });
           }
         }
-  
-        var tabBarList = [
-          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/doors`, icon: "meeting_room", text: "Doors"},
-          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`, icon: "person", text: "Users"},
-          {status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/groups`, icon: "supervisor_account", text: "Groups"},
-          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports"}
-          ];
-       
-         var varName;
-         varName = "CCSI Door Access" //optional title override
 
- 
-         res.render('groups_add', { group: groupData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: `Add Group`, panelSubtext: "Please add some Doors and Users", orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID } );
- 
- 
+        if (groupData.userFullNamesList) {
+          let userNamesArray = groupData.userFullNamesList.split(", ");
+          let userIDsArray = groupData.userIDsList.split(", ");
+          for (i in userNamesArray) {
+            groupData.allUsers.push({ name: userNamesArray[i], id: userIDsArray[i] });
+          }
+        }
+
+        console.log(groupData);
+        let companyName = groupData.companyName;
+        let siteName = groupData.siteName;
+
+        const funSites = await mySQLFun.getSites(db, req.params.companyID)
+
+        var sidebarList = [
+          { status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home" },
+          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${companyName}` }
+        ];
+        for (i in funSites) {
+          if (funSites[i].id == req.params.siteID) {
+            sidebarList.push({ status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}` });
+          }
+          else {
+            sidebarList.push({ status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}` });
+          }
+        }
+
+        var tabBarList = [
+          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/doors`, icon: "meeting_room", text: "Doors" },
+          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`, icon: "person", text: "Users" },
+          { status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/groups`, icon: "supervisor_account", text: "Groups" },
+          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports" }
+        ];
+
+        var varName;
+        varName = "CCSI Door Access" //optional title override
+
+
+        res.render('groups_add', { group: groupData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: `Add Group`, panelSubtext: "Please add some Doors and Users", orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID });
+
+
       });
 
-}catch ( err ) {
- console.log(err)
-} finally {
- //await db.close();
-}
+  } catch (err) {
+    console.log(err)
+  } finally {
+    //await db.close();
+  }
 
- 
+
 });
 
 /* POST new group to db. */
-groupsRouter.post('/add', async function(req, res, next) {
+groupsRouter.post('/add', async function (req, res, next) {
 
   /* link to database */
-  
+
   var db = req.app.get('db');
-  
+
   // /* load data from database */
-  
+
   console.log("POST Request Called");
   console.log(req.body);
 
-  
-  
-  try {
-      
-    console.log('Posting data to door_groups table on groups_add route');
-    
 
-    if (!req.body.name) { req.body.name = null};
-    if (!req.body.stime) { req.body.stime = "07:00:00"};
-    if (!req.body.etime) { req.body.etime = "17:00:00"};
+
+  try {
+
+    console.log('Posting data to door_groups table on groups_add route');
+
+
+    if (!req.body.name) { req.body.name = null };
+    if (!req.body.stime) { req.body.stime = "07:00:00" };
+    if (!req.body.etime) { req.body.etime = "17:00:00" };
 
     var groupID;
 
     await db.query(
-  
+
       `INSERT INTO door_groups
       VALUES (NULL, "${req.body.name}", ${req.params.siteID}, "${req.body.stime}", "${req.body.etime}", NULL)`,
-  
+
       async function (err, result, fields) {
-        if (err){ 
-          console.log(typeof(err));
-          for (var k in err){
+        if (err) {
+          console.log(typeof (err));
+          for (var k in err) {
             console.log(`${k}: ${err[k]}`);
           }
-          res.render('error', { error: "Duplicate ID detected", message: "Please try again", sidebar: [
-            {status: 0, url: `/`, icon: "logout", text: "Portal"}], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"});
+          res.render('error', {
+            error: "Duplicate ID detected", message: "Please try again", sidebar: [
+              { status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"
+          });
           // throw err
         };
 
@@ -366,32 +301,26 @@ groupsRouter.post('/add', async function(req, res, next) {
         var doorValues = [];
         var userValues = [];
 
-        if (req.body.doorgroups)
-        {
-          if (typeof req.body.doorgroups === 'string')
-          {
+        if (req.body.doorgroups) {
+          if (typeof req.body.doorgroups === 'string') {
             doorValues.push([null, req.body.doorgroups, groupID]);
           }
-          else
-          {
+          else {
             for (let i = 0; i < req.body.doorgroups.length; i++) {
-              if (result){
+              if (result) {
                 doorValues.push([null, req.body.doorgroups[i], groupID]);
               }
             }
           }
         }
 
-        if (req.body.usergroups)
-        {
-          if (typeof req.body.usergroups === 'string')
-          {
+        if (req.body.usergroups) {
+          if (typeof req.body.usergroups === 'string') {
             userValues.push([null, groupID, req.body.usergroups]);
           }
-          else
-          {
+          else {
             for (let i = 0; i < req.body.usergroups.length; i++) {
-              if (result){
+              if (result) {
                 userValues.push([null, groupID, req.body.usergroups[i]]);
               }
             }
@@ -399,99 +328,99 @@ groupsRouter.post('/add', async function(req, res, next) {
         }
 
         try {
-      
+
           console.log('Posting data to door_group_list table on groups_add route');
           console.log(doorValues);
-          if (doorValues.length > 0){
+          if (doorValues.length > 0) {
             await db.query(
-      
-            `INSERT INTO door_group_list
-            VALUES ?`, [doorValues],
-            function (err, result, fields) {
-              if (err){ 
-                console.log(typeof(err));
-                for (var k in err){
-                  console.log(`${k}: ${err[k]}`);
-  
-                }
-                res.render('error', { error: "Duplicate ID detected", message: "Please try again", sidebar: [{status: 0, url: `/`, icon: "logout", text: "Portal"}], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"});
-                // throw err
-              }
-            }
-      
-            );
-          }
-        }catch ( err ) {
-          res.send("server error");  
-          console.log(err)
-            
-          } finally {
-            //await db.close();
-          }
 
-        try {
-      
-          console.log('Posting data to access_groups table on groups_add route');
-          console.log(userValues);
-          if (userValues.length > 0){
-            await db.query(
-      
-            `INSERT INTO access_groups
-            VALUES ?`, [userValues],
-            function (err, result, fields) {
-              if (err){ 
-                console.log(typeof(err));
-                for (var k in err){
-                  console.log(`${k}: ${err[k]}`);
-  
+              `INSERT INTO door_group_list
+            VALUES ?`, [doorValues],
+              function (err, result, fields) {
+                if (err) {
+                  console.log(typeof (err));
+                  for (var k in err) {
+                    console.log(`${k}: ${err[k]}`);
+
+                  }
+                  res.render('error', { error: "Duplicate ID detected", message: "Please try again", sidebar: [{ status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Server Error 500" });
+                  // throw err
                 }
-                res.render('error', { error: "Duplicate ID detected", message: "Please try again", sidebar: [{status: 0, url: `/`, icon: "logout", text: "Portal"}], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"});
-                // throw err
               }
-            }
-      
+
             );
           }
-        }catch ( err ) {
-        res.send("server error");  
-        console.log(err)
-          
+        } catch (err) {
+          res.send("server error");
+          console.log(err)
+
         } finally {
           //await db.close();
         }
-    
+
+        try {
+
+          console.log('Posting data to access_groups table on groups_add route');
+          console.log(userValues);
+          if (userValues.length > 0) {
+            await db.query(
+
+              `INSERT INTO access_groups
+            VALUES ?`, [userValues],
+              function (err, result, fields) {
+                if (err) {
+                  console.log(typeof (err));
+                  for (var k in err) {
+                    console.log(`${k}: ${err[k]}`);
+
+                  }
+                  res.render('error', { error: "Duplicate ID detected", message: "Please try again", sidebar: [{ status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Server Error 500" });
+                  // throw err
+                }
+              }
+
+            );
+          }
+        } catch (err) {
+          res.send("server error");
+          console.log(err)
+
+        } finally {
+          //await db.close();
+        }
+
         res.redirect(`/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/groups/${groupID}`);
       });
 
-      
-      }catch ( err ) {
-      res.send("server error");
-      console.log(err)
-      } finally {
-      //await db.close();
+
+  } catch (err) {
+    res.send("server error");
+    console.log(err)
+  } finally {
+    //await db.close();
   }
-  
-  
-  });
+
+
+});
 
 
 /* GET access group page. */
-groupsRouter.get('/:groupID', async function(req, res, next) {
+groupsRouter.get('/:groupID', async function (req, res, next) {
 
 
   /* link to database */
 
- var db = req.app.get('db');
+  var db = req.app.get('db');
 
-   // /* load data from database */
+  // /* load data from database */
 
- try {
+  try {
 
-   console.log('Pulling data from door_groups table on group route');
-  //  GROUP_CONCAT ( DISTINCT d.doorNames ORDER BY d.doorNames SEPARATOR ', ' ) as doorNamesList,
-  // GROUP_CONCAT ( DISTINCT d.doorIDs ORDER BY d.doorNames SEPARATOR ', ' ) as doorIDsList,
-     await db.query(
-       
+    console.log('Pulling data from door_groups table on group route');
+    //  GROUP_CONCAT ( DISTINCT d.doorNames ORDER BY d.doorNames SEPARATOR ', ' ) as doorNamesList,
+    // GROUP_CONCAT ( DISTINCT d.doorIDs ORDER BY d.doorNames SEPARATOR ', ' ) as doorIDsList,
+    await db.query(
+
 
 
       `SELECT
@@ -565,48 +494,48 @@ groupsRouter.get('/:groupID', async function(req, res, next) {
         WHERE dg.id = ${req.params.groupID}
         GROUP BY dg.id
         `,
-       
-       async function (err, result, fields) {
 
-       if (err){ 
-           console.log(typeof(err));
-           for (var k in err){
-             console.log(`${k}: ${err[k]}`);
-           }
-           res.render('error', { error: "Server Error", message: "Please try again", sidebar: [
-             {status: 0, url: `/`, icon: "logout", text: "Portal"}], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"});
-           // throw err
-         };
+      async function (err, result, fields) {
 
-         console.log(result);
+        if (err) {
+          console.log(typeof (err));
+          for (var k in err) {
+            console.log(`${k}: ${err[k]}`);
+          }
+          res.render('error', {
+            error: "Server Error", message: "Please try again", sidebar: [
+              { status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"
+          });
+          // throw err
+        };
 
-         let groupData = result[0];
-         groupData.allDoors = [];
-         groupData.allUsers = [];
+        console.log(result);
 
-         if (groupData.doorNameIDList){
+        let groupData = result[0];
+        groupData.allDoors = [];
+        groupData.allUsers = [];
+
+        if (groupData.doorNameIDList) {
           let doorNameIDArray = groupData.doorNameIDList.split(", ");
-          for (i in doorNameIDArray)
-          {
+          for (i in doorNameIDArray) {
             let doorNameAndID = doorNameIDArray[i].split("~");
             console.log(doorNameAndID);
-            groupData.allDoors.push({name: doorNameAndID[0], id: doorNameAndID[1]});
+            groupData.allDoors.push({ name: doorNameAndID[0], id: doorNameAndID[1] });
           }
         }
 
-        if (groupData.userFullNamesList){
+        if (groupData.userFullNamesList) {
           let userNamesArray = groupData.userFullNamesList.split(", ");
           let userIDsArray = groupData.userIDsList.split(", ");
-          for (i in userNamesArray)
-          {
-            groupData.allUsers.push({name: userNamesArray[i], id: userIDsArray[i]});
+          for (i in userNamesArray) {
+            groupData.allUsers.push({ name: userNamesArray[i], id: userIDsArray[i] });
           }
         }
 
         groupData.doorIDs = [];
 
-        if (groupData.groupDoors){
-          if (groupData.groupDoors.length <= 1){
+        if (groupData.groupDoors) {
+          if (groupData.groupDoors.length <= 1) {
             groupData.doorIDs = [`${groupData.groupDoors}`];
           }
           else {
@@ -616,8 +545,8 @@ groupsRouter.get('/:groupID', async function(req, res, next) {
 
         groupData.userIDs = [];
 
-        if (groupData.groupUsers){
-          if (groupData.groupUsers.length <= 1){
+        if (groupData.groupUsers) {
+          if (groupData.groupUsers.length <= 1) {
             groupData.userIDs = [`${groupData.groupUsers}`];
           }
           else {
@@ -630,43 +559,41 @@ groupsRouter.get('/:groupID', async function(req, res, next) {
         let siteName = groupData.siteName;
 
         const funSites = await mySQLFun.getSites(db, req.params.companyID)
- 
+
         var sidebarList = [
-          {status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home"},
-          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${companyName}`}
+          { status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home" },
+          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${companyName}` }
         ];
-        for (i in funSites){
-          if (funSites[i].id == req.params.siteID)
-          {
-            sidebarList.push({status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}`});
+        for (i in funSites) {
+          if (funSites[i].id == req.params.siteID) {
+            sidebarList.push({ status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}` });
           }
-          else 
-          {
-            sidebarList.push({status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}`});
+          else {
+            sidebarList.push({ status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}` });
           }
         }
-  
+
         var tabBarList = [
-          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/doors`, icon: "meeting_room", text: "Doors"},
-          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`, icon: "person", text: "Users"},
-          {status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/groups`, icon: "supervisor_account", text: "Groups"},
-          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports"}
+          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/doors`, icon: "meeting_room", text: "Doors" },
+          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`, icon: "person", text: "Users" },
+          { status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/groups`, icon: "supervisor_account", text: "Groups" },
+          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports" }
         ];
-      
+
         var varName;
         varName = "CCSI Door Access" //optional title override
 
-        res.render('group', { group: groupData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: `Access Group - ${groupData.name}`, panelSubtext: `${groupData.doorIDs.length} - Doors | ${groupData.userIDs.length} - Users`, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID} );
+        res.render('group', { group: groupData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: `Access Group - ${groupData.name}`, panelSubtext: `${groupData.doorIDs.length} - Doors | ${groupData.userIDs.length} - Users`, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID });
 
 
-     });
+      });
 
 
- }catch ( err ) {
-   console.log(err)
- } finally {
-   //await db.close();
- }
+  } catch (err) {
+    console.log(err)
+  } finally {
+    //await db.close();
+  }
 
 
 });
@@ -674,22 +601,22 @@ groupsRouter.get('/:groupID', async function(req, res, next) {
 
 
 /* GET access group edit page. */
-groupsRouter.get('/:groupID/edit', async function(req, res, next) {
+groupsRouter.get('/:groupID/edit', async function (req, res, next) {
 
 
- /* link to database */
+  /* link to database */
 
- var db = req.app.get('db');
+  var db = req.app.get('db');
 
- // /* load data from database */
- try {
+  // /* load data from database */
+  try {
 
-  console.log('Pulling data from door_groups table on group route');
+    console.log('Pulling data from door_groups table on group route');
     await db.query(
-      
 
 
-     `SELECT
+
+      `SELECT
      dg.*,
      d.companyName,
      d.orgName,
@@ -761,16 +688,18 @@ groupsRouter.get('/:groupID/edit', async function(req, res, next) {
        WHERE dg.id = ${req.params.groupID}
        GROUP BY dg.id
        `,
-      
+
       async function (err, result, fields) {
 
-      if (err){ 
-          console.log(typeof(err));
-          for (var k in err){
+        if (err) {
+          console.log(typeof (err));
+          for (var k in err) {
             console.log(`${k}: ${err[k]}`);
           }
-          res.render('error', { error: "Server Error", message: "Please try again", sidebar: [
-            {status: 0, url: `/`, icon: "logout", text: "Portal"}], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"});
+          res.render('error', {
+            error: "Server Error", message: "Please try again", sidebar: [
+              { status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"
+          });
           // throw err
         };
 
@@ -780,102 +709,97 @@ groupsRouter.get('/:groupID/edit', async function(req, res, next) {
         groupData.allDoors = [];
         groupData.allUsers = [];
 
-        if (groupData.doorNamesList){
-         let doorNamesArray = groupData.doorNamesList.split(", ");
-         let doorIDsArray = groupData.doorIDsList.split(", ");
+        if (groupData.doorNamesList) {
+          let doorNamesArray = groupData.doorNamesList.split(", ");
+          let doorIDsArray = groupData.doorIDsList.split(", ");
 
-         for (i in doorNamesArray)
-         {
-           groupData.allDoors.push({name: doorNamesArray[i], id: doorIDsArray[i]});
-         }
-       }
-
-       if (groupData.userFullNamesList){
-         let userNamesArray = groupData.userFullNamesList.split(", ");
-         let userIDsArray = groupData.userIDsList.split(", ");
-         for (i in userNamesArray)
-         {
-           groupData.allUsers.push({name: userNamesArray[i], id: userIDsArray[i]});
-         }
-       }
-
-       groupData.doorIDs = [];
-
-       if (groupData.groupDoors){
-         if (groupData.groupDoors.length <= 1){
-           groupData.doorIDs = [`${groupData.groupDoors}`];
-         }
-         else {
-           groupData.doorIDs = groupData.groupDoors.split(", ");
-         }
-       }
-
-       groupData.userIDs = [];
-
-       if (groupData.groupUsers){
-         if (groupData.groupUsers.length <= 1){
-           groupData.userIDs = [`${groupData.groupUsers}`];
-         }
-         else {
-           groupData.userIDs = groupData.groupUsers.split(", ");
-         }
-       }
-
-       console.log(groupData);
-       let companyName = groupData.companyName;
-       let siteName = groupData.siteName;
-
-       const funSites = await mySQLFun.getSites(db, req.params.companyID)
- 
-        var sidebarList = [
-          {status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home"},
-          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${companyName}`}
-        ];
-        for (i in funSites){
-          if (funSites[i].id == req.params.siteID)
-          {
-            sidebarList.push({status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}`});
-          }
-          else 
-          {
-            sidebarList.push({status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}`});
+          for (i in doorNamesArray) {
+            groupData.allDoors.push({ name: doorNamesArray[i], id: doorIDsArray[i] });
           }
         }
-  
+
+        if (groupData.userFullNamesList) {
+          let userNamesArray = groupData.userFullNamesList.split(", ");
+          let userIDsArray = groupData.userIDsList.split(", ");
+          for (i in userNamesArray) {
+            groupData.allUsers.push({ name: userNamesArray[i], id: userIDsArray[i] });
+          }
+        }
+
+        groupData.doorIDs = [];
+
+        if (groupData.groupDoors) {
+          if (groupData.groupDoors.length <= 1) {
+            groupData.doorIDs = [`${groupData.groupDoors}`];
+          }
+          else {
+            groupData.doorIDs = groupData.groupDoors.split(", ");
+          }
+        }
+
+        groupData.userIDs = [];
+
+        if (groupData.groupUsers) {
+          if (groupData.groupUsers.length <= 1) {
+            groupData.userIDs = [`${groupData.groupUsers}`];
+          }
+          else {
+            groupData.userIDs = groupData.groupUsers.split(", ");
+          }
+        }
+
+        let companyName = groupData.companyName;
+        let siteName = groupData.siteName;
+
+        const funSites = await mySQLFun.getSites(db, req.params.companyID)
+
+        var sidebarList = [
+          { status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home" },
+          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${companyName}` }
+        ];
+        for (i in funSites) {
+          if (funSites[i].id == req.params.siteID) {
+            sidebarList.push({ status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}` });
+          }
+          else {
+            sidebarList.push({ status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}` });
+          }
+        }
+
         var tabBarList = [
-          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/doors`, icon: "meeting_room", text: "Doors"},
-          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`, icon: "person", text: "Users"},
-          {status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/groups`, icon: "supervisor_account", text: "Groups"},
-          {status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports"}
-          ];
-     
-       var varName;
-       varName = "CCSI Door Access" //optional title override
+          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/doors`, icon: "meeting_room", text: "Doors" },
+          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`, icon: "person", text: "Users" },
+          { status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/groups`, icon: "supervisor_account", text: "Groups" },
+          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports" }
+        ];
 
-       res.render('group_edit', { group: groupData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: `Edit Access Group - ${groupData.name}`, panelSubtext: `${groupData.doorIDs.length} - Doors | ${groupData.userIDs.length} - Users`, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID} );
+        var varName;
+        varName = "CCSI Door Access" //optional title override
 
-
-    });
+        res.render('group_edit', { group: groupData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: `Edit Access Group - ${groupData.name}`, panelSubtext: `${groupData.doorIDs.length} - Doors | ${groupData.userIDs.length} - Users`, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID });
 
 
- }catch ( err ) {
-   console.log(err)
- } finally {
-   //await db.close();
- }
+      });
+
+
+  } catch (err) {
+    console.log(err)
+  } finally {
+    //await db.close();
+  }
 
 
 });
 
 /* POST new group to db. */
-groupsRouter.post('/:groupID/edit', async function(req, res, next) {
+groupsRouter.post('/:groupID/edit', async function (req, res, next) {
 
   /* link to database */
-  
+
   var db = req.app.get('db');
-  
+
   // /* load data from database */
-  
+
   console.log("POST Request Called");
   console.log(req.body);
 
@@ -883,19 +807,19 @@ groupsRouter.post('/:groupID/edit', async function(req, res, next) {
   let siteID = req.params.siteID;
   let companyID = req.params.companyID;
   let groupID = req.params.groupID;
-  
+
   try {
-      
+
     console.log('Posting data to door_groups table on groups_add route');
-    
+
     var groupData;
-    
-    if (!req.body.name) { req.body.name = null};
-    if (!req.body.stime) { req.body.stime = null};
-    if (!req.body.etime) { req.body.etime = null};
+
+    if (!req.body.name) { req.body.name = null };
+    if (!req.body.stime) { req.body.stime = null };
+    if (!req.body.etime) { req.body.etime = null };
 
     await db.query(
-  
+
       `UPDATE door_groups
       SET
         name = "${req.body.name}",
@@ -903,15 +827,17 @@ groupsRouter.post('/:groupID/edit', async function(req, res, next) {
         end_time = "${req.body.etime}"
       WHERE id = ${req.params.groupID}
       `,
-  
+
       async function (err, result, fields) {
-        if (err){ 
-          console.log(typeof(err));
-          for (var k in err){
+        if (err) {
+          console.log(typeof (err));
+          for (var k in err) {
             console.log(`${k}: ${err[k]}`);
           }
-          res.render('error', { error: "Duplicate ID detected", message: "Please try again", sidebar: [
-            {status: 0, url: `/`, icon: "logout", text: "Portal"}], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"});
+          res.render('error', {
+            error: "Duplicate ID detected", message: "Please try again", sidebar: [
+              { status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"
+          });
           // throw err
         };
 
@@ -920,32 +846,26 @@ groupsRouter.post('/:groupID/edit', async function(req, res, next) {
         var doorValues = [];
         var userValues = [];
 
-        if (req.body.doorgroups)
-        {
-          if (typeof req.body.doorgroups === 'string')
-          {
+        if (req.body.doorgroups) {
+          if (typeof req.body.doorgroups === 'string') {
             doorValues.push([null, req.body.doorgroups, req.params.groupID]);
           }
-          else
-          {
+          else {
             for (let i = 0; i < req.body.doorgroups.length; i++) {
-              if (result){
+              if (result) {
                 doorValues.push([null, req.body.doorgroups[i], req.params.groupID]);
               }
             }
           }
         }
 
-        if (req.body.usergroups)
-        {
-          if (typeof req.body.usergroups === 'string')
-          {
+        if (req.body.usergroups) {
+          if (typeof req.body.usergroups === 'string') {
             userValues.push([null, req.params.groupID, req.body.usergroups]);
           }
-          else
-          {
+          else {
             for (let i = 0; i < req.body.usergroups.length; i++) {
-              if (result){
+              if (result) {
                 userValues.push([null, req.params.groupID, req.body.usergroups[i]]);
               }
             }
@@ -954,130 +874,134 @@ groupsRouter.post('/:groupID/edit', async function(req, res, next) {
 
 
         try {
-      
+
           console.log('Deleting data from door_group_list table on group_edit route');
-            await db.query(
+          await db.query(
             `DELETE FROM door_group_list WHERE door_group_id_door_group_list = ${req.params.groupID}`,
             async function (err, result, fields) {
-              if (err){ 
-                console.log(typeof(err));
-                for (var k in err){
+              if (err) {
+                console.log(typeof (err));
+                for (var k in err) {
                   console.log(`${k}: ${err[k]}`);
                 }
-                res.render('error', { error: "Server ERROR", message: "Please try again", sidebar: [
-                  {status: 0, url: `/`, icon: "logout", text: "Portal"}], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"});
+                res.render('error', {
+                  error: "Server ERROR", message: "Please try again", sidebar: [
+                    { status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"
+                });
                 // throw err
               }
               try {
-            
+
                 console.log('Posting data to door_group_list table on groups_edit route');
                 console.log(doorValues);
-                if (doorValues.length > 0){
+                if (doorValues.length > 0) {
                   await db.query(
-            
-                  `INSERT INTO door_group_list
+
+                    `INSERT INTO door_group_list
                   VALUES ?`, [doorValues],
-                  function (err, result, fields) {
-                    if (err){ 
-                      console.log(typeof(err));
-                      for (var k in err){
-                        console.log(`${k}: ${err[k]}`);
-        
+                    function (err, result, fields) {
+                      if (err) {
+                        console.log(typeof (err));
+                        for (var k in err) {
+                          console.log(`${k}: ${err[k]}`);
+
+                        }
+                        res.render('error', { error: "Duplicate ID detected", message: "Please try again", sidebar: [{ status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Server Error 500" });
+                        // throw err
                       }
-                      res.render('error', { error: "Duplicate ID detected", message: "Please try again", sidebar: [{status: 0, url: `/`, icon: "logout", text: "Portal"}], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"});
-                      // throw err
-                    }
 
-                  });
+                    });
 
                 }
-              }catch ( err ) {
-                res.send("server error");  
+              } catch (err) {
+                res.send("server error");
                 console.log(err)
-                  
-                } finally {
-                  //await db.close();
-                }
+
+              } finally {
+                //await db.close();
+              }
 
             });
 
-        }catch ( err ) {
-          res.send("server error");  
+        } catch (err) {
+          res.send("server error");
           console.log(err)
-            
+
         } finally {
           //await db.close();
         }
 
 
         try {
-      
+
           console.log('Deleting data from access_groups table on group_edit route');
-            await db.query(
+          await db.query(
             `DELETE FROM access_groups WHERE group_id = ${req.params.groupID}`,
             async function (err, result, fields) {
-              if (err){ 
-                console.log(typeof(err));
-                for (var k in err){
+              if (err) {
+                console.log(typeof (err));
+                for (var k in err) {
                   console.log(`${k}: ${err[k]}`);
                 }
-                res.render('error', { error: "Server ERROR", message: "Please try again", sidebar: [
-                  {status: 0, url: `/`, icon: "logout", text: "Portal"}], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"});
+                res.render('error', {
+                  error: "Server ERROR", message: "Please try again", sidebar: [
+                    { status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"
+                });
                 // throw err
               }
               try {
-            
+
                 console.log('Posting data to access_groups table on groups_add route');
                 console.log(userValues);
-                if (userValues.length > 0){
+                if (userValues.length > 0) {
                   await db.query(
-            
-                  `INSERT INTO access_groups
+
+                    `INSERT INTO access_groups
                   VALUES ?`, [userValues],
-                  function (err, result, fields) {
-                    if (err){ 
-                      console.log(typeof(err));
-                      for (var k in err){
-                        console.log(`${k}: ${err[k]}`);
-        
+                    function (err, result, fields) {
+                      if (err) {
+                        console.log(typeof (err));
+                        for (var k in err) {
+                          console.log(`${k}: ${err[k]}`);
+
+                        }
+                        res.render('error', { error: "Duplicate ID detected", message: "Please try again", sidebar: [{ status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Server Error 500" });
+                        // throw err
                       }
-                      res.render('error', { error: "Duplicate ID detected", message: "Please try again", sidebar: [{status: 0, url: `/`, icon: "logout", text: "Portal"}], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"});
-                      // throw err
                     }
-                  }
-            
+
                   );
                 }
-              }catch ( err ) {
-              res.send("server error");  
-              console.log(err)
-                
+              } catch (err) {
+                res.send("server error");
+                console.log(err)
+
               } finally {
                 //await db.close();
               }
-          
+
 
             });
-            res.redirect(`/org/${orgID}/company/${companyID}/site/${siteID}/groups/${groupID}`);
-          }catch ( err ) {
-            res.send("server error");  
-            console.log(err)
-              
-            } finally {
-              //await db.close();
-            }
+          res.redirect(`/org/${orgID}/company/${companyID}/site/${siteID}/groups/${groupID}`);
+        } catch (err) {
+          res.send("server error");
+          console.log(err)
 
-        });
+        } finally {
+          //await db.close();
+        }
+
+      });
 
 
-      }catch ( err ) {
-      res.send("server error");
-      console.log(err)
-      } finally {
-      //await db.close();
+  } catch (err) {
+    res.send("server error");
+    console.log(err)
+  } finally {
+    //await db.close();
   }
-  
-  
-  });
+
+
+});
 
 module.exports = groupsRouter;

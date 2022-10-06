@@ -65,9 +65,6 @@
                             Door
                           </th>
                           <th>
-                            Location
-                          </th>
-                          <th>
                             IP Address
                           </th>
                           <th>
@@ -89,16 +86,13 @@
                               <%= door.name %>
                             </td>
                             <td>
-                              <%= door.location %>
-                            </td>
-                            <td>
                               <%= door.ip %>
                             </td>
                             <td class=<%= door.statusTextStyle %>>
-                              <%= door.statusText %>
+                              <%= door.status %>
                             </td>
                             <td class=<%= door.alarmTextStyle %>>
-                              <%= door.alarmText %>
+                              <%= door.alarm %>
                             </td>
                             <td>
                               <a href="/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>/doors/<%= door.id %>"><button class="btn btn-primary">Select</button></a>

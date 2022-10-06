@@ -7,7 +7,7 @@ const orgRouter = require('./org');
 portalRouter.use('/org', orgRouter);
 
 /* GET portal page. needs to be built*/
-portalRouter.get('/', function(req, res, next) {
+portalRouter.get('/', function (req, res, next) {
 
   var sidebarList = [];
   var varName = "CCSI Door Access";

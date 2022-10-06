@@ -2,106 +2,168 @@ require('../mySQL');
 
 var express = require('express');
 const asyncify = require('express-asyncify');
-var orgRouter = asyncify(express.Router({mergeParams: true}));
+var orgRouter = asyncify(express.Router({ mergeParams: true }));
 
 
 const companyRouter = require('./company');
-const globalUsersRouter = require('./global_users');
 
 orgRouter.use('/:orgID/company', companyRouter);
-orgRouter.use('/:orgID/users', globalUsersRouter);
-
-
-
 
 
 /* GET home page. */
-orgRouter.get('/:orgID', async function(req, res, next) {
+orgRouter.get('/:orgID', async function (req, res, next) {
 
-  
+
   /* link to database */
 
   var db = req.app.get('db');
 
   // /* load data from database */
 
-  data = {};
-  data.name = 'test';
-
-  // data = await db.query("SELECT name FROM companies", function (err, result, fields) {
-    //  if (err){ 
-    //       console.log(typeof(err));
-    //       for (var k in err){
-    //         console.log(`${k}: ${err[k]}`);
-    //       }
-    //       res.render('error', { error: "Server Error", message: "Please try again", sidebar: [
-    //         {status: 0, url: `/`, icon: "logout", text: "Portal"}], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"});
-    //       // throw err
-    //     };
-  //   console.log(result[1].name);
-  // });
-
   try {
-    
+
     console.log('Pulling data from companies table on org route');
     await db.query(
 
       `SELECT * 
       FROM companies 
-      ORDER BY name ASC`, 
-      
+      ORDER BY name ASC`,
+
       function (err, result, fields) {
-      if (err){ 
-          console.log(typeof(err));
-          for (var k in err){
+        if (err) {
+          console.log(typeof (err));
+          for (var k in err) {
             console.log(`${k}: ${err[k]}`);
           }
-          res.render('error', { error: "Server Error", message: "Please try again", sidebar: [
-            {status: 0, url: `/`, icon: "logout", text: "Portal"}], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"});
+          res.render('error', {
+            error: "Server Error", message: "Please try again", sidebar: [
+              { status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"
+          });
           // throw err
         };
-      var companiesList = [];
-      var orgName = result[0].org;
+        var companiesData = result;
+        var orgName = companiesData[0].org;
 
-      for (let i = 0; i < result.length; i++) {
-        var statusTextT
-        var statusTextStyleT
-        var statusButtonStyleT
-        if (result[i].status) {
-          statusTextT = "Online";
-          statusTextStyleT = "text-success";
-          statusButtonStyleT = "btn btn-primary";
+        for (i in companiesData) {
+          if (companiesData[i].status) {
+            companiesData[i].statusText = "Online";
+            companiesData[i].statusTextStyle = "text-success";
+            companiesData[i].statusButtonStyle = "btn btn-primary";
+          }
+          else {
+            companiesData[i].statusText = "Offline";
+            companiesData[i].statusTextStyle = "text-danger";
+            companiesData[i].statusButtonStyle = "btn btn-secondary";
+          }
         }
-        else {
-          statusTextT = "Offline";
-          statusTextStyleT = "text-danger";
-          statusButtonStyleT = "btn btn-secondary";
-        }
-        companiesList.push({ id: result[i].id, name: result[i].name, statusText: statusTextT,  statusTextStyle: statusTextStyleT, statusButtonStyle: statusButtonStyleT});
-      }
 
-      var sidebarList = [
-        {status: 1, url: `/org/${req.params.orgID}`, icon: "home", text: "Home"},
-        {status: 0, url: `/org/${req.params.orgID}/users`, icon: "public", text: `Global Users`},
-      ];
+        var sidebarList = [
+          { status: 1, url: `/org/${req.params.orgID}`, icon: "home", text: "Home" },
+          { status: 0, url: `/org/${req.params.orgID}/users`, icon: "public", text: `Global Users` },
+        ];
 
-      orgName = "CCSI Door Access" //optional title override
-    
-    
-      res.render('org', { companies: companiesList, sidebar: sidebarList, sideTitle: orgName, navTitle: `${orgName} - Available Companies`, orgID: req.params.orgID });
+        varName = "CCSI Door Access" //optional title override
 
 
-    });
+        res.render('org', { companies: companiesData, sidebar: sidebarList, sideTitle: varName, navTitle: `${varName} - Available Companies`, orgID: req.params.orgID });
 
-  } catch ( err ) {
+
+      });
+
+  } catch (err) {
     res.send("server error");
     console.log(err)
-    
+
   } finally {
     //await db.close();
   }
 
-  
+
+});
+
+
+/* GET users page. */
+orgRouter.get('/:orgID/users', async function (req, res, next) {
+
+  console.log(req.params);
+
+
+  /* link to database */
+
+  var db = req.app.get('db');
+
+  // /* load data from database */
+
+  try {
+
+    console.log('Pulling data from users db on global_users route');
+    await db.query(
+
+      `SELECT u.*, d.companyName, d.orgName, d.siteName
+      FROM users u
+        JOIN (
+          SELECT c.id as id, c.name as companyName, c.org as orgName, s.id as siteID, s.name as siteName
+          FROM companies c
+          JOIN (
+            SELECT sit.id as id, sit.name as name, sit.company_id_sites as company_id_sites
+            FROM sites sit
+          ) s ON (c.id = s.company_id_sites)
+        ) d ON (u.site_id_users = d.siteID) 
+      ORDER BY last_name ASC`,
+
+      function (err, result, fields) {
+
+        if (err) {
+          console.log(typeof (err));
+          for (var k in err) {
+            console.log(`${k}: ${err[k]}`);
+          }
+          res.render('error', {
+            error: "Server Error", message: "Please try again", sidebar: [
+              { status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"
+          });
+          // throw err
+        };
+        let userData = result;
+        let orgName = userData[0].orgName;
+
+
+
+        var sidebarList = [
+          { status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home" },
+          { status: 1, url: `/org/${req.params.orgID}/users`, icon: "public", text: `Global Users` },
+        ];
+
+        varName = "CCSI Door Access"; //optional title override
+
+        var panelTitleT;
+        var panelSubtextT;
+
+        if (userData.length) {
+          if (userData.length === 1) {
+            panelTitleT = `${userData.length} User at ${orgName}`;
+          }
+          else {
+            panelTitleT = `${userData.length} Users at ${orgName}`;
+          }
+          panelSubtextT = "Please Select a User";
+        }
+        else {
+          panelTitleT = `No Users at ${orgName}`;
+          panelSubtextT = "Please Add a User";
+        }
+
+        res.render('org_users', { users: userData, sidebar: sidebarList, sideTitle: varName, navTitle: `${orgName}`, panelTitle: panelTitleT, panelSubtext: panelSubtextT, orgID: req.params.orgID });
+
+
+      });
+
+  } catch (err) {
+    console.log(err)
+  } finally {
+    //await db.close();
+  }
+
 });
 
 module.exports = orgRouter;
