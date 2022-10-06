@@ -67,7 +67,7 @@ companyRouter.get('/:companyID', async function (req, res, next) {
         var sidebarList = [
           { status: 0, url: `/org/${req.params.companyID}`, icon: "home", text: "Home", justText: "text-left" },
           { status: 1, url: `/org/${req.params.companyID}/company/${req.params.companyID}`, icon: "business", text: `${companyName}`, justText: "text-left" },
-          { status: 0, url: `/org/${req.params.companyID}/company/${req.params.companyID}/users`, icon: "people_alt", text: `Company Users`, justText: "text-right" },
+          // { status: 0, url: `/org/${req.params.companyID}/company/${req.params.companyID}/users`, icon: "people_alt", text: `Company Users`, justText: "text-right" },
         ];
 
         varName = "CCSI Door Access" //optional title override
@@ -163,7 +163,7 @@ companyRouter.get('/:companyID/users', async function (req, res, next) {
         var sidebarList = [
           { status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home", justText: "text-left" },
           { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${companyName}`, justText: "text-left" },
-          { status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/users`, icon: "people_alt", text: `Company Users`, justText: "text-center" },
+          // { status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/users`, icon: "people_alt", text: `Company Users`, justText: "text-center" }
         ];
 
 
@@ -171,7 +171,7 @@ companyRouter.get('/:companyID/users', async function (req, res, next) {
 
         
 
-        res.render('company_users', { users: usersData, sidebar: sidebarList, sideTitle: varName, navTitle: `${companyName}`, panelTitle: panelTitleT, panelSubtext: panelSubtextT, orgID: req.params.orgID });
+        res.render('company_users', { users: usersData, sidebar: sidebarList, sideTitle: varName, navTitle: `${companyName}`, panelTitle: panelTitleT, panelSubtext: panelSubtextT, orgID: req.params.orgID, companyID: req.params.companyID });
 
 
       });

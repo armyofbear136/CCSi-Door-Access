@@ -15,11 +15,24 @@
           <% } else { %>
             <li class="nav-item">
           <% } %>
-          
-          <a class="nav-link" href=<%= link.url %>>
-            <i class="material-icons"><%= link.icon %></i>
-            <p><%= link.text %></p>
-          </a>
+          <% if (link.icon == "business") { %>
+            <a class="nav-link" href=<%= link.url %>>
+              <i class="material-icons"><%= link.icon %></i>
+              <p><%= link.text %></p>
+            </a>
+            <% if (links.length > 2) { %>
+              <li class="nav-item">
+                <div class="card">
+                  <div class="card-body">Sites</div>
+                </div>
+              </li>
+            <% } %>
+          <% } else { %>
+            <a class="nav-link" href=<%= link.url %>>
+              <i class="material-icons"><%= link.icon %></i>
+              <p><%= link.text %></p>
+            </a>
+          <% } %>
         </li>
         <% }); %>
       </ul>

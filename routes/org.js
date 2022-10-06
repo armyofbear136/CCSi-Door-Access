@@ -59,7 +59,7 @@ orgRouter.get('/:orgID', async function (req, res, next) {
 
         var sidebarList = [
           { status: 1, url: `/org/${req.params.orgID}`, icon: "home", text: "Home" },
-          { status: 0, url: `/org/${req.params.orgID}/users`, icon: "public", text: `Global Users` },
+          // { status: 0, url: `/org/${req.params.orgID}/users`, icon: "public", text: `Global Users` },
         ];
 
         varName = "CCSI Door Access" //optional title override
@@ -84,8 +84,6 @@ orgRouter.get('/:orgID', async function (req, res, next) {
 
 /* GET users page. */
 orgRouter.get('/:orgID/users', async function (req, res, next) {
-
-  console.log(req.params);
 
 
   /* link to database */
@@ -130,8 +128,8 @@ orgRouter.get('/:orgID/users', async function (req, res, next) {
 
 
         var sidebarList = [
-          { status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home" },
-          { status: 1, url: `/org/${req.params.orgID}/users`, icon: "public", text: `Global Users` },
+          { status: 1, url: `/org/${req.params.orgID}`, icon: "home", text: "Home" },
+          // { status: 1, url: `/org/${req.params.orgID}/users`, icon: "public", text: `Global Users` },
         ];
 
         varName = "CCSI Door Access"; //optional title override
