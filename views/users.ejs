@@ -50,8 +50,12 @@
                   <p class="card-category"><%= panelSubtext %></p>
                 </div>
                 <div class="card-body">
-                  <div class="col-md-5">
+                  <div class="col-md-12">
                     <a href="<%= rootPath %>users/add"><button class="btn btn-primary">Add New User</button></a>
+                    <button onclick="sortLastNameAscending()">Last Name Asc</button>
+                    <button onclick="sortLastNameDescending()">Last Name Desc</button>
+                    <button onclick="sortFirstNameAscending()">First Name Asc</button>
+                    <button onclick="sortFirstNameDescending()">First Name Desc</button>
                   </div>
                 </div>
                 <div class="card-body">
@@ -79,7 +83,7 @@
                         <th>
                         </th>
                       </thead>
-                      <tbody>
+                      <tbody id ="usersData">
                         <% users.forEach(function(user) { %>
                           <tr>
                             <td>
@@ -121,5 +125,40 @@
 
   <%- include('./partials/foot'); %>
 </body>
+
+<script>
+  const tbody = document.getElementById("usersData");
+
+// Helper function for sorting on a given column, with a given comparator
+function tableSort(colNum, cmp) {
+  let rows = [...tbody.rows];
+  rows.sort((a, b) => cmp(a.cells[colNum].textContent, b.cells[colNum].textContent))
+    .map(row => tbody.appendChild(row));
+}
+
+function sortIDAscending() {
+  tableSort(0, (a, b) => a - b); // assuming that school column has number representations
+}
+
+function sortIDDescending() {
+  tableSort(0, (a, b) => b - a); // assuming that school column has number representations
+}
+
+function sortLastNameAscending() {
+  tableSort(1, (a, b) => a.localeCompare(b)); // assuming that school column has number representations
+}
+
+function sortLastNameDescending() {
+  tableSort(1, (a, b) => b.localeCompare(a)); // assuming that school column has number representations
+}
+
+function sortFirstNameAscending() {
+  tableSort(2, (a, b) => a.localeCompare(b)); // assuming that location column has strings
+}
+
+function sortFirstNameDescending() {
+  tableSort(2, (a, b) => b.localeCompare(a)); // assuming that location column has strings
+}
+</script>
 
 </html>

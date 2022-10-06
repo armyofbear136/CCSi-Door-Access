@@ -90,8 +90,6 @@ companyRouter.get('/:companyID', async function (req, res, next) {
 /* GET company users page. */
 companyRouter.get('/:companyID/users', async function (req, res, next) {
 
-  console.log(req.params);
-
 
   /* link to database */
 
@@ -99,8 +97,6 @@ companyRouter.get('/:companyID/users', async function (req, res, next) {
 
   // /* load data from database */
 
-  var companyName;
-  var orgName;
 
   try {
 
@@ -140,13 +136,7 @@ companyRouter.get('/:companyID/users', async function (req, res, next) {
         };
 
         let userList = result;
-        orgName = result[0].orgName;
-        companyName = result[0].companyName;
-        siteName = result[0].siteName;
-
-        // for (let i = 0; i < result.length; i++) {
-        //   userList.push({ employeeID: result[i].employee_id, fob: result[i].fob_id, site: result[i].siteName, first: result[i].first_name, last: result[i].last_name, groups: result[i].doorgroups, siteID: result[i].site_id_users});
-        // }
+        let companyName = result[0].companyName;
 
 
 
@@ -156,11 +146,8 @@ companyRouter.get('/:companyID/users', async function (req, res, next) {
           { status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/users`, icon: "people_alt", text: `Company Users`, justText: "text-center" },
         ];
 
-        console.log(companyName);
-        console.log(orgName);
 
-
-        orgName = "CCSI Door Access"; //optional title override
+        varName = "CCSI Door Access"; //optional title override
 
         var panelTitleT;
         var panelSubtextT;
@@ -179,7 +166,7 @@ companyRouter.get('/:companyID/users', async function (req, res, next) {
           panelSubtextT = "Please Add a User";
         }
 
-        res.render('company_users', { users: userList, sidebar: sidebarList, sideTitle: orgName, navTitle: `${companyName}`, panelTitle: panelTitleT, panelSubtext: panelSubtextT, orgID: req.params.orgID });
+        res.render('company_users', { users: userList, sidebar: sidebarList, sideTitle: varName, navTitle: `${companyName}`, panelTitle: panelTitleT, panelSubtext: panelSubtextT, orgID: req.params.orgID });
 
 
       });

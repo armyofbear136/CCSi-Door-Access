@@ -81,7 +81,7 @@ groupsRouter.get('/', async function (req, res, next) {
 
         // console.log(funSites);
 
-        res.render('groups', { groups: groupsData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: `${siteName} - Groups`, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID });
+        res.render('groups', { groups: groupsData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: `Groups (${siteName})`, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID });
 
       });
 
@@ -183,8 +183,6 @@ groupsRouter.get('/add', async function (req, res, next) {
           // throw err
         };
 
-        console.log(result);
-
         let groupData = result[0];
         groupData.allDoors = [];
         groupData.allUsers = [];
@@ -207,7 +205,6 @@ groupsRouter.get('/add', async function (req, res, next) {
           }
         }
 
-        console.log(groupData);
         let companyName = groupData.companyName;
         let siteName = groupData.siteName;
 
@@ -509,7 +506,6 @@ groupsRouter.get('/:groupID', async function (req, res, next) {
           // throw err
         };
 
-        console.log(result);
 
         let groupData = result[0];
         groupData.allDoors = [];
@@ -519,7 +515,6 @@ groupsRouter.get('/:groupID', async function (req, res, next) {
           let doorNameIDArray = groupData.doorNameIDList.split(", ");
           for (i in doorNameIDArray) {
             let doorNameAndID = doorNameIDArray[i].split("~");
-            console.log(doorNameAndID);
             groupData.allDoors.push({ name: doorNameAndID[0], id: doorNameAndID[1] });
           }
         }
@@ -554,7 +549,6 @@ groupsRouter.get('/:groupID', async function (req, res, next) {
           }
         }
 
-        console.log(groupData);
         let companyName = groupData.companyName;
         let siteName = groupData.siteName;
 
@@ -703,8 +697,6 @@ groupsRouter.get('/:groupID/edit', async function (req, res, next) {
           // throw err
         };
 
-        console.log(result);
-
         let groupData = result[0];
         groupData.allDoors = [];
         groupData.allUsers = [];
@@ -776,7 +768,7 @@ groupsRouter.get('/:groupID/edit', async function (req, res, next) {
         var varName;
         varName = "CCSI Door Access" //optional title override
 
-        res.render('group_edit', { group: groupData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: `Edit Access Group - ${groupData.name}`, panelSubtext: `${groupData.doorIDs.length} - Doors | ${groupData.userIDs.length} - Users`, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID });
+        res.render('group_edit', { group: groupData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: `${groupData.name} (Editing)`, panelSubtext: `${groupData.doorIDs.length} - Doors | ${groupData.userIDs.length} - Users`, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID });
 
 
       });

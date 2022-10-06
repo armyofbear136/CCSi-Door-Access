@@ -6,8 +6,6 @@ const usersRouter = asyncify(express.Router({ mergeParams: true }));
 /* GET site users page. */
 usersRouter.get('/', async function (req, res, next) {
 
-  console.log(req.params);
-
 
   /* link to database */
 
@@ -88,15 +86,15 @@ usersRouter.get('/', async function (req, res, next) {
 
         if (usersData.length) {
           if (usersData.length === 1) {
-            panelTitleT = `${usersData.length} User at ${companyName} - ${siteName}`;
+            panelTitleT = `${usersData.length} User (${siteName})`;
           }
           else {
-            panelTitleT = `${usersData.length} Users at ${companyName} - ${siteName}`;
+            panelTitleT = `${usersData.length} Users (${siteName})`;
           }
           panelSubtextT = "Please Select a User";
         }
         else {
-          panelTitleT = `No Users at ${companyName} - ${siteName}`;
+          panelTitleT = `No Users (${siteName})`;
           panelSubtextT = "Please Add a User";
         }
 
@@ -132,11 +130,6 @@ usersRouter.get('/add', async function (req, res, next) {
   var db = req.app.get('db');
 
   // /* load data from database */
-
-  var companyName;
-
-  var siteName;
-
 
 
   try {

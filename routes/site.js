@@ -30,8 +30,6 @@ siteRouter.get('/', async function (req, res, next) {
 /* GET site page. */
 siteRouter.get('/:siteID', async function (req, res, next) {
 
-  console.log(req.params);
-
 
   /* link to database */
 

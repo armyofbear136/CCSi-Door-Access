@@ -218,7 +218,6 @@ doorsRouter.post('/add', async function (req, res, next) {
   // /* load data from database */
 
   console.log("POST Request Called");
-  console.log(req.body);
 
 
   try {
@@ -386,8 +385,6 @@ doorsRouter.get('/:doorID', async function (req, res, next) {
           // throw err
         };
 
-        console.log(result);
-
         let doorData = result[0];
 
         if (doorData.groupNamesList) {
@@ -437,7 +434,6 @@ doorsRouter.get('/:doorID', async function (req, res, next) {
 
         var varName;
 
-        console.log(doorData);
         varName = "CCSI Door Access" //optional title override
         res.render('door', { door: doorData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${doorData.companyName} - ${doorData.siteName}`, panelTitle: `${doorData.name}`, panelSubtext: `Site - ${doorData.siteName}`, companyID: req.params.companyID, siteID: req.params.siteID, orgID: req.params.orgID });
 
@@ -536,7 +532,6 @@ doorsRouter.get('/:doorID/edit', async function (req, res, next) {
           // throw err
         };
 
-        console.log(result);
 
         // let doorInfo = {id: result[0].id, name: result[0].name, ip: result[0].ip, status: result[0].status, alarm: result[0].alarm};
         let doorData = result[0];
@@ -588,7 +583,6 @@ doorsRouter.get('/:doorID/edit', async function (req, res, next) {
 
         var varName;
 
-        console.log(doorData);
         varName = "CCSI Door Access" //optional title override
         res.render('door_edit', { door: doorData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${doorData.companyName} - ${doorData.siteName}`, panelTitle: `${doorData.name}`, panelSubtext: `Site - ${doorData.siteName}`, companyID: req.params.companyID, siteID: req.params.siteID, orgID: req.params.orgID });
 
@@ -615,7 +609,6 @@ doorsRouter.post('/:doorID/edit', async function (req, res, next) {
   // /* load data from database */
 
   console.log("POST Request Called");
-  console.log(req.body);
   // res.send("posting");
 
   try {
@@ -667,7 +660,6 @@ doorsRouter.post('/:doorID/edit', async function (req, res, next) {
               try {
                 console.log('Posting data to door_group_list table on door edit route');
                 let valuesString = ""
-                console.log(req.body.groups);
 
                 if (req.body.groups) {
                   if (typeof req.body.groups === 'string') {
