@@ -94,7 +94,7 @@ groupsRouter.get('/', async function (req, res, next) {
 
         // console.log(funSites);
 
-        res.render('groups', { groups: groupsData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: `Groups (${siteName})`, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID });
+        res.render('groups', { groups: groupsData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: `Groups (${siteName})`, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID, thisURL: req.originalUrl});
 
       });
 
@@ -590,7 +590,7 @@ groupsRouter.get('/:groupID', async function (req, res, next) {
         var varName;
         varName = "CCSI Door Access" //optional title override
 
-        res.render('group', { group: groupData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: `Access Group - ${groupData.name}`, panelSubtext: `${groupData.doorIDs.length} - Doors | ${groupData.userIDs.length} - Users`, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID });
+        res.render('group', { group: groupData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: `Access Group - ${groupData.name}`, panelSubtext: `${groupData.doorIDs.length} - Doors | ${groupData.userIDs.length} - Users`, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID, thisURL: req.originalUrl });
 
 
       });

@@ -72,7 +72,7 @@ companyRouter.get('/:companyID', async function (req, res, next) {
 
         varName = "CCSI Door Access" //optional title override
 
-        res.render('company', { sites: siteList, sidebar: sidebarList, sideTitle: varName, navTitle: `${companyName}`, orgID: req.params.orgID, companyID: req.params.companyID });
+        res.render('company', { sites: siteList, sidebar: sidebarList, sideTitle: varName, navTitle: `${companyName}`, orgID: req.params.orgID, companyID: req.params.companyID, thisURL: req.originalUrl });
 
 
       });

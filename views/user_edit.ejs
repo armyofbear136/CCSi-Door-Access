@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<% var rootPath = './'; %>
-
 <head>
   <%- include('./partials/head'); %>
 </head>
@@ -57,7 +55,7 @@
                   </div>
                   <p class="card-category"><%= panelSubtext %></p>
                 </div>
-                <form id="addUserForm" method="post">
+                <form id="editUserForm" method="put">
                   <div class="card text-right">
                     <div class="card-body">
                       <div class="row">
@@ -159,9 +157,38 @@
 
   <%- include('./partials/foot'); %>
   <script>
-    function tryAdding() {
-      document.getElementById("addUserForm").submit();
-    }
+    // function tryAdding() {
+      // document.getElementById("editUserForm").submit();
+
+    async function tryAdding() {
+      // data = new URLSearchParams(new FormData(document.getElementById("editUserForm")));
+      // console.log(new FormData (document.querySelector("editUserForm")));
+      const formData = new FormData(document.getElementById('editUserForm'))
+      data = {};
+      data.groups = [];
+      for (const [key, value] of formData) {
+        if (key == "groups") {
+          data[key].push(value);
+        }
+        else {
+          data[key] = value;
+        }
+      }
+      await fetch(window.location.href, {
+        method: 'PUT', // *GET, POST, PUT, DELETE, etc.
+        mode: 'cors', // no-cors, *cors, same-origin
+        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: 'same-origin', // include, *same-origin, omit
+        headers: {
+          'Content-Type': 'application/json'
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        redirect: 'follow', // manual, *follow, error
+        referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+        body: JSON.stringify(data) // body data type must match "Content-Type" header
+      });
+    window.location.href = '/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>/users/<%= user.id %>';
+  }
   </script>
 
 </body>

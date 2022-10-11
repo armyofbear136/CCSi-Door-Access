@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<% var rootPath='./' ; %>
-
 <head>
   <%- include('./partials/head'); %>
 </head>
@@ -54,9 +52,9 @@
                     </div>
                     <div class="col-md-8">
                       <button class="btn btn-primary pull-right">Delete</button></a>
-                      <a href="<%= rootPath %><%= door.id %>/controls"><button class="btn btn-primary pull-right">Door
+                      <a href="<%= thisURL %>/controls"><button class="btn btn-primary pull-right">Door
                           Controls</button></a>
-                      <a href="<%= rootPath %><%= door.id %>/edit"><button class="btn btn-primary pull-right">Edit
+                      <a href="<%= thisURL %>/edit"><button class="btn btn-primary pull-right">Edit
                           Door</button></a>
                       <button type="submit" class="btn btn-primary pull-right">Unlock Door</button>
                       <button type="submit" class="btn btn-primary pull-right">Lock Door</button>

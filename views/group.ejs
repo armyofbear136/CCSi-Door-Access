@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<% var rootPath = './'; %>
-
 <head>
   <%- include('./partials/head'); %>
 </head>
@@ -53,7 +51,7 @@
                     <div class="col-md-6">
                       <button class="btn btn-primary pull-right">Delete</button></a>
                       <button class="btn btn-primary pull-right">Disable</button></a>
-                      <a href="<%= rootPath %><%= group.id %>/edit"><button class="btn btn-primary pull-right">Edit</button></a>
+                      <a href="<%= thisURL %>/edit"><button class="btn btn-primary pull-right">Edit</button></a>
                     </div>
                   </div>
                   <p class="card-category"><%= panelSubtext %></p>

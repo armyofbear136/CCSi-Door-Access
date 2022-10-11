@@ -111,7 +111,9 @@ usersRouter.get('/', async function (req, res, next) {
           panelSubtextT = "Please Add a User";
         }
 
-        res.render('users', { users: usersData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: orgName, navTitle: `${companyName} - ${siteName}`, panelTitle: panelTitleT, panelSubtext: panelSubtextT, companyID: req.params.companyID, siteID: req.params.siteID, orgID: req.params.orgID });
+        console.log(req.originalUrl);
+
+        res.render('users', { users: usersData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: orgName, navTitle: `${companyName} - ${siteName}`, panelTitle: panelTitleT, panelSubtext: panelSubtextT, companyID: req.params.companyID, siteID: req.params.siteID, orgID: req.params.orgID, thisURL: req.originalUrl });
 
 
       });
@@ -489,7 +491,7 @@ usersRouter.get('/:userID', async function (req, res, next) {
         var panelSubtextT = "User Info";
         var varName = "CCSI DOOR ACCESS"
 
-        res.render('user', { user: userData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: `${varName}`, navTitle: `${userData.companyName} - ${userData.siteName}`, panelTitle: panelTitleT, panelSubtext: panelSubtextT, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID });
+        res.render('user', { user: userData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: `${varName}`, navTitle: `${userData.companyName} - ${userData.siteName}`, panelTitle: panelTitleT, panelSubtext: panelSubtextT, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID, thisURL: req.originalUrl });
 
 
       });
@@ -504,7 +506,7 @@ usersRouter.get('/:userID', async function (req, res, next) {
 
 
 /* DELETE user route. */
-usersRouter.post('/:userID', async function (req, res, next) {
+usersRouter.delete('/:userID', async function (req, res, next) {
 
   console.log("hitting user delete route");
 
@@ -517,7 +519,7 @@ usersRouter.post('/:userID', async function (req, res, next) {
 
   // /* load data from database */
 
-  if (req.body.command == "delete") {
+  // if (req.body.command == "delete") {
     try {
 
       console.log('Pulling user data from tables on userID route');
@@ -530,7 +532,7 @@ usersRouter.post('/:userID', async function (req, res, next) {
         FROM users
         LEFT JOIN
           access_groups ON users.id = access_groups.user_id
-        WHERE users.id = ${req.body.uID};
+        WHERE users.id = ${req.params.userID};
         `,
 
 
@@ -561,7 +563,8 @@ usersRouter.post('/:userID', async function (req, res, next) {
     }
   }
   
-});
+// }
+);
 
 
 /* GET user edit page. */
@@ -690,7 +693,9 @@ usersRouter.get('/:userID/edit', async function (req, res, next) {
         var panelSubtextT = "Edit User";
         var varName = "CCSI DOOR ACCESS"
 
-        res.render('user_edit', { user: userData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: `${varName}`, navTitle: `${userData.companyName} - ${userData.siteName}`, panelTitle: panelTitleT, panelSubtext: panelSubtextT, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID });
+      
+
+        res.render('user_edit', { user: userData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: `${varName}`, navTitle: `${userData.companyName} - ${userData.siteName}`, panelTitle: panelTitleT, panelSubtext: panelSubtextT, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID, thisURL: req.originalUrl });
 
 
       });
@@ -704,7 +709,7 @@ usersRouter.get('/:userID/edit', async function (req, res, next) {
 
 
 /* POST edited user to db. */
-usersRouter.post('/:userID/edit', async function (req, res, next) {
+usersRouter.put('/:userID/edit', async function (req, res, next) {
 
   /* link to database */
 
@@ -712,13 +717,13 @@ usersRouter.post('/:userID/edit', async function (req, res, next) {
 
   // /* load data from database */
 
-  console.log("POST Request Called");
+  console.log("PUT Request Called");
   console.log(req.body);
   // res.send("posting");
 
   try {
 
-    console.log('Posting data to users table on user edit POST route');
+    console.log('Posting data to users table on user edit PUT route');
 
     await db.query(
 
@@ -794,7 +799,8 @@ usersRouter.post('/:userID/edit', async function (req, res, next) {
                       });
                       // throw err
                     }
-                    res.redirect(`/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users/${req.params.userID}`);
+                    res.send(200);
+                    // res.redirect(`/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users/${req.params.userID}`);
                   });
               } catch (err) {
                 res.send("server error");

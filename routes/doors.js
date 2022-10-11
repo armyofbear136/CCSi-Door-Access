@@ -110,7 +110,7 @@ doorsRouter.get('/', async function (req, res, next) {
         varName = "CCSI Door Access" //optional title override
 
         // console.log(funSites);
-        res.render('doors', { doors: doorsData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: `Doors (${siteName})`, companyID: req.params.companyID, siteID: req.params.siteID, orgID: req.params.orgID });
+        res.render('doors', { doors: doorsData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: `Doors (${siteName})`, companyID: req.params.companyID, siteID: req.params.siteID, orgID: req.params.orgID, thisURL: req.originalUrl });
 
       });
 
@@ -448,7 +448,7 @@ doorsRouter.get('/:doorID', async function (req, res, next) {
         var varName;
 
         varName = "CCSI Door Access" //optional title override
-        res.render('door', { door: doorData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${doorData.companyName} - ${doorData.siteName}`, panelTitle: `${doorData.name}`, panelSubtext: `Site - ${doorData.siteName}`, companyID: req.params.companyID, siteID: req.params.siteID, orgID: req.params.orgID });
+        res.render('door', { door: doorData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${doorData.companyName} - ${doorData.siteName}`, panelTitle: `${doorData.name}`, panelSubtext: `Site - ${doorData.siteName}`, companyID: req.params.companyID, siteID: req.params.siteID, orgID: req.params.orgID, thisURL: req.originalUrl });
 
 
       });

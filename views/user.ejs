@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<% var rootPath = './'; %>
+
 
 <head>
   <%- include('./partials/head'); %>
 </head>
+
+<% console.log(thisURL); %>
 
 <body class="dark-edition">
   <div class="wrapper ">
@@ -51,9 +53,9 @@
                       <h4 class="card-title"><%= panelTitle %></h4>
                     </div>
                     <div class="col-md-6">
-                      <button class="btn btn-primary pull-right" onclick=tryDeleting(<%= user.id %>)>Delete</button></a>
+                      <button class="btn btn-primary pull-right" onclick=tryDeleting()>Delete</button></a>
                       <button class="btn btn-primary pull-right" id="delete">Disable</button></a>
-                      <a href="<%= rootPath %><%= user.id %>/edit"><button class="btn btn-primary pull-right">Edit</button></a>
+                      <a href="<%= thisURL %>/edit"><button class="btn btn-primary pull-right">Edit</button></a>
                     </div>
                   </div>
                   <p class="card-category"><%= panelSubtext %></p>
@@ -161,10 +163,10 @@
   <%- include('./partials/foot'); %>
 
   <script>
-    async function tryDeleting(userID) {
-      data = {command: "delete", uID: userID};
+    async function tryDeleting() {
+      // data = {command: "delete", uID: userID};
       await fetch(window.location.href, {
-    method: 'POST', // *GET, POST, PUT, DELETE, etc.
+    method: 'DELETE', // *GET, POST, PUT, DELETE, etc.
     mode: 'cors', // no-cors, *cors, same-origin
     cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
     credentials: 'same-origin', // include, *same-origin, omit
@@ -173,10 +175,10 @@
       // 'Content-Type': 'application/x-www-form-urlencoded',
     },
     redirect: 'follow', // manual, *follow, error
-    referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-    body: JSON.stringify(data) // body data type must match "Content-Type" header
+    referrerPolicy: 'no-referrer' // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+    // body: JSON.stringify(data) // body data type must match "Content-Type" header
     });
-    window.location.href = '<%= rootPath %>processing';
+    window.location.href = `${thisURL}/processing`;
     }
   </script>
 

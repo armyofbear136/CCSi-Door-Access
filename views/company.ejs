@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <% var rootPath = './'; %>
 
 <head>
   <%- include('./partials/head'); %>
@@ -55,7 +54,7 @@
                                     <strong><%= site.statusText %></strong>
                                    </td> 
                                   <td> 
-                                     <a  href="<%= rootPath %><%= companyID %>/site/<%= site.id %>"><button class=<%= site.statusButtonStyle %>>Enter</button></a> 
+                                     <a  href="<%= thisURL %>/site/<%= site.id %>"><button class=<%= site.statusButtonStyle %>>Enter</button></a> 
                                    </td> 
                               </tr>
                             <% }); %>
