@@ -1,3 +1,4 @@
+const { response } = require('express');
 var express = require('express');
 const asyncify = require('express-asyncify');
 const mySQLFun = require('../mySQL');
@@ -336,6 +337,25 @@ usersRouter.post('/add', async function (req, res, next) {
 
 });
 
+/* GET new user page. */
+usersRouter.get('/processing', async function (req, res, next) {
+
+
+  /* link to database */
+
+
+  // /* load data from database */
+  console.log("hitting processing page");
+
+
+  
+
+  res.render('success', { redirect: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`, success: "Processing transaction", message: "Redirecting...", sidebar: [{ status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Action completed successfully" });
+ 
+
+
+});
+
 
 
 
@@ -483,7 +503,7 @@ usersRouter.get('/:userID', async function (req, res, next) {
 
 
 
-/* GET user page. */
+/* DELETE user route. */
 usersRouter.post('/:userID', async function (req, res, next) {
 
   console.log("hitting user delete route");
@@ -530,13 +550,17 @@ usersRouter.post('/:userID', async function (req, res, next) {
           
 
         });
+        res.send(200);
+        // res.redirect(`/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`);
+        
+
     } catch (err) {
       console.log(err)
     } finally {
       //await db.close();
     }
   }
-  res.redirect(`/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`);
+  
 });
 
 

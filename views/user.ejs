@@ -161,9 +161,9 @@
   <%- include('./partials/foot'); %>
 
   <script>
-    function tryDeleting(userID) {
+    async function tryDeleting(userID) {
       data = {command: "delete", uID: userID};
-      fetch(window.location.href, {
+      await fetch(window.location.href, {
     method: 'POST', // *GET, POST, PUT, DELETE, etc.
     mode: 'cors', // no-cors, *cors, same-origin
     cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
@@ -176,6 +176,7 @@
     referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
     body: JSON.stringify(data) // body data type must match "Content-Type" header
     });
+    window.location.href = '<%= rootPath %>processing';
     }
   </script>
 
