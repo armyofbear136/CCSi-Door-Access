@@ -605,6 +605,68 @@ groupsRouter.get('/:groupID', async function (req, res, next) {
 
 });
 
+/* DELETE user route. */
+groupsRouter.delete('/:groupID', async function (req, res, next) {
+
+  console.log("hitting group delete route");
+
+
+
+  /* link to database */
+
+  var db = req.app.get('db');
+
+  // /* load data from database */
+
+  // if (req.body.command == "delete") {
+    try {
+
+      console.log('Pulling group data from tables on groupID delete route');
+      await db.query(
+
+        `
+        DELETE
+          door_groups,
+          access_groups,
+          door_group_list
+        FROM door_groups
+        LEFT JOIN
+          access_groups ON door_groups.id = access_groups.group_id
+        LEFT JOIN
+          door_group_list ON door_groups.id = door_group_list.door_group_id_door_group_list
+        WHERE door_groups.id = ${req.params.groupID};
+        `,
+
+
+
+        async function (err, result, fields) {
+          
+
+          if (err) {
+            console.log(typeof (err));
+            for (var k in err) {
+              console.log(`${k}: ${err[k]}`);
+            }
+            res.render('error', { error: "Server Error", message: "Please try again", sidebar: [{ status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Server Error 500" });
+            // throw err
+          };
+
+          
+
+        });
+        res.send(200);
+        // res.redirect(`/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`);
+        
+
+    } catch (err) {
+      console.log(err)
+    } finally {
+      //await db.close();
+    }
+  }
+  
+// }
+);
 
 
 /* GET access group edit page. */
@@ -797,7 +859,7 @@ groupsRouter.get('/:groupID/edit', async function (req, res, next) {
 });
 
 /* POST new group to db. */
-groupsRouter.post('/:groupID/edit', async function (req, res, next) {
+groupsRouter.put('/:groupID/edit', async function (req, res, next) {
 
   /* link to database */
 
@@ -806,7 +868,6 @@ groupsRouter.post('/:groupID/edit', async function (req, res, next) {
   // /* load data from database */
 
   console.log("POST Request Called");
-  console.log(req.body);
 
   let orgID = req.params.orgID;
   let siteID = req.params.siteID;
@@ -987,7 +1048,8 @@ groupsRouter.post('/:groupID/edit', async function (req, res, next) {
 
 
             });
-          res.redirect(`/org/${orgID}/company/${companyID}/site/${siteID}/groups/${groupID}`);
+            res.send(200);
+          // res.redirect(`/org/${orgID}/company/${companyID}/site/${siteID}/groups/${groupID}`);
         } catch (err) {
           res.send("server error");
           console.log(err)
@@ -1008,5 +1070,25 @@ groupsRouter.post('/:groupID/edit', async function (req, res, next) {
 
 
 });
+
+/* GET user processing page. */
+groupsRouter.get('/:groupID/processing', async function (req, res, next) {
+
+
+  /* link to database */
+
+
+  // /* load data from database */
+  console.log("hitting processing page");
+
+
+  
+
+  res.render('success', { redirect: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/groups`, success: "Processing transaction", message: "Redirecting...", sidebar: [{ status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Action completed successfully" });
+ 
+
+
+});
+
 
 module.exports = groupsRouter;

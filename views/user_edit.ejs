@@ -49,7 +49,7 @@
                       <h4 class="card-title"><%= panelTitle %></h4>
                     </div>
                     <div class="col-md-6">
-                      <button type="submit" class="btn btn-primary pull-right" onclick="tryAdding()" value="Submit">Submit</button>
+                      <button type="submit" class="btn btn-primary pull-right" onclick="tryEditing()" value="Submit">Submit</button>
                       <a href="/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>/users/<%= user.id %>"><button class="btn btn-primary pull-right">Cancel</button></a>
                     </div>
                   </div>
@@ -156,41 +156,39 @@
   </div>
 
   <%- include('./partials/foot'); %>
-  <script>
-    // function tryAdding() {
-      // document.getElementById("editUserForm").submit();
-
-    async function tryAdding() {
-      // data = new URLSearchParams(new FormData(document.getElementById("editUserForm")));
-      // console.log(new FormData (document.querySelector("editUserForm")));
-      const formData = new FormData(document.getElementById('editUserForm'))
-      data = {};
-      data.groups = [];
-      for (const [key, value] of formData) {
-        if (key == "groups") {
-          data[key].push(value);
-        }
-        else {
-          data[key] = value;
-        }
-      }
-      await fetch(window.location.href, {
-        method: 'PUT', // *GET, POST, PUT, DELETE, etc.
-        mode: 'cors', // no-cors, *cors, same-origin
-        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-        credentials: 'same-origin', // include, *same-origin, omit
-        headers: {
-          'Content-Type': 'application/json'
-          // 'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        redirect: 'follow', // manual, *follow, error
-        referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-        body: JSON.stringify(data) // body data type must match "Content-Type" header
-      });
-    window.location.href = '/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>/users/<%= user.id %>';
-  }
-  </script>
+  
 
 </body>
+
+<script>
+
+  async function tryEditing() {
+    const formData = new FormData(document.getElementById('editUserForm'))
+    data = {};
+    data.groups = [];
+    for (const [key, value] of formData) {
+      if (key == "groups") {
+        data[key].push(value);
+      }
+      else {
+        data[key] = value;
+      }
+    }
+    await fetch(window.location.href, {
+      method: 'PUT', // *GET, POST, PUT, DELETE, etc.
+      mode: 'cors', // no-cors, *cors, same-origin
+      cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+      credentials: 'same-origin', // include, *same-origin, omit
+      headers: {
+        'Content-Type': 'application/json'
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      redirect: 'follow', // manual, *follow, error
+      referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+      body: JSON.stringify(data) // body data type must match "Content-Type" header
+    });
+  window.location.href = '/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>/users/<%= user.id %>';
+}
+</script>
 
 </html>

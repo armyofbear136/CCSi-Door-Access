@@ -463,7 +463,65 @@ doorsRouter.get('/:doorID', async function (req, res, next) {
 });
 
 
+/* DELETE user route. */
+doorsRouter.delete('/:doorID', async function (req, res, next) {
 
+  console.log("hitting user delete route");
+
+
+
+  /* link to database */
+
+  var db = req.app.get('db');
+
+  // /* load data from database */
+
+  // if (req.body.command == "delete") {
+    try {
+
+      console.log('Pulling door data from tables on doorID route');
+      await db.query(
+
+        `
+        DELETE
+          doors,
+          door_group_list
+        FROM doors
+        LEFT JOIN
+          door_group_list ON doors.id = door_group_list.door_id_door_group_list
+        WHERE doors.id = ${req.params.doorID};
+        `,
+
+
+
+        async function (err, result, fields) {
+          
+
+          if (err) {
+            console.log(typeof (err));
+            for (var k in err) {
+              console.log(`${k}: ${err[k]}`);
+            }
+            res.render('error', { error: "Server Error", message: "Please try again", sidebar: [{ status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Server Error 500" });
+            // throw err
+          };
+
+          
+
+        });
+        res.send(200);
+        // res.redirect(`/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`);
+        
+
+    } catch (err) {
+      console.log(err)
+    } finally {
+      //await db.close();
+    }
+  }
+  
+// }
+);
 
 
 /* GET door_edit page. */
@@ -613,7 +671,7 @@ doorsRouter.get('/:doorID/edit', async function (req, res, next) {
 
 
 /* POST edited door to db. */
-doorsRouter.post('/:doorID/edit', async function (req, res, next) {
+doorsRouter.put('/:doorID/edit', async function (req, res, next) {
 
   /* link to database */
 
@@ -680,7 +738,6 @@ doorsRouter.post('/:doorID/edit', async function (req, res, next) {
                   }
                   else {
                     for (var i in req.body.groups) {
-                      console.log(i);
                       if (i == 0) { valuesString = `(NULL, ${req.params.doorID}, ${req.body.groups[i]})` }
                       else { valuesString = valuesString.concat(", ", `(NULL, ${req.params.doorID}, ${req.body.groups[i]})`) }
                     }
@@ -689,8 +746,10 @@ doorsRouter.post('/:doorID/edit', async function (req, res, next) {
 
 
                   await db.query(
-                    `INSERT INTO door_group_list
-                  VALUES ${valuesString}`,
+                    `
+                      INSERT INTO door_group_list
+                      VALUES ${valuesString}
+                    `,
 
                     async function (err, result, fields) {
                       if (err) {
@@ -704,7 +763,8 @@ doorsRouter.post('/:doorID/edit', async function (req, res, next) {
                         });
                         // throw err
                       }
-                      res.redirect(`/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/doors/${req.params.doorID}`);
+                      res.send(200);
+                      // res.redirect(`/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/doors/${req.params.doorID}`);
                     });
                 }
               } catch (err) {
@@ -836,6 +896,25 @@ doorsRouter.get('/:doorID/controls', async function (req, res, next) {
   } finally {
     //await db.close();
   }
+
+});
+
+/* GET door processing page. */
+doorsRouter.get('/:doorID/processing', async function (req, res, next) {
+
+
+  /* link to database */
+
+
+  // /* load data from database */
+  console.log("hitting processing page");
+
+
+  
+
+  res.render('success', { redirect: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/doors`, success: "Processing transaction", message: "Redirecting...", sidebar: [{ status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Action completed successfully" });
+ 
+
 
 });
 

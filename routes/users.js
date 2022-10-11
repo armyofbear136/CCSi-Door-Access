@@ -339,26 +339,6 @@ usersRouter.post('/add', async function (req, res, next) {
 
 });
 
-/* GET new user page. */
-usersRouter.get('/processing', async function (req, res, next) {
-
-
-  /* link to database */
-
-
-  // /* load data from database */
-  console.log("hitting processing page");
-
-
-  
-
-  res.render('success', { redirect: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`, success: "Processing transaction", message: "Redirecting...", sidebar: [{ status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Action completed successfully" });
- 
-
-
-});
-
-
 
 
 /* GET user page. */
@@ -515,7 +495,6 @@ usersRouter.delete('/:userID', async function (req, res, next) {
   /* link to database */
 
   var db = req.app.get('db');
-  console.log(req.body);
 
   // /* load data from database */
 
@@ -830,6 +809,23 @@ usersRouter.put('/:userID/edit', async function (req, res, next) {
 });
 
 
+/* GET new user page. */
+usersRouter.get('/:userID/processing', async function (req, res, next) {
 
+
+  /* link to database */
+
+
+  // /* load data from database */
+  console.log("hitting processing page");
+
+
+  
+
+  res.render('success', { redirect: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`, success: "Processing transaction", message: "Redirecting...", sidebar: [{ status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Action completed successfully" });
+ 
+
+
+});
 
 module.exports = usersRouter;
