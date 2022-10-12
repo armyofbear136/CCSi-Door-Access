@@ -2,6 +2,19 @@
 <html lang="en">
 
 
+  <script>
+    trimSlashes = str => str.split('/').filter(v => v !== '').join('/');
+  
+    let sanitized = window.location.pathname;
+    sanitized = trimSlashes(sanitized);
+    
+    const newURL = window.location.protocol + '//' + window.location.host + '/'+ sanitized;
+  
+    if (window.location.href !== newURL) {
+       window.location.href = newURL;
+    }
+  </script>
+
 <head>
   <%- include('./partials/head'); %>
 </head>
