@@ -34,7 +34,6 @@
                   </div>
                   <div class="col-md-8">
                     <a href="/org/<%= orgID %>/users">
-                      
                       <button class="btn btn-primary pull-right">
                         <i class="material-icons">public</i>
                         Global Users
@@ -43,37 +42,23 @@
                   </div>
                   <p class="card-category"> Please select which company you would like to Access</p>
                 </div>
-                <div class="card-body">
-                  <div class="table-responsive">
-                    <table class="table">
-                      <thead class=" text-primary">
-                        <th>
-                          Location
-                        </th>
-                        <th>
-                          Status
-                        </th>
-                        <th>
-                        </th>
-                      </thead>
-                      <tbody>
-                          <% companies.forEach(function(company) { %> 
-                              <tr>
-                                  <td>
-                                      <%= company.name %>
-                                  </td>
-                                   <td class=<%= company.statusTextStyle %>> 
-                                    <strong><%= company.statusText %></strong>
-                                   </td> 
-                                  <td> 
-                                     <a  href="/org/<%= orgID %>/company/<%= company.id %>"><button class=<%= company.statusButtonStyle %>>Enter</button></a> 
-                                   </td> 
-                                  
-                              </tr>
-                            <% }); %>
-                      </tbody>
-                    </table>
-                  </div>
+                <br />
+                <div class="row">
+                  <% companies.forEach(function(company) { %> 
+                    <div class="col-md-1"></div>
+                    <div class="col-md-4">
+                      <div class="jumbotron">
+                        <h1 class="display-4"><%= company.name %></h1>
+                        <p class="lead">X Sites | X Doors | X Users</p>
+                        <hr class="my-4">
+                        <p class=<%= company.statusTextStyle %>><%= company.statusText %></p>
+                        <p class="lead">
+                          <a class="btn btn-primary btn-lg" href="/org/<%= orgID %>/company/<%= company.id %>" role="button">Enter</a>
+                        </p>
+                      </div>
+                    </div>
+                    <div class="col-md-1"></div>
+                  <% }); %>
                 </div>
               </div>
             </div>

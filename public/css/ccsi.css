@@ -1,0 +1,94 @@
+/*!
+
+ =========================================================
+ * Material Dashboard Dark Edition - v2.1.0
+ =========================================================
+
+ * Product Page: https://www.creative-tim.com/product/material-dashboard-dark
+ * Copyright 2019 Creative Tim (http://www.creative-tim.com)
+
+ =========================================================
+
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+ */
+/*     brand Colors              */
+a {
+  color: #3c3c3c !important;
+  text-decoration: none !important;
+  background-color: transparent !important;
+  -webkit-text-decoration-skip: objects;
+}
+body {
+  color: #b2b2b2 !important;
+}
+label {
+  color: #3c3c3c !important;
+}
+td {
+  color: #3c3c3c !important;
+}
+th {
+  color: #3c3c3c !important;
+}
+.dark-edition {
+  background-color: #b2b2b2;
+}
+.dark-edition .sidebar[data-color="purple"] li.active>a {
+  color: #3c3c3c;
+  background: linear-gradient(60deg, #ededed , #303ab2 ) !important;
+}
+.btn, .btn-primary, .btn-lg {
+  color: #ffffff !important;
+  background-color: #3c3c3c !important;
+  border-color: #3c3c3c !important;
+  box-shadow: none;
+}
+.card {
+  background-color: #ededed !important;
+}
+.card-body {
+  color: #3c3c3c !important;
+}
+.card-header {
+  background-color: #ededed !important;
+  border-bottom: 1px solid #303ab2 !important;
+}
+.card .card-header-primary .card-icon,
+.card .card-header-primary .card-text,
+.card .card-header-primary:not(.card-header-icon):not(.card-header-text),
+.card.bg-primary,
+.card.card-rotate.bg-primary .front,
+.card.card-rotate.bg-primary .back {
+  background: linear-gradient(60deg, #303ab2, #ededed) !important;
+}
+.card .card-header-secondary .card-icon,
+.card .card-header-secondary .card-text,
+.card .card-header-secondary:not(.card-header-icon):not(.card-header-text),
+.card.bg-primary,
+.card.card-rotate.bg-primary .front,
+.card.card-rotate.bg-primary .back {
+  background: #3c3c3c !important;
+}
+.form-control {
+  color: #3c3c3c !important;
+  background-color: rgba(0, 0, 0, 0);
+}
+.jumbotron {
+  background-color: #ededed;
+  border: 1px solid #3c3c3c !important;
+}
+.navbar-brand {
+  font-size: 2.0rem !important;
+}
+.sidebar[data-background-color="black"] .nav .nav-item i {
+  color: #3c3c3c;
+}
+.sidebar-background{
+  background: #3c3c3c !important;
+}
+.text-primary {
+  color: #3c3c3c !important;
+}
+
+/*# sourceMappingURL=dashboard-free.css.map */

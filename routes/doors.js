@@ -864,7 +864,7 @@ doorsRouter.get('/:doorID/controls', async function (req, res, next) {
 
         var sidebarList = [
           { status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home" },
-          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${companyName}` }
+          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${doorData.companyName}` }
         ];
         for (i in funSites) {
           if (funSites[i].id == req.params.siteID) {
