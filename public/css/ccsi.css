@@ -44,6 +44,9 @@ th {
   border-color: #3c3c3c !important;
   box-shadow: none;
 }
+.btn:hover, .btn:focus {
+  background-color: #303ab2 !important;
+}
 .card {
   background-color: #ededed !important;
 }
@@ -81,9 +84,29 @@ th {
 .logo {
   background-color: #ededed;
 }
+::placeholder {
+  color: #3c3c3c !important;
+}
 .navbar-brand {
   font-size: 2.0rem !important;
 }
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-item.show .nav-link {
+  color: #3c3c3c !important;
+  background-color: #ededed !important;
+  border-color: #303ab2 #303ab2 #303ab2 !important;
+}
+.nav-tabs .nav-link.active:hover,
+.nav-tabs .nav-link.active:focus {
+  color: #3c3c3c !important;
+  background-color: #b2b2b2 !important;
+  border-color: #303ab2 #303ab2 #303ab2 !important;
+}
+.nav-link:hover,
+.nav-link:focus {
+  background-color: #b2b2b2 !important;
+}
+
 .sidebar[data-background-color="black"] .nav .nav-item i {
   color: #303ab2 !important;
 }
