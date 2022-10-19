@@ -336,6 +336,72 @@ usersRouter.post('/add', async function (req, res, next) {
     //await db.close();
   }
 
+  try {
+
+    console.log('Getting data from users table on new_user route');
+
+    await db.query(
+
+      `SELECT COUNT(*)
+      FROM users
+      WHERE site_id_users = ${req.params.siteID}`,
+
+      async function (err, result, fields) {
+        if (err) {
+          console.log(typeof (err));
+          for (var k in err) {
+            console.log(`${k}: ${err[k]}`);
+          }
+          res.render('error', {
+            error: "Duplicate ID detected", message: "Please try again", sidebar: [
+              { status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"
+          });
+          // throw err
+        }
+        let userCount = Object.values(result[0])[0];
+        console.log(userCount);
+        try {
+
+          console.log('Getting data from users table on new_user route');
+      
+          await db.query(
+      
+            `UPDATE sites
+            SET usercount = ${userCount}
+            WHERE id = ${req.params.siteID}`,
+      
+            async function (err, result, fields) {
+              if (err) {
+                console.log(typeof (err));
+                for (var k in err) {
+                  console.log(`${k}: ${err[k]}`);
+                }
+                res.render('error', {
+                  error: "Duplicate ID detected", message: "Please try again", sidebar: [
+                    { status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"
+                });
+                // throw err
+              }
+            }
+          );
+        } catch (err) {
+          res.send("server error");
+          console.log(err)
+      
+        } finally {
+          //await db.close();
+        }
+      }
+    );
+  } catch (err) {
+    res.send("server error");
+    console.log(err)
+
+  } finally {
+    //await db.close();
+  }
+  
+
 
 });
 
@@ -540,10 +606,73 @@ usersRouter.delete('/:userID', async function (req, res, next) {
     } finally {
       //await db.close();
     }
-  }
+
+    try {
+
+      console.log('Getting data from users table on new_user route');
   
-// }
-);
+      await db.query(
+  
+        `SELECT COUNT(*)
+        FROM users
+        WHERE site_id_users = ${req.params.siteID}`,
+  
+        async function (err, result, fields) {
+          if (err) {
+            console.log(typeof (err));
+            for (var k in err) {
+              console.log(`${k}: ${err[k]}`);
+            }
+            res.render('error', {
+              error: "Duplicate ID detected", message: "Please try again", sidebar: [
+                { status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"
+            });
+            // throw err
+          }
+          let userCount = Object.values(result[0])[0];
+          console.log(userCount);
+          try {
+  
+            console.log('Getting data from users table on new_user route');
+        
+            await db.query(
+        
+              `UPDATE sites
+              SET usercount = ${userCount}
+              WHERE id = ${req.params.siteID}`,
+        
+              async function (err, result, fields) {
+                if (err) {
+                  console.log(typeof (err));
+                  for (var k in err) {
+                    console.log(`${k}: ${err[k]}`);
+                  }
+                  res.render('error', {
+                    error: "Duplicate ID detected", message: "Please try again", sidebar: [
+                      { status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"
+                  });
+                  // throw err
+                }
+              }
+            );
+          } catch (err) {
+            res.send("server error");
+            console.log(err)
+        
+          } finally {
+            //await db.close();
+          }
+        }
+      );
+    } catch (err) {
+      res.send("server error");
+      console.log(err)
+  
+    } finally {
+      //await db.close();
+    }
+
+  });
 
 
 /* GET user edit page. */
@@ -683,6 +812,7 @@ usersRouter.get('/:userID/edit', async function (req, res, next) {
   } finally {
     //await db.close();
   }
+
 });
 
 
@@ -809,7 +939,7 @@ usersRouter.put('/:userID/edit', async function (req, res, next) {
 });
 
 
-/* GET new user page. */
+/* GET user processing page. */
 usersRouter.get('/:userID/processing', async function (req, res, next) {
 
 

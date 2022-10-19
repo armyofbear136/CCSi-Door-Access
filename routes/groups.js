@@ -411,6 +411,71 @@ groupsRouter.post('/add', async function (req, res, next) {
   }
 
 
+  try {
+
+    console.log('Getting data from door_groups table on new_group route');
+
+    await db.query(
+
+      `SELECT COUNT(*)
+      FROM door_groups
+      WHERE site_id_door_group = ${req.params.siteID}`,
+
+      async function (err, result, fields) {
+        if (err) {
+          console.log(typeof (err));
+          for (var k in err) {
+            console.log(`${k}: ${err[k]}`);
+          }
+          res.render('error', {
+            error: "Duplicate ID detected", message: "Please try again", sidebar: [
+              { status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"
+          });
+          // throw err
+        }
+        let groupCount = Object.values(result[0])[0];
+        try {
+
+          console.log('updating data on sites table on new_group route');
+      
+          await db.query(
+      
+            `UPDATE sites
+            SET groupcount = ${groupCount}
+            WHERE id = ${req.params.siteID}`,
+      
+            async function (err, result, fields) {
+              if (err) {
+                console.log(typeof (err));
+                for (var k in err) {
+                  console.log(`${k}: ${err[k]}`);
+                }
+                res.render('error', {
+                  error: "Duplicate ID detected", message: "Please try again", sidebar: [
+                    { status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"
+                });
+                // throw err
+              }
+            }
+          );
+        } catch (err) {
+          res.send("server error");
+          console.log(err)
+      
+        } finally {
+          //await db.close();
+        }
+      }
+    );
+  } catch (err) {
+    res.send("server error");
+    console.log(err)
+
+  } finally {
+    //await db.close();
+  }
+
+
 });
 
 
@@ -663,10 +728,73 @@ groupsRouter.delete('/:groupID', async function (req, res, next) {
     } finally {
       //await db.close();
     }
-  }
+
+    try {
+
+      console.log('Getting data from door_groups table on new_group route');
   
-// }
-);
+      await db.query(
+  
+        `SELECT COUNT(*)
+        FROM door_groups
+        WHERE site_id_door_group = ${req.params.siteID}`,
+  
+        async function (err, result, fields) {
+          if (err) {
+            console.log(typeof (err));
+            for (var k in err) {
+              console.log(`${k}: ${err[k]}`);
+            }
+            res.render('error', {
+              error: "Duplicate ID detected", message: "Please try again", sidebar: [
+                { status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"
+            });
+            // throw err
+          }
+          let groupCount = Object.values(result[0])[0];
+          try {
+  
+            console.log('updating data on sites table on new_group route');
+        
+            await db.query(
+        
+              `UPDATE sites
+              SET groupcount = ${groupCount}
+              WHERE id = ${req.params.siteID}`,
+        
+              async function (err, result, fields) {
+                if (err) {
+                  console.log(typeof (err));
+                  for (var k in err) {
+                    console.log(`${k}: ${err[k]}`);
+                  }
+                  res.render('error', {
+                    error: "Duplicate ID detected", message: "Please try again", sidebar: [
+                      { status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"
+                  });
+                  // throw err
+                }
+              }
+            );
+          } catch (err) {
+            res.send("server error");
+            console.log(err)
+        
+          } finally {
+            //await db.close();
+          }
+        }
+      );
+    } catch (err) {
+      res.send("server error");
+      console.log(err)
+  
+    } finally {
+      //await db.close();
+    }
+
+
+  });
 
 
 /* GET access group edit page. */

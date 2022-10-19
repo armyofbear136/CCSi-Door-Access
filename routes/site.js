@@ -112,13 +112,13 @@ siteRouter.get('/:siteID', async function (req, res, next) {
 
     console.log('Pulling data on site route');
     await db.query(
-      ` SELECT ds.*, d.companyName, d.orgName, d.siteName
+      ` SELECT ds.*, d.companyName, d.orgName, d.siteName, d.usercount, d.doorcount, d.groupcount
       FROM doors ds
       JOIN (
-        SELECT c.id as id, c.name as companyName, c.org as orgName, s.id as siteID, s.name as siteName
+        SELECT c.id as id, c.name as companyName, c.org as orgName, s.id as siteID, s.name as siteName, s.usercount as usercount, s.doorcount as doorcount, s.groupcount as groupcount
         FROM companies c
         JOIN (
-          SELECT sit.id as id, sit.name as name, sit.company_id_sites as company_id_sites
+          SELECT sit.id as id, sit.name as name, sit.company_id_sites as company_id_sites, sit.usercount as usercount, sit.doorcount as doorcount, sit.groupcount
           FROM sites sit
         ) s ON (c.id = s.company_id_sites)
       ) d ON (ds.site_id_doors = d.siteID)
@@ -142,17 +142,26 @@ siteRouter.get('/:siteID', async function (req, res, next) {
         let doorsData = result;
         var companyName;
         var siteName;
+        var userCount;
+        var doorCount;
+        var groupCount;
 
         if (doorsData.length)
         {
           companyName = doorsData[0].companyName;
           siteName = doorsData[0].siteName;
+          userCount = doorsData[0].usercount;
+          doorCount = doorsData[0].doorcount;
+          groupCount = doorsData[0].groupCount;
         }
         else
         {
           let siteInfo = await mySQLFun.getSiteInfo(db, req.params.siteID);
           companyName = siteInfo[0].companyName;
           siteName = siteInfo[0].name;
+          userCount = siteInfo[0].usercount;
+          doorCount = siteInfo[0].doorcount;
+          groupCount = siteInfo[0].groupCount;
         }
 
 

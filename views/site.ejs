@@ -57,8 +57,26 @@
             <div class="col-md-12">
               <div class="card">
                 <div class="card-header card-header-primary">
-                  <h4 class="card-title"><%= panelTitle %></h4>
-                  <p class="card-category">Site Panel</p>
+                  <h4 class="card-title"><%= panelTitle %> Site Panel</h4>
+                  <div class="row">
+                    <div class="col-md-1">
+                      <div class="card text-center" style="font-size: 1.2rem;">
+                          <%= doors[0].doorcount %> Doors
+                      </div>
+                    </div>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-1">
+                      <div class="card text-center" style="font-size: 1.2rem;">
+                          <%= doors[0].usercount %> Users
+                      </div>
+                    </div>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-1">
+                      <div class="card text-center" style="font-size: 1.2rem;">
+                          <%= doors[0].groupcount %> Groups
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <br />
                 <div class="row">

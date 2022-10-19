@@ -218,6 +218,8 @@ doorsRouter.get('/add', async function (req, res, next) {
     //await db.close();
   }
 
+  
+
 });
 
 
@@ -304,6 +306,70 @@ doorsRouter.post('/add', async function (req, res, next) {
           //await db.close();
         }
 
+      }
+    );
+  } catch (err) {
+    res.send("server error");
+    console.log(err)
+
+  } finally {
+    //await db.close();
+  }
+
+  try {
+
+    console.log('Getting data from doors table on new_door route');
+
+    await db.query(
+
+      `SELECT COUNT(*)
+      FROM doors
+      WHERE site_id_doors = ${req.params.siteID}`,
+
+      async function (err, result, fields) {
+        if (err) {
+          console.log(typeof (err));
+          for (var k in err) {
+            console.log(`${k}: ${err[k]}`);
+          }
+          res.render('error', {
+            error: "Duplicate ID detected", message: "Please try again", sidebar: [
+              { status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"
+          });
+          // throw err
+        }
+        let doorCount = Object.values(result[0])[0];
+        try {
+
+          console.log('Getting data from users table on new_user route');
+      
+          await db.query(
+      
+            `UPDATE sites
+            SET doorcount = ${doorCount}
+            WHERE id = ${req.params.siteID}`,
+      
+            async function (err, result, fields) {
+              if (err) {
+                console.log(typeof (err));
+                for (var k in err) {
+                  console.log(`${k}: ${err[k]}`);
+                }
+                res.render('error', {
+                  error: "Duplicate ID detected", message: "Please try again", sidebar: [
+                    { status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"
+                });
+                // throw err
+              }
+            }
+          );
+        } catch (err) {
+          res.send("server error");
+          console.log(err)
+      
+        } finally {
+          //await db.close();
+        }
       }
     );
   } catch (err) {
@@ -518,10 +584,73 @@ doorsRouter.delete('/:doorID', async function (req, res, next) {
     } finally {
       //await db.close();
     }
-  }
+
+    try {
+
+      console.log('Getting data from doors table on new_door route');
   
-// }
-);
+      await db.query(
+  
+        `SELECT COUNT(*)
+        FROM doors
+        WHERE site_id_doors = ${req.params.siteID}`,
+  
+        async function (err, result, fields) {
+          if (err) {
+            console.log(typeof (err));
+            for (var k in err) {
+              console.log(`${k}: ${err[k]}`);
+            }
+            res.render('error', {
+              error: "Duplicate ID detected", message: "Please try again", sidebar: [
+                { status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"
+            });
+            // throw err
+          }
+          let doorCount = Object.values(result[0])[0];
+          try {
+  
+            console.log('Getting data from users table on new_user route');
+        
+            await db.query(
+        
+              `UPDATE sites
+              SET doorcount = ${doorCount}
+              WHERE id = ${req.params.siteID}`,
+        
+              async function (err, result, fields) {
+                if (err) {
+                  console.log(typeof (err));
+                  for (var k in err) {
+                    console.log(`${k}: ${err[k]}`);
+                  }
+                  res.render('error', {
+                    error: "Duplicate ID detected", message: "Please try again", sidebar: [
+                      { status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"
+                  });
+                  // throw err
+                }
+              }
+            );
+          } catch (err) {
+            res.send("server error");
+            console.log(err)
+        
+          } finally {
+            //await db.close();
+          }
+        }
+      );
+    } catch (err) {
+      res.send("server error");
+      console.log(err)
+  
+    } finally {
+      //await db.close();
+    }
+
+
+  });
 
 
 /* GET door_edit page. */
