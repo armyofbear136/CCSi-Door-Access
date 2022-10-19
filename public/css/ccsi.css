@@ -78,11 +78,17 @@ th {
   background-color: #ededed;
   border: 1px solid #3c3c3c !important;
 }
+.logo {
+  background-color: #ededed;
+}
 .navbar-brand {
   font-size: 2.0rem !important;
 }
 .sidebar[data-background-color="black"] .nav .nav-item i {
-  color: #3c3c3c;
+  color: #303ab2 !important;
+}
+.sidebar .sidebar-wrapper {
+  background: #ededed !important;
 }
 .sidebar-background{
   background: #3c3c3c !important;
