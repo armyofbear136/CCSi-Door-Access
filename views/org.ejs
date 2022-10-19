@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <script>
-    trimSlashes = str => str.split('/').filter(v => v !== '').join('/');
-  
-    let sanitized = window.location.pathname;
-    sanitized = trimSlashes(sanitized);
-    
-    const newURL = window.location.protocol + '//' + window.location.host + '/'+ sanitized;
-  
-    if (window.location.href !== newURL) {
-       window.location.href = newURL;
-    }
-  </script>
+<script>
+  trimSlashes = str => str.split('/').filter(v => v !== '').join('/');
+
+  let sanitized = window.location.pathname;
+  sanitized = trimSlashes(sanitized);
+
+  const newURL = window.location.protocol + '//' + window.location.host + '/' + sanitized;
+
+  if (window.location.href !== newURL) {
+    window.location.href = newURL;
+  }
+</script>
 
 <head>
   <%- include('./partials/head'); %>
@@ -44,21 +44,31 @@
                 </div>
                 <br />
                 <div class="row">
-                  <% companies.forEach(function(company) { %> 
-                    <div class="col-md-1"></div>
-                    <div class="col-md-4">
-                      <div class="jumbotron">
-                        <h1 class="display-4"><%= company.name %></h1>
-                        <p class="lead">X Sites | X Doors | X Users</p>
-                        <hr class="my-4">
-                        <p class=<%= company.statusTextStyle %>><%= company.statusText %></p>
-                        <p class="lead">
-                          <a class="btn btn-primary btn-lg" href="/org/<%= orgID %>/company/<%= company.id %>" role="button">Enter</a>
-                        </p>
+                  <div class="col-md-1"></div>
+                  <div class="col-md-10">
+                    <div class="row">
+                      <% companies.forEach(function(company) { %>
+                      <div class="col-md-3">
+                        <% if (company.status == 1) { %>
+                          <div class="jumbotron card-safe-2">
+                        <% } else if (company.status == 0) { %>
+                          <div class="jumbotron card-danger">
+                        <% } else { %>
+                          <div class="jumbotron">
+                        <% } %>
+                          <h1 class="display-5" style="font-weight: bold;"><%= company.name %></h1>
+                          <p class="lead" style="font-weight: bold;">X Sites | X Doors | X Users</p>
+                          <hr class="my-4">
+                          <!-- <p class=<%= company.statusTextStyle %>><%= company.statusText %></p> -->
+                          <p style="font-weight: bold;"><%= company.statusText %></p>
+                          <p class="lead">
+                            <a class="btn btn-primary btn-lg" href="/org/<%= orgID %>/company/<%= company.id %>" role="button">Enter</a>
+                          </p>
+                        </div>
                       </div>
+                      <% }); %>
                     </div>
-                    <div class="col-md-1"></div>
-                  <% }); %>
+                  </div>
                 </div>
               </div>
             </div>

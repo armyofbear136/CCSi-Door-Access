@@ -92,9 +92,25 @@ groupsRouter.get('/', async function (req, res, next) {
         var varName;
         varName = "CCSI Door Access" //optional title override
 
+        var panelTitle;
+        var panelSubtext;
+        if (groupsData.length) {
+          if (groupsData.length === 1) {
+            panelTitle = `${groupsData.length} Group (${siteName})`;
+          }
+          else {
+            panelTitle = `${groupsData.length} Groups (${siteName})`;
+          }
+          panelSubtext = "Please Select a Group";
+        }
+        else {
+          panelTitle = `No Groups (${siteName})`;
+          panelSubtext = "Please Add a Group";
+        }
+
         // console.log(funSites);
 
-        res.render('groups', { groups: groupsData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: `Groups (${siteName})`, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID, thisURL: req.originalUrl});
+        res.render('groups', { groups: groupsData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: panelTitle, panelSubtext: panelSubtext, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID, thisURL: req.originalUrl});
 
       });
 

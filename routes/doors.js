@@ -106,11 +106,27 @@ doorsRouter.get('/', async function (req, res, next) {
           { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/groups`, icon: "supervisor_account", text: "Groups" },
           { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports" }
         ]
+        
+        var panelTitle;
+        var panelSubtext;
+        if (doorsData.length) {
+          if (doorsData.length === 1) {
+            panelTitle = `${doorsData.length} Door (${siteName})`;
+          }
+          else {
+            panelTitle = `${doorsData.length} Doors (${siteName})`;
+          }
+          panelSubtext = "Please Select a Door";
+        }
+        else {
+          panelTitle = `No Doors (${siteName})`;
+          panelSubtext = "Please Add a Door";
+        }
 
         varName = "CCSI Door Access" //optional title override
 
         // console.log(funSites);
-        res.render('doors', { doors: doorsData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: `Doors (${siteName})`, companyID: req.params.companyID, siteID: req.params.siteID, orgID: req.params.orgID, thisURL: req.originalUrl });
+        res.render('doors', { doors: doorsData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: panelTitle, panelSubtext: panelSubtext, companyID: req.params.companyID, siteID: req.params.siteID, orgID: req.params.orgID, thisURL: req.originalUrl });
 
       });
 

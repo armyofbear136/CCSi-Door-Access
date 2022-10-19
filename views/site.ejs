@@ -1,26 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <script>
-    trimSlashes = str => str.split('/').filter(v => v !== '').join('/');
-  
-    let sanitized = window.location.pathname;
-    sanitized = trimSlashes(sanitized);
-    
-    const newURL = window.location.protocol + '//' + window.location.host + '/'+ sanitized;
-  
-    if (window.location.href !== newURL) {
-       window.location.href = newURL;
-    }
-  </script>
+<script>
+  trimSlashes = str => str.split('/').filter(v => v !== '').join('/');
 
-  <head>
-    <%- include('./partials/head'); %>
-  </head>
-  
-  <body class="dark-edition">
-    <div class="wrapper ">
-      <%- include('./partials/sidebar', {links: sidebar, logo: sideTitle}) %>
+  let sanitized = window.location.pathname;
+  sanitized = trimSlashes(sanitized);
+
+  const newURL = window.location.protocol + '//' + window.location.host + '/' + sanitized;
+
+  if (window.location.href !== newURL) {
+    window.location.href = newURL;
+  }
+</script>
+
+<head>
+  <%- include('./partials/head'); %>
+</head>
+
+<body class="dark-edition">
+  <div class="wrapper ">
+    <%- include('./partials/sidebar', {links: sidebar, logo: sideTitle}) %>
     <div class="main-panel">
       <%- include('./partials/navbar', {title: navTitle}) %>
       <div class="content">
@@ -30,52 +30,55 @@
             <div class="col-md-12">
               <div class="card">
                 <div class="card-header card-header-primary">
-                  <h4 class="card-title"><%= panelTitle %> Site Panel</h4>
-                  <div class="row">
-                    <div class="col-md-1">
-                      <div class="card text-center" style="font-size: 1.2rem;">
-                          <%= doorCount %> Doors
-                      </div>
-                    </div>
-                    <div class="col-md-1"></div>
-                    <div class="col-md-1">
-                      <div class="card text-center" style="font-size: 1.2rem;">
-                          <%= userCount %> Users
-                      </div>
-                    </div>
-                    <div class="col-md-1"></div>
-                    <div class="col-md-1">
-                      <div class="card text-center" style="font-size: 1.2rem;">
-                          <%= groupCount %> Groups
-                      </div>
-                    </div>
+                  <h4 class="card-title"><%= panelTitle %> Site Panel Overview</h4>
+                  <div class="col-md-1">
+                    <%= doorCount %> Doors
+                  </div>
+                  <div class="col-md-1">
+                    <%= userCount %> Users
+                  </div>
+                  <div class="col-md-1">
+                    <%= groupCount %> Groups
                   </div>
                 </div>
                 <br />
                 <div class="row">
-                  <% doors.forEach(function(door) { %> 
-                    <div class="col-md-1"></div>
-                    <div class="col-md-2">
-                      <div class="jumbotron">
-                        <h1 class="display-5"><%= door.name %></h1>
-                        <p class="lead">Info</p>
-                        <hr class="my-4">
-                        <p class="lead">
-                          <a class="btn btn-primary btn-lg" href="/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>/doors/<%= door.id %>" role="button">Select</a>
-                        </p>
+                  <div class="col-md-1"></div>
+                  <div class="col-md-10">
+                    <div class="row">
+                      <% doors.forEach(function(door) { %>
+                      <div class="col-md-2">
+                        <% if (door.status == 'Locked') { %>
+                          <div class="jumbotron card-safe">
+                        <% } else if (door.status == 'Unlocked') { %>
+                          <div class="jumbotron card-safe-2">
+                        <% } else if (door.status == 'Open') { %>
+                          <div class="jumbotron card-warning">
+                        <% } else if (door.status == 'Alarm') { %>
+                          <div class="jumbotron card-danger">
+                        <% } else { %>
+                          <div class="jumbotron">
+                        <% } %>
+                          <h1 class="display-5" style="font-size: 1.0rem !important; font-weight: bold;"><%= door.name %></h1>
+                          <p class="lead" style="font-size: 1.0rem !important; font-weight: bold;"><%= door.status %></p>
+                          <hr class="my-4">
+                          <p class="lead">
+                            <a class="btn btn-primary btn-sm" href="/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>/doors/<%= door.id %>" role="button">Select</a>
+                          </p>
+                        </div>
                       </div>
+                      <% }); %>
                     </div>
-                    <div class="col-md-1"></div>
-                  <% }); %>
-                </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <%- include('./partials/footer'); %>
     </div>
+    <%- include('./partials/footer'); %>
+  </div>
   </div>
   <%- include('./partials/foot') %>
 </body>

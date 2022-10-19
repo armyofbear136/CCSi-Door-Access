@@ -22,6 +22,7 @@ a {
 body {
   color: #b2b2b2 !important;
 }
+
 label {
   color: #3c3c3c !important;
 }
@@ -37,6 +38,8 @@ th {
 .dark-edition .sidebar[data-color="purple"] li.active>a {
   color: #3c3c3c;
   background: linear-gradient(60deg, #ededed , #303ab2 ) !important;
+  border-color: #3c3c3c !important;
+  box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(0, 0, 0, 0.4) !important;
 }
 .btn, .btn-primary, .btn-lg {
   color: #ffffff !important;
@@ -53,6 +56,18 @@ th {
 .card-body {
   color: #3c3c3c !important;
 }
+.card-safe {
+  background-color: #3dc5cc !important;
+}
+.card-safe-2 {
+  background-color: #4caf50 !important;
+}
+.card-warning {
+  background-color: #FFBF00 !important;
+}
+.card-danger {
+  background-color: #f44336 !important;
+}
 .card-header {
   background-color: #ededed !important;
   border-bottom: 1px solid #303ab2 !important;
@@ -64,6 +79,8 @@ th {
 .card.card-rotate.bg-primary .front,
 .card.card-rotate.bg-primary .back {
   background: linear-gradient(60deg, #303ab2, #ededed) !important;
+  border-color: #3c3c3c !important;
+  box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(0, 0, 0, 0.4) !important;
 }
 .card .card-header-secondary .card-icon,
 .card .card-header-secondary .card-text,
@@ -72,6 +89,8 @@ th {
 .card.card-rotate.bg-primary .front,
 .card.card-rotate.bg-primary .back {
   background: #3c3c3c !important;
+  border-color: #3c3c3c !important;
+  box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(0, 0, 0, 0.4) !important;
 }
 .display-5 {
   font-size: 1.5rem !important;
@@ -109,7 +128,10 @@ th {
 .nav-link:focus {
   background-color: #b2b2b2 !important;
 }
-
+.navbar .notification {
+  color: #ffffff !important;
+  background: #303ab2 !important;
+}
 .sidebar[data-background-color="black"] .nav .nav-item i {
   color: #303ab2 !important;
 }
