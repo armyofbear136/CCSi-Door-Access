@@ -73,6 +73,9 @@ th {
 .card.card-rotate.bg-primary .back {
   background: #3c3c3c !important;
 }
+.display-5 {
+  font-size: 1.5rem !important;
+}
 .form-control {
   color: #3c3c3c !important;
   background-color: rgba(0, 0, 0, 0);

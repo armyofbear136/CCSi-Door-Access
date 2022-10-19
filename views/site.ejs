@@ -54,11 +54,28 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-12">
               <div class="card">
                 <div class="card-header card-header-primary">
                   <h4 class="card-title"><%= panelTitle %></h4>
                   <p class="card-category">Site Panel</p>
+                </div>
+                <br />
+                <div class="row">
+                  <% doors.forEach(function(door) { %> 
+                    <div class="col-md-1"></div>
+                    <div class="col-md-2">
+                      <div class="jumbotron">
+                        <h1 class="display-5"><%= door.name %></h1>
+                        <p class="lead">Info</p>
+                        <hr class="my-4">
+                        <p class="lead">
+                          <a class="btn btn-primary btn-lg" href="/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>/doors/<%= door.id %>" role="button">Select</a>
+                        </p>
+                      </div>
+                    </div>
+                    <div class="col-md-1"></div>
+                  <% }); %>
                 </div>
                 </div>
               </div>
