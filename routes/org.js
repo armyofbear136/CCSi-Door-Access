@@ -29,6 +29,14 @@ orgRouter.get('/:orgID', async function (req, res, next) {
       FROM companies 
       ORDER BY name ASC`,
 
+      // `SELECT c.id, c.name, c.status, c.org, s.usercount, s.doorcount, s.groupcount 
+      // FROM companies c
+      // JOIN (
+      //   SELECT sit.company_id_sites as company_id_sites, COUNT(sit.usercount) as usercount, COUNT(sit.doorcount) as doorcount, COUNT(sit.groupcount) as groupcount
+      //   FROM sites sit
+      // ) s ON (s.company_id_sites = c.id)
+      // ORDER BY name ASC`,
+
       function (err, result, fields) {
         if (err) {
           console.log(typeof (err));

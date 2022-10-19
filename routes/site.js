@@ -152,18 +152,17 @@ siteRouter.get('/:siteID', async function (req, res, next) {
           siteName = doorsData[0].siteName;
           userCount = doorsData[0].usercount;
           doorCount = doorsData[0].doorcount;
-          groupCount = doorsData[0].groupCount;
+          groupCount = doorsData[0].groupcount;
         }
         else
         {
           let siteInfo = await mySQLFun.getSiteInfo(db, req.params.siteID);
           companyName = siteInfo[0].companyName;
           siteName = siteInfo[0].name;
-          userCount = siteInfo[0].usercount;
-          doorCount = siteInfo[0].doorcount;
-          groupCount = siteInfo[0].groupCount;
+          userCount = 0;
+          doorCount = 0;
+          groupCount = 0;
         }
-
 
         
 
@@ -212,7 +211,7 @@ siteRouter.get('/:siteID', async function (req, res, next) {
         varName = "CCSI Door Access" //optional title override
 
         // console.log(funSites);
-        res.render('site', { doors: doorsData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: `${siteName}`, companyID: req.params.companyID, siteID: req.params.siteID, orgID: req.params.orgID, thisURL: req.originalUrl });
+        res.render('site', { doors: doorsData, userCount: userCount, doorCount: doorCount, groupCount: groupCount, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: `${siteName}`, companyID: req.params.companyID, siteID: req.params.siteID, orgID: req.params.orgID, thisURL: req.originalUrl });
 
       });
   } catch (err) {
