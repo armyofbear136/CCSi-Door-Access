@@ -25,34 +25,7 @@
       <%- include('./partials/navbar', {title: navTitle}) %>
       <div class="content">
         <div class="container-fluid">
-          <div class="row">
-            <div class="col-md-12">
-              <div class="card card-nav-tabs card-plain">
-                <div class="card-header card-header-secondary">
-                  <!-- colors: "header-primary", "header-info", "header-success", "header-warning", "header-danger" -->
-                  <div class="nav-tabs-navigation">
-                    <div class="nav-tabs-wrapper">
-                      <ul class="nav nav-tabs" data-tabs="tabs">
-                        <% tabBar.forEach(function(tab) { %>
-                          <li class="nav-item">
-                            <% if (tab.status) { %>
-                              <a class="nav-link active show" href=<%= tab.url %>>
-                            <% } else { %>
-                              <a class="nav-link show" href=<%= tab.url %>>
-                            <% } %>
-                                <i class="material-icons"><%= tab.icon %></i>
-                                <%= tab.text %>
-                                <div class="ripple-container"></div>
-                              </a>
-                          </li>
-                        <% }); %>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <%- include('./partials/tabBar', {tabs: tabBar}) %>
           <div class="row">
             <div class="col-md-12">
               <div class="card">
