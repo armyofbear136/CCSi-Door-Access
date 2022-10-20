@@ -197,8 +197,8 @@ usersRouter.get('/add', async function (req, res, next) {
         };
 
         let groupsData = result;
-        let companyName = groupsData.companyName;
-        let siteName = groupsData.siteName;
+        let companyName = groupsData[0].companyName;
+        let siteName = groupsData[0].siteName;
 
         const funSites = await mySQLFun.getSites(db, req.params.companyID)
 

@@ -57,7 +57,7 @@
                           <div class="jumbotron">
                         <% } %>
                           <h1 class="display-5" style="font-weight: bold;"><%= company.name %></h1>
-                          <p class="lead" style="font-weight: bold;">X Sites | X Doors | X Users</p>
+                          <p class="lead" style="font-weight: bold;"><%= company.sitecount %> Sites | <%= company.doorcount %> Doors | <%= company.usercount %> Users</p>
                           <hr class="my-4">
                           <!-- <p class=<%= company.statusTextStyle %>><%= company.statusText %></p> -->
                           <p style="font-weight: bold;"><%= company.statusText %></p>

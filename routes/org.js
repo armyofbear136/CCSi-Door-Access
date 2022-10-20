@@ -25,17 +25,19 @@ orgRouter.get('/:orgID', async function (req, res, next) {
     console.log('Pulling data from companies table on org route');
     await db.query(
 
-      `SELECT * 
-      FROM companies 
-      ORDER BY name ASC`,
-
-      // `SELECT c.id, c.name, c.status, c.org, s.usercount, s.doorcount, s.groupcount 
-      // FROM companies c
-      // JOIN (
-      //   SELECT sit.company_id_sites as company_id_sites, COUNT(sit.usercount) as usercount, COUNT(sit.doorcount) as doorcount, COUNT(sit.groupcount) as groupcount
-      //   FROM sites sit
-      // ) s ON (s.company_id_sites = c.id)
+      // `SELECT * 
+      // FROM companies 
       // ORDER BY name ASC`,
+
+      `SELECT c.id, c.name, c.status, c.org, COALESCE(COUNT(s.id), 0) as sitecount, COALESCE(SUM(s.usercount), 0) as usercount, COALESCE(SUM(s.doorcount), 0) as doorcount, COALESCE(SUM(s.groupcount), 0) as groupcount
+      FROM companies c
+      LEFT JOIN (
+        SELECT sit.id, sit.company_id_sites as company_id_sites, sit.usercount as usercount, sit.doorcount as doorcount, sit.groupcount as groupcount
+        FROM sites sit
+      ) s ON (c.id = s.company_id_sites)
+      GROUP BY c.id
+      ORDER BY c.name ASC
+      `,
 
       function (err, result, fields) {
         if (err) {
@@ -51,6 +53,8 @@ orgRouter.get('/:orgID', async function (req, res, next) {
         };
         var companiesData = result;
         var orgName = companiesData[0].org;
+
+        console.log(companiesData);
 
         for (i in companiesData) {
           if (companiesData[i].status) {
