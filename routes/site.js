@@ -9,6 +9,7 @@ const siteRouter = asyncify(express.Router({ mergeParams: true }));
 const doorsRouter = require('./doors');
 const usersRouter = require('./users');
 const groupsRouter = require('./groups');
+const reportsRouter = require('./reports');
 
 
 
@@ -16,8 +17,10 @@ siteRouter.use('/:siteID/doors', doorsRouter);
 
 siteRouter.use('/:siteID/users', usersRouter);
 
-
 siteRouter.use('/:siteID/groups', groupsRouter);
+
+siteRouter.use('/:siteID/reports', reportsRouter);
+
 
 
 

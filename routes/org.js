@@ -1,7 +1,6 @@
-require('../mySQL');
-
 var express = require('express');
 const asyncify = require('express-asyncify');
+const mySQLFun = require('../mySQL');
 var orgRouter = asyncify(express.Router({ mergeParams: true }));
 
 
@@ -24,10 +23,6 @@ orgRouter.get('/:orgID', async function (req, res, next) {
 
     console.log('Pulling data from companies table on org route');
     await db.query(
-
-      // `SELECT * 
-      // FROM companies 
-      // ORDER BY name ASC`,
 
       `SELECT c.id, c.name, c.status, c.org, COALESCE(COUNT(s.id), 0) as sitecount, COALESCE(SUM(s.usercount), 0) as usercount, COALESCE(SUM(s.doorcount), 0) as doorcount, COALESCE(SUM(s.groupcount), 0) as groupcount
       FROM companies c
@@ -53,8 +48,6 @@ orgRouter.get('/:orgID', async function (req, res, next) {
         };
         var companiesData = result;
         var orgName = companiesData[0].org;
-
-        console.log(companiesData);
 
         for (i in companiesData) {
           if (companiesData[i].status) {
