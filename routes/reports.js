@@ -1,6 +1,8 @@
 var express = require('express');
 const asyncify = require('express-asyncify');
 const mySQLFun = require('../mySQL');
+const APIfun = require('../myAPI');
+const CSVfun = require('../myCSV');
 var reportsRouter = asyncify(express.Router({ mergeParams: true }));
 
 
@@ -160,7 +162,7 @@ reportsRouter.get('/', async function (req, res, next) {
 
 
 /* POST new group to db. */
-reportsRouter.post('/add', async function (req, res, next) {
+reportsRouter.post('/', async function (req, res, next) {
 
   /* link to database */
 
@@ -171,7 +173,12 @@ reportsRouter.post('/add', async function (req, res, next) {
   console.log("POST Request Called");
   console.log(req.body);
 
-
+  const response = await APIfun.digestor('http://10.0.1.246/vapix/eventlogger/FetchEvents', 'root', 'pass', {});
+  let parsedAllEvents = await APIfun.axisParseAllEvents(response.Event);
+  let parsedLastEvents = await APIfun.axisParseLastEvents(response.Event);
+  // for (i in parsedAllEvents){
+  //   await CSVfun.generate((i + '_' + Date.now() + '.csv'), parsedAllEvents[i]);
+  // }
 
   try {
 
@@ -185,6 +192,37 @@ reportsRouter.post('/add', async function (req, res, next) {
     if (!req.body.edate) { req.body.edate = "12/25/2022" };
 
     var groupID;
+    for (i in parsedLastEvents.Doors){
+      let tampered = 0;
+      if (parsedLastEvents.Doors[i]['Door Tamper'] != 'NotInTamper'){tampered = 1;}
+      await db.query(
+
+        `UPDATE doors 
+        SET 
+        status = '${parsedLastEvents.Doors[i]['Door Mode']}', 
+        alarm = '${parsedLastEvents.Doors[i]['Door Alarm']}', 
+        last_access = "${parsedLastEvents.Doors[i].Accessed}", 
+        tamper = '${tampered}'
+        WHERE site_id_doors = ${req.params.siteID} AND name = '${i}'`,
+
+        async function (err, result, fields) {
+          if (err) {
+            console.log(typeof (err));
+            for (var k in err) {
+              console.log(`${k}: ${err[k]}`);
+            }
+            res.render('error', {
+              error: "Duplicate ID detected", message: "Please try again", sidebar: [
+                { status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"
+            });
+            // throw err
+          }
+        }
+      )
+    }
+    
+
+    res.redirect(`/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`);
 
    
   } catch (err) {

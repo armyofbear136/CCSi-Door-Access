@@ -265,7 +265,7 @@ usersRouter.post('/add', async function (req, res, next) {
     await db.query(
 
       `INSERT INTO users
-    VALUES (NULL, "${req.body.fname}", "${req.body.lname}", "${req.body.email}", ${req.body.fob}, ${req.params.companyID}, ${req.params.siteID}, ${req.body.eid})`,
+    VALUES (NULL, "${req.body.fname}", "${req.body.lname}", "${req.body.email}", ${req.body.fob}, ${req.params.companyID}, ${req.params.siteID}, ${req.body.eid}, NULL, ${Date.now()})`,
 
       async function (err, result, fields) {
         if (err) {
@@ -302,7 +302,7 @@ usersRouter.post('/add', async function (req, res, next) {
             await db.query(
 
               `INSERT INTO access_groups
-          VALUES ?`, [values],
+              VALUES ?`, [values],
               function (err, result, fields) {
                 if (err) {
                   console.log(typeof (err));

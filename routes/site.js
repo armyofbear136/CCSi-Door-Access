@@ -181,7 +181,7 @@ siteRouter.get('/:siteID', async function (req, res, next) {
             doorsData[i].statusTextStyle = "text-danger";
           }
 
-          if (doorsData[i].alarm == "OK") {
+          if (doorsData[i].alarm == "Normal") {
             doorsData[i].alarmTextStyle = "text-success";
           }
           else {

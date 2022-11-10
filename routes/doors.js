@@ -77,7 +77,7 @@ doorsRouter.get('/', async function (req, res, next) {
             doorsData[i].statusTextStyle = "text-danger";
           }
 
-          if (doorsData[i].alarm == "OK") {
+          if (doorsData[i].alarm == "Normal") {
             doorsData[i].alarmTextStyle = "text-success";
           }
           else {
@@ -261,7 +261,7 @@ doorsRouter.post('/add', async function (req, res, next) {
     await db.query(
 
       `INSERT INTO doors
-      VALUES (NULL, "${req.body.name}", "${req.body.ip}", "NEW", "NEW", ${req.params.siteID}, NULL)`,
+      VALUES (NULL, "${req.body.name}", "${req.body.ip}", "NEW", "NEW", ${req.params.siteID}, NULL, NULL)`,
 
       async function (err, result, fields) {
         if (err) {
