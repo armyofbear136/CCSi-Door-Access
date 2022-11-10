@@ -191,8 +191,8 @@ reportsRouter.post('/', async function (req, res, next) {
 
   if (!req.body.name) { req.body.name = 'Null' };
   if (!req.body.stime) { req.body.stime = "00:00:00" };
-  if (!req.body.sdate) { req.body.sdate = "2022-11-09" };
-  if (!req.body.etime) { req.body.etime = "17:00:00" };
+  if (!req.body.sdate) { req.body.sdate = "2022-01-01" };
+  if (!req.body.etime) { req.body.etime = "23:59:59" };
   if (!req.body.edate) { req.body.edate = "2022-12-25" };
 
   let startDT = new Date(req.body.sdate + ':' + req.body.stime);
