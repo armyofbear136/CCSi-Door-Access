@@ -556,8 +556,6 @@ usersRouter.delete('/:userID', async function (req, res, next) {
 
   console.log("hitting user delete route");
 
-
-
   /* link to database */
 
   var db = req.app.get('db');
@@ -580,11 +578,8 @@ usersRouter.delete('/:userID', async function (req, res, next) {
         WHERE users.id = ${req.params.userID};
         `,
 
-
-
         async function (err, result, fields) {
           
-
           if (err) {
             console.log(typeof (err));
             for (var k in err) {
@@ -593,8 +588,6 @@ usersRouter.delete('/:userID', async function (req, res, next) {
             res.render('error', { error: "Server Error", message: "Please try again", sidebar: [{ status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Server Error 500" });
             // throw err
           };
-
-          
 
         });
         res.send(200);
@@ -658,7 +651,6 @@ usersRouter.delete('/:userID', async function (req, res, next) {
           } catch (err) {
             res.send("server error");
             console.log(err)
-        
           } finally {
             //await db.close();
           }
@@ -667,7 +659,6 @@ usersRouter.delete('/:userID', async function (req, res, next) {
     } catch (err) {
       res.send("server error");
       console.log(err)
-  
     } finally {
       //await db.close();
     }

@@ -12,10 +12,10 @@ CSVfun.generate = async function(path, data) {
     {
       if (i == 0){
         stringifier = stringify({ header: true, columns: data[i]});
-        console.log(data[i].toString());
+        // console.log(data[i].toString());
       }
       else {
-        console.log(`${data[i].toString()}`);
+        // console.log(`${data[i].toString()}`);
         stringifier.write(data[i]);
       }
     }

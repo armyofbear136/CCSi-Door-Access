@@ -56,7 +56,7 @@
                       </div>
                       <div class="col-md-3">
                         <div class="form-group">
-                          <label class="bmd-label-floating" >Start Date DD/MM/YYYY</label>
+                          <label class="bmd-label-floating" >Start Date YYYY-MM-DD</label>
                           <input type="text" class="form-control" name="sdate">
                         </div>
                       </div>
@@ -68,7 +68,7 @@
                       </div>
                       <div class="col-md-3">
                         <div class="form-group">
-                          <label class="bmd-label-floating" >End Date DD/MM/YYYY</label>
+                          <label class="bmd-label-floating" >End Date YYYY-MM-DD</label>
                           <input type="text" class="form-control" name="edate">
                         </div>
                       </div>
@@ -82,7 +82,7 @@
                           <div class="form-group">
                             <div class="form-check">
                               <label class="form-check-label">
-                                <input class="form-check-input" type="checkbox" value="<%= door.id %>" name="doorgroups">
+                                <input class="form-check-input" type="checkbox" value="<%= door.name %>" name="doorgroups">
                                 <span class="form-check-sign">
                                   <span class="check"></span>
                                 </span>
@@ -102,7 +102,7 @@
                           <div class="form-group">
                             <div class="form-check">
                               <label class="form-check-label">
-                                <input class="form-check-input" type="checkbox" value="<%= user.id %>" name="usergroups">
+                                <input class="form-check-input" type="checkbox" value="<%= user.fob_id %>" name="usergroups">
                                 <span class="form-check-sign">
                                   <span class="check"></span>
                                 </span>
