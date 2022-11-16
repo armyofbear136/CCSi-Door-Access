@@ -1,8 +1,13 @@
 var express = require('express');
 const asyncify = require('express-asyncify');
+const fs = require('fs');
+const archiver = require('archiver');
+const path = require('path');
+
 const mySQLFun = require('../mySQL');
 const APIfun = require('../myAPI');
 const CSVfun = require('../myCSV');
+
 var reportsRouter = asyncify(express.Router({ mergeParams: true }));
 
 
@@ -151,6 +156,8 @@ reportsRouter.get('/', async function (req, res, next) {
         var varName;
         varName = "CCSI Door Access" //optional title override
 
+        
+
 
         res.render('reports', { group: groupData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: `Door Access Reporting`, panelSubtext: "Select parameters for report", orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID });
 
@@ -179,6 +186,32 @@ reportsRouter.post('/', async function (req, res, next) {
   console.log("POST Request Called");
   console.log(req.body);
 
+  var siteReport = false;
+  var doorsReport = false;
+  var usersReport = false;
+
+  if (req.body.sitedoorgroups && req.body.siteusergroups){siteReport = true;}
+  if (req.body.dooronlygroups){doorsReport = true;}
+  if (req.body.useronlygroups){usersReport = true;}
+
+  var reportTitle;
+
+  var doorsData;
+  var usersData;
+  var companyName;
+  var siteName;
+
+  let doorObjects = {};
+  let userObjects = {};
+
+  // /* load data from database */
+
+  
+  let siteInfo = await mySQLFun.getSiteInfo(db, req.params.siteID);
+  companyName = siteInfo[0].companyName;
+  siteName = siteInfo[0].name;
+  reportTitle = siteName + '_' + Date.now();
+
   const response = await APIfun.digestor('http://10.0.1.246/vapix/eventlogger/FetchEvents', 'root', 'pass', {});
   let parsedAllEvents = await APIfun.axisParseAllEvents(response.Event);
   let parsedLastEvents = await APIfun.axisParseLastEvents(response.Event);
@@ -200,55 +233,120 @@ reportsRouter.post('/', async function (req, res, next) {
 
   //generate csv for selected doors in timeframe
 
-  if (typeof req.body.doorgroups == 'string'){req.body.doorgroups = [req.body.doorgroups]};
-  let selectedDoorEvents = [
-    [
-      "doorname",
-      "doorevent",
-      "doorstatus",
-      "access_time"
-    ]
-  ];
-  // console.log(parsedAllEvents)
-  for (i in req.body.doorgroups)
-  {
-    for (e in parsedAllEvents.door_events)
-    {
-      if ((parsedAllEvents.door_events[e][0] == req.body.doorgroups[i]) && (new Date(parsedAllEvents.door_events[e][3]) > (startDT)) && (new Date(parsedAllEvents.door_events[e][3]) < (endDT)))
-      {
-        selectedDoorEvents.push(parsedAllEvents.door_events[e]);
+  doorsData = await mySQLFun.getDoorsInfo(db, req.params.siteID);
+
+  if (doorsReport){
+
+
+    for (i in doorsData){
+      doorObjects[doorsData[i].name] = {};
+      for (o in doorsData[i]){
+        doorObjects[doorsData[i].name][o] = doorsData[i][o];
       }
     }
+
+    if (typeof req.body.dooronlygroups == 'string'){req.body.dooronlygroups = [req.body.dooronlygroups]};
+    let selectedDoorEvents = [
+      [
+        "doorname",
+        "doorevent",
+        "doorstatus",
+        "access_time",
+        "id",
+        "name",
+        "ip",
+        "status",
+        "alarm",
+        "site_id_doors",
+        "tamper",
+        "companyName",
+        "orgName",
+        "siteName"
+      ]
+    ];
+    // console.log(parsedAllEvents)
+    // var doorEvent;
+    for (i in req.body.dooronlygroups)
+    {
+      for (e in parsedAllEvents.door_events)
+      {
+        let doorEvent = parsedAllEvents.door_events[e];
+        // console.log(doorEvent);
+        if ((doorEvent[0] == req.body.dooronlygroups[i]) && (new Date(doorEvent[3]) > (startDT)) && (new Date(doorEvent[3]) < (endDT)))
+        {
+          for (o in doorObjects[doorEvent[0]]){
+            doorEvent.push(doorObjects[doorEvent[0]][o]);
+          }
+          selectedDoorEvents.push(doorEvent);
+        }
+
+      }
+
+    }
+    
+    // console.log(selectedDoorEvents);
+    await CSVfun.generate((reportTitle + '/' + req.body.name + '_' + 'Doors_' + Date.now() + '.csv'), selectedDoorEvents);
   }
-  // console.log(selectedDoorEvents);
-  await CSVfun.generate((req.body.name + '_' + 'Doors_' + Date.now() + '.csv'), selectedDoorEvents);
 
   //generate csv for selected users in timeframe
 
-  if (typeof req.body.usergroups == 'string'){req.body.usergroups = [req.body.usergroups]};
-  let selectedUserEvents = [
-    [
-      "cardraw",
-      "cardnr",
-      "access_time"
-    ]
-  ];
-  // console.log(parsedAllEvents)
-  for (i in req.body.usergroups)
-  {
-    for (e in parsedAllEvents.card_events)
+  usersData = await mySQLFun.getUsersInfo(db, req.params.siteID);
+
+  if (usersReport){
+
+      // usersData = await mySQLFun.getUsersInfo(req.params.siteID);
+          for (i in usersData){
+            userObjects[usersData[i].fob_id] = {};
+            for (o in usersData[i]){
+              userObjects[usersData[i].fob_id][o] = usersData[i][o];
+            }
+          }
+        
+    if (typeof req.body.useronlygroups == 'string'){req.body.useronlygroups = [req.body.useronlygroups]};
+    let selectedUserEvents = [
+      [
+        "cardraw",
+        "cardnr",
+        "access_time",
+        "id",
+        "first_name",
+        "last_name",
+        "email",
+        "fob_id",
+        "company_id_users",
+        "site_id_users",
+        "employee_id",
+        "fob_raw",
+        "last_access",
+        "companyName",
+        "orgName",
+        "siteName",
+        "doorgroups"
+      ]
+    ];
+    // console.log(parsedAllEvents)
+    for (i in req.body.useronlygroups)
     {
-      if ((parsedAllEvents.card_events[e][1] == req.body.usergroups[i]) && (new Date(parsedAllEvents.card_events[e][2]) > (startDT)) && (new Date(parsedAllEvents.card_events[e][2]) < (endDT)))
+      for (e in parsedAllEvents.card_events)
       {
-        selectedUserEvents.push(parsedAllEvents.card_events[e]);
+        let cardEvent = parsedAllEvents.card_events[e];
+        if ((cardEvent[1] == req.body.useronlygroups[i]) && (new Date(cardEvent[2]) > (startDT)) && (new Date(cardEvent[2]) < (endDT)))
+        {
+          for (o in userObjects[cardEvent[1]]){
+            cardEvent.push(userObjects[cardEvent[1]][o]);
+          }
+          selectedUserEvents.push(cardEvent);
+        }
       }
     }
+    // console.log(selectedUserEvents);
+    console.log('generating user report');
+    await CSVfun.generate((reportTitle + '/' + req.body.name + '_' + 'Users_' + Date.now() + '.csv'), selectedUserEvents);
   }
-  // console.log(selectedUserEvents);
-  let userFileName = (req.body.name + '_' + 'Users_' + Date.now() + '.csv');
-  await CSVfun.generate(userFileName, selectedUserEvents);
-  res.download('./csv_export/'+userFileName);
-  //updates db with most recent statuses (placeholder)
+  // res.download('./csv_export/'+userFileName);
+
+
+  //updates db with most recent statuses
 
   try {
 
@@ -316,17 +414,64 @@ reportsRouter.post('/', async function (req, res, next) {
     } finally {
       //await db.close();
     }
-    res.redirect(`/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports/download/${userFileName}`);
+    console.log(reportTitle);
+    res.redirect(`/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports/download/${reportTitle}`);
 
 });
 
-reportsRouter.get('/download/:filename', (req, res)=>{
+reportsRouter.get('/download/:filename', async (req, res)=>{
+  console.log('downloading');
 
-  res.download('./csv_export/' + req.params.filename, (err)=>{
+  await emptyDir('./csv_export/archives/');
+
+  await zipDirectory('./csv_export/generated/' + req.params.filename, './csv_export/archives/' + req.params.filename + '.zip');
+
+  // await emptyDir('./csv_export/generated/');
+
+  res.download('./csv_export/archives/' + req.params.filename + '.zip', (err)=>{
     console.log(err);
   });
+
   // res.redirect(`/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`)
 
 });
+
+function zipDirectory(sourceDir, outPath) {
+  const archive = archiver('zip', { zlib: { level: 9 }});
+  const stream = fs.createWriteStream(outPath);
+
+  return new Promise((resolve, reject) => {
+    archive
+      .directory(sourceDir, false)
+      .on('error', err => reject(err))
+      .pipe(stream)
+    ;
+
+    stream.on('close', () => resolve());
+    archive.finalize();
+  });
+}
+
+function emptyDir(dirPath) {
+  const dirContents = fs.readdirSync(dirPath); // List dir content
+  return new Promise((resolve, reject) => {
+    for (const fileOrDirPath of dirContents) {
+      try {
+        // Get Full path
+        const fullPath = path.join(dirPath, fileOrDirPath);
+        const stat = fs.statSync(fullPath);
+        if (stat.isDirectory()) {
+          // It's a sub directory
+          if (fs.readdirSync(fullPath).length) emptyDir(fullPath);
+          // If the dir is not empty then remove it's contents too(recursively)
+          fs.rmdirSync(fullPath);
+        } else fs.unlinkSync(fullPath); // It's a file
+      } catch (ex) {
+        reject(console.error(ex.message));
+      }
+    }
+    resolve(true);
+  });
+}
 
 module.exports = reportsRouter;

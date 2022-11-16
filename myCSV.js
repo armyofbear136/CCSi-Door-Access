@@ -1,12 +1,25 @@
 const fs = require("fs");
+const path = require("path");
 const { stringify } = require("csv-stringify");
 
 let CSVfun = {};
 
 CSVfun.generate = async function(path, data) {
 
+  var dir = 'csv_export/generated/';
+
+  // await emptyDir('./csv_export/generated/');
+  
+  console.log('deleted');
+
   return new Promise(function(resolve, reject) {
-    const writeableStream = fs.createWriteStream('csv_export/'+path);
+    
+    // fs.rm(dir, { recursive: true }, callback)
+    let newDir = path.split("/");
+    if (!fs.existsSync(dir+newDir[0])){
+      fs.mkdirSync(dir+newDir[0]);
+  }
+    const writeableStream = fs.createWriteStream(dir+path);
     var stringifier;
     for (i in data)
     {
@@ -19,10 +32,37 @@ CSVfun.generate = async function(path, data) {
         stringifier.write(data[i]);
       }
     }
+    // console.log(stringifier);
     resolve(stringifier.pipe(writeableStream));
+    // writeableStream.end();
+    // writeableStream.once('finish', () => resolve());
+    // // stringifier.on('error', reject);
     }
   )
 };
+
+function emptyDir(dirPath) {
+  const dirContents = fs.readdirSync(dirPath); // List dir content
+  return new Promise((resolve, reject) => {
+    for (const fileOrDirPath of dirContents) {
+      try {
+        // Get Full path
+        const fullPath = path.join(dirPath, fileOrDirPath);
+        const stat = fs.statSync(fullPath);
+        if (stat.isDirectory()) {
+          // It's a sub directory
+          if (fs.readdirSync(fullPath).length) emptyDir(fullPath);
+          // If the dir is not empty then remove it's contents too(recursively)
+          fs.rmdirSync(fullPath);
+        } else fs.unlinkSync(fullPath); // It's a file
+      } catch (ex) {
+        reject(console.error(ex.message));
+      }
+    }
+    console.log('resolved');
+    resolve(true);
+  });
+}
 
 
 module.exports = CSVfun;

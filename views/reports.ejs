@@ -33,88 +33,237 @@
                   <h4 class="card-title"><%= panelTitle %></h4>
                   <p class="card-category"><%= panelSubtext %></p>
                 </div>
-                <div class="card-body">
-                  <div class="col-md-5">
-                    <button type="submit" class="btn btn-primary" onclick="tryAdding()" value="Submit">Submit</button>
-                    <a href="/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>"><button class="btn btn-primary">Cancel</button></a>
+                <div class="card card-nav-tabs card-plain">
+                  <div class="card-header card-header-danger">
+                      <!-- colors: "header-primary", "header-info", "header-success", "header-warning", "header-danger" -->
+                      <div class="nav-tabs-navigation">
+                          <div class="nav-tabs-wrapper">
+                              <ul class="nav nav-tabs" data-tabs="tabs">
+                                  <li class="nav-item">
+                                      <a class="nav-link active" href="#site" data-toggle="tab">Site</a>
+                                  </li>
+                                  <li class="nav-item">
+                                      <a class="nav-link" href="#doors" data-toggle="tab">Doors</a>
+                                  </li>
+                                  <li class="nav-item">
+                                      <a class="nav-link" href="#users" data-toggle="tab">Users</a>
+                                  </li>
+                              </ul>
+                          </div>
+                      </div>
+                  </div><div class="card-body ">
+                      <div class="tab-content">
+                          <div class="tab-pane active" id="site">
+                            <div class="card-body">
+                              <div class="col-md-5">
+                                <button type="submit" class="btn btn-primary" onclick="tryGenSite()" value="Submit">Submit</button>
+                                <a href="/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>"><button class="btn btn-primary">Cancel</button></a>
+                              </div>
+                            </div>
+                            <form id="siteReportForm" method="post">
+                              <div class="row">
+                                <div class="col-md-2">
+                                  <div class="form-group">
+                                    <label class="bmd-label-floating" >Report Title</label>
+                                    <input type="text" class="form-control" name="name">
+                                  </div>
+                                </div>
+                                <div class="col-md-2">
+                                  <div class="form-group">
+                                    <label class="bmd-label-floating" >Start Time HH:MM:SS</label>
+                                    <input type="text" class="form-control" name="stime">
+                                  </div>
+                                </div>
+                                <div class="col-md-3">
+                                  <div class="form-group">
+                                    <label class="bmd-label-floating" >Start Date YYYY-MM-DD</label>
+                                    <input type="text" class="form-control" name="sdate">
+                                  </div>
+                                </div>
+                                <div class="col-md-2">
+                                  <div class="form-group">
+                                    <label class="bmd-label-floating">End Time HH:MM:SS</label>
+                                    <input type="text" class="form-control" name="etime">
+                                  </div>
+                                </div>
+                                <div class="col-md-3">
+                                  <div class="form-group">
+                                    <label class="bmd-label-floating" >End Date YYYY-MM-DD</label>
+                                    <input type="text" class="form-control" name="edate">
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="card-body">
+                                <h5>Doors</h5>
+                              </div>
+                              <div class="row">
+                                <% group.allDoors.forEach(function(door) { %>
+                                  <div class="col-md-6">
+                                    <div class="form-group">
+                                      <div class="form-check">
+                                        <label class="form-check-label">
+                                          <input class="form-check-input" type="checkbox" value="<%= door.name %>" name="sitedoorgroups">
+                                          <span class="form-check-sign">
+                                            <span class="check"></span>
+                                          </span>
+                                          <%= door.name %>
+                                        </label>
+                                      </div>
+                                    </div>
+                                  </div>
+                                <% }); %>
+                              </div>
+                              <div class="card-body">
+                                <h5>Users</h5>
+                              </div>
+                              <div class="row">
+                                <% group.allUsers.forEach(function(user) { %>
+                                  <div class="col-md-6">
+                                    <div class="form-group">
+                                      <div class="form-check">
+                                        <label class="form-check-label">
+                                          <input class="form-check-input" type="checkbox" value="<%= user.fob_id %>" name="siteusergroups">
+                                          <span class="form-check-sign">
+                                            <span class="check"></span>
+                                          </span>
+                                          <%= user.name %>
+                                        </label>
+                                      </div>
+                                    </div>
+                                  </div>
+                                <% }); %>
+                              </div>
+                              <div class="clearfix"></div>
+                            </form>
+                          </div>
+                          <div class="tab-pane" id="doors">
+                            <div class="card-body">
+                              <div class="col-md-5">
+                                <button type="submit" class="btn btn-primary" onclick="tryGenDoors()" value="Submit">Submit</button>
+                                <a href="/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>"><button class="btn btn-primary">Cancel</button></a>
+                              </div>
+                            </div>
+                            <form id="doorsReportForm" method="post">
+                              <div class="row">
+                                <div class="col-md-2">
+                                  <div class="form-group">
+                                    <label class="bmd-label-floating" >Report Title</label>
+                                    <input type="text" class="form-control" name="name">
+                                  </div>
+                                </div>
+                                <div class="col-md-2">
+                                  <div class="form-group">
+                                    <label class="bmd-label-floating" >Start Time HH:MM:SS</label>
+                                    <input type="text" class="form-control" name="stime">
+                                  </div>
+                                </div>
+                                <div class="col-md-3">
+                                  <div class="form-group">
+                                    <label class="bmd-label-floating" >Start Date YYYY-MM-DD</label>
+                                    <input type="text" class="form-control" name="sdate">
+                                  </div>
+                                </div>
+                                <div class="col-md-2">
+                                  <div class="form-group">
+                                    <label class="bmd-label-floating">End Time HH:MM:SS</label>
+                                    <input type="text" class="form-control" name="etime">
+                                  </div>
+                                </div>
+                                <div class="col-md-3">
+                                  <div class="form-group">
+                                    <label class="bmd-label-floating" >End Date YYYY-MM-DD</label>
+                                    <input type="text" class="form-control" name="edate">
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="card-body">
+                                <h5>Doors</h5>
+                              </div>
+                              <div class="row">
+                                <% group.allDoors.forEach(function(door) { %>
+                                  <div class="col-md-6">
+                                    <div class="form-group">
+                                      <div class="form-check">
+                                        <label class="form-check-label">
+                                          <input class="form-check-input" type="checkbox" value="<%= door.name %>" name="dooronlygroups">
+                                          <span class="form-check-sign">
+                                            <span class="check"></span>
+                                          </span>
+                                          <%= door.name %>
+                                        </label>
+                                      </div>
+                                    </div>
+                                  </div>
+                                <% }); %>
+                              </div>
+                              <div class="clearfix"></div>
+                            </form>
+                          </div>
+                          <div class="tab-pane" id="users">
+                            <div class="card-body">
+                              <div class="col-md-5">
+                                <button type="submit" class="btn btn-primary" onclick="tryGenUsers()" value="Submit">Submit</button>
+                                <a href="/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>"><button class="btn btn-primary">Cancel</button></a>
+                              </div>
+                            </div>
+                            <form id="usersReportForm" method="post">
+                              <div class="row">
+                                <div class="col-md-2">
+                                  <div class="form-group">
+                                    <label class="bmd-label-floating" >Report Title</label>
+                                    <input type="text" class="form-control" name="name">
+                                  </div>
+                                </div>
+                                <div class="col-md-2">
+                                  <div class="form-group">
+                                    <label class="bmd-label-floating" >Start Time HH:MM:SS</label>
+                                    <input type="text" class="form-control" name="stime">
+                                  </div>
+                                </div>
+                                <div class="col-md-3">
+                                  <div class="form-group">
+                                    <label class="bmd-label-floating" >Start Date YYYY-MM-DD</label>
+                                    <input type="text" class="form-control" name="sdate">
+                                  </div>
+                                </div>
+                                <div class="col-md-2">
+                                  <div class="form-group">
+                                    <label class="bmd-label-floating">End Time HH:MM:SS</label>
+                                    <input type="text" class="form-control" name="etime">
+                                  </div>
+                                </div>
+                                <div class="col-md-3">
+                                  <div class="form-group">
+                                    <label class="bmd-label-floating" >End Date YYYY-MM-DD</label>
+                                    <input type="text" class="form-control" name="edate">
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="card-body">
+                                <h5>Users</h5>
+                              </div>
+                              <div class="row">
+                                <% group.allUsers.forEach(function(user) { %>
+                                  <div class="col-md-6">
+                                    <div class="form-group">
+                                      <div class="form-check">
+                                        <label class="form-check-label">
+                                          <input class="form-check-input" type="checkbox" value="<%= user.fob_id %>" name="useronlygroups">
+                                          <span class="form-check-sign">
+                                            <span class="check"></span>
+                                          </span>
+                                          <%= user.name %>
+                                        </label>
+                                      </div>
+                                    </div>
+                                  </div>
+                                <% }); %>
+                              </div>
+                              <div class="clearfix"></div>
+                            </form>
+                          </div>
+                      </div>
                   </div>
-                </div>
-                <div class="card-body">
-                  <form id="addGroupForm" method="post">
-                    <div class="row">
-                      <div class="col-md-2">
-                        <div class="form-group">
-                          <label class="bmd-label-floating" >Report Title</label>
-                          <input type="text" class="form-control" name="name">
-                        </div>
-                      </div>
-                      <div class="col-md-2">
-                        <div class="form-group">
-                          <label class="bmd-label-floating" >Start Time HH:MM:SS</label>
-                          <input type="text" class="form-control" name="stime">
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="form-group">
-                          <label class="bmd-label-floating" >Start Date YYYY-MM-DD</label>
-                          <input type="text" class="form-control" name="sdate">
-                        </div>
-                      </div>
-                      <div class="col-md-2">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">End Time HH:MM:SS</label>
-                          <input type="text" class="form-control" name="etime">
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="form-group">
-                          <label class="bmd-label-floating" >End Date YYYY-MM-DD</label>
-                          <input type="text" class="form-control" name="edate">
-                        </div>
-                      </div>
-                    </div>
-                    <div class="card-body">
-                      <h5>Doors</h5>
-                    </div>
-                    <div class="row">
-                      <% group.allDoors.forEach(function(door) { %>
-                        <div class="col-md-6">
-                          <div class="form-group">
-                            <div class="form-check">
-                              <label class="form-check-label">
-                                <input class="form-check-input" type="checkbox" value="<%= door.name %>" name="doorgroups">
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
-                                <%= door.name %>
-                              </label>
-                            </div>
-                          </div>
-                        </div>
-                      <% }); %>
-                    </div>
-                    <div class="card-body">
-                      <h5>Users</h5>
-                    </div>
-                    <div class="row">
-                      <% group.allUsers.forEach(function(user) { %>
-                        <div class="col-md-6">
-                          <div class="form-group">
-                            <div class="form-check">
-                              <label class="form-check-label">
-                                <input class="form-check-input" type="checkbox" value="<%= user.fob_id %>" name="usergroups">
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
-                                <%= user.name %>
-                              </label>
-                            </div>
-                          </div>
-                        </div>
-                      <% }); %>
-                    </div>
-                    <div class="clearfix"></div>
-                  </form>
                 </div>
               </div>
             </div>
@@ -128,8 +277,23 @@
   
   <%- include('./partials/foot'); %>
   <script>
-    function tryAdding() {
-      document.getElementById("addGroupForm").submit();
+    function tryGenSite() {
+      let form = document.getElementById("siteReportForm")
+      // let input = document.createElement('input');
+      // input.setAttribute('name', 'reportType');
+      // input.setAttribute('value', 'door');
+      // input.setAttribute('type', 'text');
+
+      // form.appendChild(input);
+      form.submit();
+    }
+    function tryGenDoors() {
+      let form = document.getElementById("doorsReportForm")
+      form.submit();
+    }
+    function tryGenUsers() {
+      let form = document.getElementById("usersReportForm")
+      form.submit();
     }
   </script>
 
