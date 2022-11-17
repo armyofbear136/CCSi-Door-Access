@@ -56,8 +56,7 @@
                           <div class="tab-pane active" id="site">
                             <div class="card-body">
                               <div class="col-md-5">
-                                <button type="submit" class="btn btn-primary" onclick="tryGenSite()" value="Submit">Submit</button>
-                                <a href="/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>"><button class="btn btn-primary">Cancel</button></a>
+                                <button type="submit" class="btn btn-primary" onclick="tryGenSite()" value="Submit">Event Log</button>
                               </div>
                             </div>
                             <form id="siteReportForm" method="post">
@@ -139,8 +138,8 @@
                           <div class="tab-pane" id="doors">
                             <div class="card-body">
                               <div class="col-md-5">
-                                <button type="submit" class="btn btn-primary" onclick="tryGenDoors()" value="Submit">Submit</button>
-                                <a href="/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>"><button class="btn btn-primary">Cancel</button></a>
+                                <button type="submit" class="btn btn-primary" onclick="tryGenDoorEvent()" value="Submit">Event Log</button>
+                                <button type="submit" class="btn btn-primary" onclick="tryGenDoorAccess()" value="Submit">Access Log</button>
                               </div>
                             </div>
                             <form id="doorsReportForm" method="post">
@@ -202,8 +201,7 @@
                           <div class="tab-pane" id="users">
                             <div class="card-body">
                               <div class="col-md-5">
-                                <button type="submit" class="btn btn-primary" onclick="tryGenUsers()" value="Submit">Submit</button>
-                                <a href="/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>"><button class="btn btn-primary">Cancel</button></a>
+                                <button type="submit" class="btn btn-primary" onclick="tryGenUsers()" value="Submit">Event Log</button>
                               </div>
                             </div>
                             <form id="usersReportForm" method="post">
@@ -279,16 +277,26 @@
   <script>
     function tryGenSite() {
       let form = document.getElementById("siteReportForm")
-      // let input = document.createElement('input');
-      // input.setAttribute('name', 'reportType');
-      // input.setAttribute('value', 'door');
-      // input.setAttribute('type', 'text');
-
-      // form.appendChild(input);
       form.submit();
     }
-    function tryGenDoors() {
+    function tryGenDoorEvent() {
       let form = document.getElementById("doorsReportForm")
+      let input = document.createElement('input');
+      input.setAttribute('name', 'logtype');
+      input.setAttribute('value', 'event');
+      input.setAttribute('type', 'hidden');
+
+      form.appendChild(input);
+      form.submit();
+    }
+    function tryGenDoorAccess() {
+      let form = document.getElementById("doorsReportForm")
+      let input = document.createElement('input');
+      input.setAttribute('name', 'logtype');
+      input.setAttribute('value', 'access');
+      input.setAttribute('type', 'hidden');
+
+      form.appendChild(input);
       form.submit();
     }
     function tryGenUsers() {
