@@ -1,6 +1,7 @@
 var express = require('express');
 const asyncify = require('express-asyncify');
 const mySQLFun = require('../mySQL');
+const APIFun = require('../myAPI');
 const doorsRouter = asyncify(express.Router({ mergeParams: true }));
 
 
@@ -952,6 +953,10 @@ doorsRouter.get('/:doorID/controls', async function (req, res, next) {
 
   // /* load data from database */
 
+  const response = await APIFun.doorControls('access', "Axis-accc8e75260e:1667922341.563428000");
+  console.log("response");
+  console.log(response);
+
 
   try {
 
@@ -1028,7 +1033,7 @@ doorsRouter.get('/:doorID/controls', async function (req, res, next) {
         ]
         var varName;
 
-        console.log(doorData);
+        // console.log(doorData);
         varName = "CCSI Door Access" //optional title override
         res.render('door_controls', { door: doorData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${doorData.companyName} - ${doorData.siteName}`, panelTitle: `${doorData.name} - Controls`, panelSubtext: `Door Control Panel`, companyID: req.params.companyID, siteID: req.params.siteID, orgID: req.params.orgID });
 

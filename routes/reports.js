@@ -259,10 +259,9 @@ reportsRouter.post('/', async function (req, res, next) {
         "status",
         "alarm",
         "site_id_doors",
+        "last_access",
         "tamper",
-        "companyName",
-        "orgName",
-        "siteName"
+        "reader"
       ]
     ];
     // console.log(parsedAllEvents)

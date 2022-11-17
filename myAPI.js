@@ -45,6 +45,57 @@ const client = new DigestFetch(username, password);
   .catch(e=>console.error(e))
 }
 
+APIfun.doorControls = async function(command, token){
+  const option = {
+    method: 'POST',
+    body: `{"Token": "${token}"}`
+  }
+  
+  return new Promise(async function(resolve, reject) {
+    var response;
+    if (command == 'unlock'){
+      response = await APIfun.digestor('http://10.0.1.246/vapix/doorcontrol/UnlockDoor', 'root', 'pass', option);
+    }
+    else if (command == 'lock'){
+      response = await APIfun.digestor('http://10.0.1.246/vapix/doorcontrol/LockDoor', 'root', 'pass', option);
+    }
+    else if (command == 'access'){
+      response = await APIfun.digestor('http://10.0.1.246/vapix/doorcontrol/AccessDoor', 'root', 'pass', option);
+    }
+    resolve (response);
+  });
+    
+
+}
+
+APIfun.lockDoor = async function(){
+  const option = {
+    method: 'POST',
+    body: `{"Token": "Axis-accc8e75260e:1667922341.563428000"}`
+  }
+  const response = await APIfun.digestor('http://10.0.1.246/vapix/doorcontrol/LockDoor', 'root', 'pass', option);
+  return new Promise(function(resolve, reject) {
+    
+    resolve (response);
+  });
+    
+
+}
+
+APIfun.accessDoor = async function(){
+  const option = {
+    method: 'POST',
+    body: `{"Token": "Axis-accc8e75260e:1667922341.563428000"}`
+  }
+  const response = await APIfun.digestor('http://10.0.1.246/vapix/doorcontrol/AccessDoor', 'root', 'pass', option);
+  return new Promise(function(resolve, reject) {
+    
+    resolve (response);
+  });
+    
+
+}
+
 APIfun.axisParseAllEvents = async function(jsonData){
   return new Promise(function(resolve, reject) {
     let cardEventArray = [
