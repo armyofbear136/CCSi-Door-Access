@@ -8,9 +8,9 @@ CSVfun.generate = async function(path, data) {
 
   var dir = 'csv_export/generated/';
 
+  // file wont stop being in use so can't delete right now, but would like auto cleanup
   // await emptyDir('./csv_export/generated/');
   
-  console.log('deleted');
 
   return new Promise(function(resolve, reject) {
     

@@ -51,7 +51,8 @@ APIfun.axisParseAllEvents = async function(jsonData){
       [
         "cardraw",
         "cardnr",
-        "access_time"
+        "access_time",
+        "reader"
       ]
     ];
     let doorEventArray = [
@@ -115,6 +116,10 @@ APIfun.axisParseAllEvents = async function(jsonData){
             
           }
         }
+      }
+      //push door reader since out of sequence check needed
+      if (foundDoorRequest){
+        cardEventArray[cardEventArray.length-1].push(jsonData[i].KeyValues[1].Value);
       }
     }
     console.log('finished parsing');

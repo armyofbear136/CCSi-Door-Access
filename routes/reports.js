@@ -308,6 +308,7 @@ reportsRouter.post('/', async function (req, res, next) {
         "cardraw",
         "cardnr",
         "access_time",
+        "reader",
         "id",
         "first_name",
         "last_name",
@@ -344,6 +345,78 @@ reportsRouter.post('/', async function (req, res, next) {
     await CSVfun.generate((reportTitle + '/' + req.body.name + '_' + 'Users_' + Date.now() + '.csv'), selectedUserEvents);
   }
   // res.download('./csv_export/'+userFileName);
+
+  //generate csv for door and user cross reference 
+
+  if (siteReport){
+
+    for (i in doorsData){
+      doorObjects[doorsData[i].name] = {};
+      for (o in doorsData[i]){
+        doorObjects[doorsData[i].name][o] = doorsData[i][o];
+      }
+    }
+    for (i in usersData){
+      userObjects[usersData[i].fob_id] = {};
+      for (o in usersData[i]){
+        userObjects[usersData[i].fob_id][o] = usersData[i][o];
+      }
+    }
+
+      
+  if (typeof req.body.siteusergroups == 'string'){req.body.siteusergroups = [req.body.siteusergroups]};
+  if (typeof req.body.sitedoorgroups == 'string'){req.body.sitedoorgroups = [req.body.sitedoorgroups]};
+  let selectedSiteEvents = [
+    [
+      "cardraw",
+      "cardnr",
+      "access_time",
+      "reader",
+      "id",
+      "first_name",
+      "last_name",
+      "email",
+      "fob_id",
+      "company_id_users",
+      "site_id_users",
+      "employee_id",
+      "fob_raw",
+      "last_access",
+      "companyName",
+      "orgName",
+      "siteName",
+      "doorgroups",
+      "doorname"
+    ]
+  ];
+  // console.log(parsedAllEvents)
+  for (i in req.body.siteusergroups)
+  {
+    for (e in parsedAllEvents.card_events)
+    {
+      var doorMatch = false;
+      let cardEvent = parsedAllEvents.card_events[e];
+      if ((cardEvent[1] == req.body.siteusergroups[i]) && (new Date(cardEvent[2]) > (startDT)) && (new Date(cardEvent[2]) < (endDT)))
+      {
+        for (d in doorObjects){
+          if (doorObjects[d].reader == cardEvent[3]){
+            if (req.body.sitedoorgroups.includes(d)){doorMatch = true;}
+            for (o in userObjects[cardEvent[1]]){
+              cardEvent.push(userObjects[cardEvent[1]][o]);
+            }
+            cardEvent.push(d);
+          }
+        }
+        if (doorMatch){
+          selectedSiteEvents.push(cardEvent);
+        }
+      }
+    }
+  }
+  // console.log(selectedUserEvents);
+  console.log('generating site report');
+  await CSVfun.generate((reportTitle + '/' + req.body.name + '_' + 'Site_' + Date.now() + '.csv'), selectedSiteEvents);
+}
 
 
   //updates db with most recent statuses
