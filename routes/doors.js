@@ -262,7 +262,7 @@ doorsRouter.post('/add', async function (req, res, next) {
     await db.query(
 
       `INSERT INTO doors
-      VALUES (NULL, "${req.body.name}", "${req.body.ip}", "NEW", "NEW", ${req.params.siteID}, NULL, NULL)`,
+      VALUES (NULL, "${req.body.name}", "${req.body.ip}", "NEW", "NEW", ${req.params.siteID}, NULL, NULL, NULL, "07:00:00", "18:00:00", "07:00:00", "18:00:00", "07:00:00", "18:00:00", "07:00:00", "18:00:00", "07:00:00", "18:00:00", "07:00:00", "18:00:00", "07:00:00", "18:00:00", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)`,
 
       async function (err, result, fields) {
         if (err) {
@@ -834,13 +834,57 @@ doorsRouter.put('/:doorID/edit', async function (req, res, next) {
 
     if (!req.body.name) { req.body.name = null };
     if (!req.body.ip) { req.body.ip = null };
+    if (!req.body.alwayson) { req.body.alwayson = 0};
+    if (!req.body.mallday) { req.body.mallday = 0};
+    if (!req.body.menabled) { req.body.menabled = 0};
+    if (!req.body.tuallday) { req.body.tuallday = 0};
+    if (!req.body.tuenabled) { req.body.tuenabled = 0};
+    if (!req.body.wallday) { req.body.wallday = 0};
+    if (!req.body.wenabled) { req.body.wenabled = 0};
+    if (!req.body.thallday) { req.body.thallday = 0};
+    if (!req.body.thenabled) { req.body.thenabled = 0};
+    if (!req.body.fallday) { req.body.fallday = 0};
+    if (!req.body.fenabled) { req.body.fenabled = 0};
+    if (!req.body.saallday) { req.body.saallday = 0};
+    if (!req.body.saenabled) { req.body.saenabled = 0};
+    if (!req.body.suallday) { req.body.suallday = 0};
+    if (!req.body.suenabled) { req.body.suenabled = 0};
 
     await db.query(
 
       `UPDATE doors 
       SET 
         name = "${req.body.name}", 
-        ip = "${req.body.ip}"
+        ip = "${req.body.ip}",
+        mstart_time = "${req.body.mstime}",
+        mend_time = "${req.body.metime}",
+        tustart_time = "${req.body.tustime}",
+        tuend_time = "${req.body.tuetime}",
+        wstart_time = "${req.body.wstime}",
+        wend_time = "${req.body.wetime}",
+        thstart_time = "${req.body.thstime}",
+        thend_time = "${req.body.thetime}",
+        fstart_time = "${req.body.fstime}",
+        fend_time = "${req.body.fetime}",
+        sastart_time = "${req.body.sastime}",
+        saend_time = "${req.body.saetime}",
+        sustart_time = "${req.body.sustime}",
+        suend_time = "${req.body.suetime}",
+        menabled = "${req.body.menabled}",
+        tuenabled = "${req.body.tuenabled}",
+        wenabled = "${req.body.wenabled}",
+        thenabled = "${req.body.thenabled}",
+        fenabled = "${req.body.fenabled}",
+        saenabled = "${req.body.saenabled}",
+        suenabled = "${req.body.suenabled}",
+        mallday = "${req.body.mallday}",
+        tuallday = "${req.body.tuallday}",
+        wallday = "${req.body.wallday}",
+        thallday = "${req.body.thallday}",
+        fallday = "${req.body.fallday}",
+        saallday = "${req.body.saallday}",
+        suallday = "${req.body.suallday}",
+        alwayson = "${req.body.alwayson}"
       WHERE id = ${req.params.doorID}`,
 
       async function (err, result, fields) {

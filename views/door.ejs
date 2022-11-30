@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <script>
-    trimSlashes = str => str.split('/').filter(v => v !== '').join('/');
-  
-    let sanitized = window.location.pathname;
-    sanitized = trimSlashes(sanitized);
-    
-    const newURL = window.location.protocol + '//' + window.location.host + '/'+ sanitized;
-  
-    if (window.location.href !== newURL) {
-       window.location.href = newURL;
-    }
-  </script>
+<script>
+  trimSlashes = str => str.split('/').filter(v => v !== '').join('/');
+
+  let sanitized = window.location.pathname;
+  sanitized = trimSlashes(sanitized);
+
+  const newURL = window.location.protocol + '//' + window.location.host + '/' + sanitized;
+
+  if (window.location.href !== newURL) {
+    window.location.href = newURL;
+  }
+</script>
 
 <head>
   <%- include('./partials/head'); %>
@@ -27,30 +27,27 @@
         <div class="container-fluid">
           <%- include('./partials/tabBar', {tabs: tabBar}) %>
           <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-6">
               <div class="card">
                 <div class="card-header card-header-primary">
                   <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-2">
                       <h4 class="card-title">
                         <%= panelTitle %>
                       </h4>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-10">
                       <button class="btn btn-primary pull-right" onclick=tryDeleting()>Delete</button></a>
                       <a href="<%= thisURL %>/controls"><button class="btn btn-primary pull-right">Door
                           Controls</button></a>
                       <a href="<%= thisURL %>/edit"><button class="btn btn-primary pull-right">Edit
                           Door</button></a>
-                      <button type="submit" class="btn btn-primary pull-right">Unlock Door</button>
-                      <button type="submit" class="btn btn-primary pull-right">Lock Door</button>
                     </div>
                   </div>
                   <p class="card-category">
                     <%= panelSubtext %>
                   </p>
                 </div>
-                <form>
                   <div class="card text-right">
                     <div class="card-body">
                       <div class="row">
@@ -112,7 +109,512 @@
                     </div>
                   </div>
                   <div class="clearfix"></div>
-                </form>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header card-header-primary">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <h4 class="card-title">Schedule</h4>
+                    </div>
+                  </div>
+                  <!-- <p class="card-category"><%= panelSubtext %></p> -->
+                </div>
+                <div class="card text-right">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-2">
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <% if (door.alwayson) { %>
+                              <input class="form-check-input" type="checkbox" value="<%= door.alwayson %>" disabled checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                            <% } else { %>
+                              <input class="form-check-input" type="checkbox" value="<%= door.alwayson %>" disabled>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                            <% } %>
+                            Always On
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-2">
+                        <p></p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-2">
+                        <p></p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <!-- <label for="name">Group Name</label>
+                          <input type="text" class="form-control" id="name" placeholder="<%= door.name %>" disabled> -->
+                          <p>Monday</p>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <label for="mstime">Start Time</label>
+                          <input type="text" class="form-control" id="mstime" placeholder="<%= door.mstart_time %>" disabled>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <label for="metime">End Time</label>
+                          <input type="text" class="form-control" id="metime" placeholder="<%= door.mend_time %>" disabled>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <% if (door.mallday) { %>
+                              <input class="form-check-input" type="checkbox" value="<%= door.mallday %>" disabled checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                            <% } else { %>
+                              <input class="form-check-input" type="checkbox" value="<%= door.mallday %>" disabled>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                            <% } %>
+                            All Day
+                          </label>
+                        </div>
+                      </div>
+                      <div class="col-md-1">
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <% if (door.menabled) { %>
+                              <input class="form-check-input" type="checkbox" value="<%= door.menabled %>" disabled checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                            <% } else { %>
+                              <input class="form-check-input" type="checkbox" value="<%= door.menabled %>" disabled>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                            <% } %>
+                            Enabled
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-2">
+                        <p></p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-2">
+                        <p></p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <!-- <label for="name">Group Name</label>
+                          <input type="text" class="form-control" id="name" placeholder="<%= door.name %>" disabled> -->
+                          <p>Tuesday</p>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <label for="tustime">Start Time</label>
+                          <input type="text" class="form-control" id="tustime" placeholder="<%= door.tustart_time %>" disabled>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <label for="tuetime">End Time</label>
+                          <input type="text" class="form-control" id="tuetime" placeholder="<%= door.tuend_time %>" disabled>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <% if (door.tuallday) { %>
+                              <input class="form-check-input" type="checkbox" value="<%= door.tuallday %>" disabled checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                            <% } else { %>
+                              <input class="form-check-input" type="checkbox" value="<%= door.tuallday %>" disabled>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                            <% } %>
+                            All Day
+                          </label>
+                        </div>
+                      </div>
+                      <div class="col-md-1">
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <% if (door.tuenabled) { %>
+                              <input class="form-check-input" type="checkbox" value="<%= door.tuenabled %>" disabled checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                            <% } else { %>
+                              <input class="form-check-input" type="checkbox" value="<%= door.tuenabled %>" disabled>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                            <% } %>
+                            Enabled
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-2">
+                        <p></p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-2">
+                        <p></p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <!-- <label for="name">Group Name</label>
+                          <input type="text" class="form-control" id="name" placeholder="<%= door.name %>" disabled> -->
+                          <p>Wednesday</p>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <label for="wstime">Start Time</label>
+                          <input type="text" class="form-control" id="wstime" placeholder="<%= door.wstart_time %>" disabled>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <label for="wetime">End Time</label>
+                          <input type="text" class="form-control" id="wetime" placeholder="<%= door.wend_time %>" disabled>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <% if (door.wallday) { %>
+                              <input class="form-check-input" type="checkbox" value="<%= door.wallday %>" disabled checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                            <% } else { %>
+                              <input class="form-check-input" type="checkbox" value="<%= door.wallday %>" disabled>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                            <% } %>
+                            All Day
+                          </label>
+                        </div>
+                      </div>
+                      <div class="col-md-1">
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <% if (door.wenabled) { %>
+                              <input class="form-check-input" type="checkbox" value="<%= door.wenabled %>" disabled checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                            <% } else { %>
+                              <input class="form-check-input" type="checkbox" value="<%= door.wenabled %>" disabled>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                            <% } %>
+                            Enabled
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-2">
+                        <p></p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-2">
+                        <p></p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <!-- <label for="name">Group Name</label>
+                          <input type="text" class="form-control" id="name" placeholder="<%= door.name %>" disabled> -->
+                          <p>Thursday</p>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <label for="thstime">Start Time</label>
+                          <input type="text" class="form-control" id="thstime" placeholder="<%= door.thstart_time %>" disabled>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <label for="thetime">End Time</label>
+                          <input type="text" class="form-control" id="thetime" placeholder="<%= door.thend_time %>" disabled>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <% if (door.thallday) { %>
+                              <input class="form-check-input" type="checkbox" value="<%= door.thallday %>" disabled checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                            <% } else { %>
+                              <input class="form-check-input" type="checkbox" value="<%= door.thallday %>" disabled>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                            <% } %>
+                            All Day
+                          </label>
+                        </div>
+                      </div>
+                      <div class="col-md-1">
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <% if (door.thenabled) { %>
+                              <input class="form-check-input" type="checkbox" value="<%= door.thenabled %>" disabled checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                            <% } else { %>
+                              <input class="form-check-input" type="checkbox" value="<%= door.thenabled %>" disabled>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                            <% } %>
+                            Enabled
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-2">
+                        <p></p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-2">
+                        <p></p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <!-- <label for="name">Group Name</label>
+                          <input type="text" class="form-control" id="name" placeholder="<%= door.name %>" disabled> -->
+                          <p>Friday</p>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <label for="fstime">Start Time</label>
+                          <input type="text" class="form-control" id="fstime" placeholder="<%= door.fstart_time %>" disabled>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <label for="fetime">End Time</label>
+                          <input type="text" class="form-control" id="fetime" placeholder="<%= door.fend_time %>" disabled>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <% if (door.fallday) { %>
+                              <input class="form-check-input" type="checkbox" value="<%= door.fallday %>" disabled checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                            <% } else { %>
+                              <input class="form-check-input" type="checkbox" value="<%= door.fallday %>" disabled>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                            <% } %>
+                            All Day
+                          </label>
+                        </div>
+                      </div>
+                      <div class="col-md-1">
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <% if (door.fenabled) { %>
+                              <input class="form-check-input" type="checkbox" value="<%= door.fenabled %>" disabled checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                            <% } else { %>
+                              <input class="form-check-input" type="checkbox" value="<%= door.fenabled %>" disabled>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                            <% } %>
+                            Enabled
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-2">
+                        <p></p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-2">
+                        <p></p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <!-- <label for="name">Group Name</label>
+                          <input type="text" class="form-control" id="name" placeholder="<%= door.name %>" disabled> -->
+                          <p>Saturday</p>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <label for="sastime">Start Time</label>
+                          <input type="text" class="form-control" id="sastime" placeholder="<%= door.sastart_time %>" disabled>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <label for="saetime">End Time</label>
+                          <input type="text" class="form-control" id="saetime" placeholder="<%= door.saend_time %>" disabled>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <% if (door.saallday) { %>
+                              <input class="form-check-input" type="checkbox" value="<%= door.saallday %>" disabled checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                            <% } else { %>
+                              <input class="form-check-input" type="checkbox" value="<%= door.saallday %>" disabled>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                            <% } %>
+                            All Day
+                          </label>
+                        </div>
+                      </div>
+                      <div class="col-md-1">
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <% if (door.saenabled) { %>
+                              <input class="form-check-input" type="checkbox" value="<%= door.saenabled %>" disabled checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                            <% } else { %>
+                              <input class="form-check-input" type="checkbox" value="<%= door.saenabled %>" disabled>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                            <% } %>
+                            Enabled
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-2">
+                        <p></p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-2">
+                        <p></p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <!-- <label for="name">Group Name</label>
+                          <input type="text" class="form-control" id="name" placeholder="<%= door.name %>" disabled> -->
+                          <p>Sunday</p>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <label for="sustime">Start Time</label>
+                          <input type="text" class="form-control" id="sustime" placeholder="<%= door.sustart_time %>" disabled>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <label for="suetime">End Time</label>
+                          <input type="text" class="form-control" id="suetime" placeholder="<%= door.suend_time %>" disabled>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <% if (door.suallday) { %>
+                              <input class="form-check-input" type="checkbox" value="<%= door.suallday %>" disabled checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                            <% } else { %>
+                              <input class="form-check-input" type="checkbox" value="<%= door.suallday %>" disabled>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                            <% } %>
+                            All Day
+                          </label>
+                        </div>
+                      </div>
+                      <div class="col-md-1">
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <% if (door.suenabled) { %>
+                              <input class="form-check-input" type="checkbox" value="<%= door.suenabled %>" disabled checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                            <% } else { %>
+                              <input class="form-check-input" type="checkbox" value="<%= door.suenabled %>" disabled>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                            <% } %>
+                            Enabled
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="clearfix"></div>
               </div>
             </div>
           </div>
@@ -127,8 +629,7 @@
 </body>
 
 <script>
-  async function tryDeleting()
-  { 
+  async function tryDeleting() {
     await fetch(window.location.href, {
       method: 'DELETE', // *GET, POST, PUT, DELETE, etc.
       mode: 'cors', // no-cors, *cors, same-origin

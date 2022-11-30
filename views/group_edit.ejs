@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <script>
-    trimSlashes = str => str.split('/').filter(v => v !== '').join('/');
-  
-    let sanitized = window.location.pathname;
-    sanitized = trimSlashes(sanitized);
-    
-    const newURL = window.location.protocol + '//' + window.location.host + '/'+ sanitized;
-  
-    if (window.location.href !== newURL) {
-       window.location.href = newURL;
-    }
-  </script>
+<script>
+  trimSlashes = str => str.split('/').filter(v => v !== '').join('/');
+
+  let sanitized = window.location.pathname;
+  sanitized = trimSlashes(sanitized);
+
+  const newURL = window.location.protocol + '//' + window.location.host + '/' + sanitized;
+
+  if (window.location.href !== newURL) {
+    window.location.href = newURL;
+  }
+</script>
 
 <head>
   <%- include('./partials/head'); %>
@@ -26,29 +26,32 @@
       <div class="content">
         <div class="container-fluid">
           <%- include('./partials/tabBar', {tabs: tabBar}) %>
-          <div class="row">
-            <div class="col-md-8">
-              <div class="card">
-                <div class="card-header card-header-primary">
-                  <div class="row">
-                    <div class="col-md-6">
-                      <h4 class="card-title"><%= panelTitle %></h4>
+          <div class ="row">
+          <div class="col-md-2">
+            <button type="submit" class="btn btn-primary pull-right" onclick="tryEditing()" value="Submit">Submit</button>
+            <a href="/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>/groups/<%= group.id %>"><button class="btn btn-primary pull-right">Cancel</button></a>
+          </div>
+          </div>
+          <form id="editGroupForm" method="put">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="card">
+                  <div class="card-header card-header-primary">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <h4 class="card-title"><%= panelTitle %></h4>
+                      </div>
+                      
                     </div>
-                    <div class="col-md-6">
-                      <button type="submit" class="btn btn-primary pull-right" onclick="tryEditing()" value="Submit">Submit</button>
-                      <a href="/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>/groups/<%= group.id %>"><button class="btn btn-primary pull-right">Cancel</button></a>
-                    </div>
+                    <p class="card-category"><%= panelSubtext %></p>
                   </div>
-                  <p class="card-category"><%= panelSubtext %></p>
-                </div>
-                <form id="editGroupForm" method="put">
                   <div class="card text-right">
                     <div class="card-body">
                       <div class="row">
                         <div class="col-md-2">
                           <div class="form-group">
                             <label for="name">Group Name</label>
-                            <input type="text" class="form-control" id="name" name ="name" value="<%= group.name %>" placeholder="Access Group">
+                            <input type="text" class="form-control" id="name" name="name" value="<%= group.name %>" placeholder="Access Group">
                           </div>
                         </div>
                         <div class="col-md-2">
@@ -126,25 +129,530 @@
                       </div>
                     </div>
                   </div>
-                  <div class="clearfix"></div>
-                </form>
+                  <!-- <div class="clearfix"></div> -->
+                </div>
               </div>
-            </div>
-          </div>
+              <div class="col-md-6">
+                <div class="card">
+                  <div class="card-header card-header-primary">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <h4 class="card-title">Schedule</h4>
+                      </div>
+                    </div>
+                    <!-- <p class="card-category"><%= panelSubtext %></p> -->
+                  </div>
+                  <div class="card text-right">
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-md-2">
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <% if (group.alwayson) { %>
+                              <input class="form-check-input" type="checkbox" value="1" name="alwayson" checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                              <% } else { %>
+                              <input class="form-check-input" type="checkbox" value="1" name="alwayson">
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                              <% } %>
+                              Always On
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-2">
+                          <p></p>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-2">
+                          <p></p>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-2">
+                          <div class="form-group">
+                            <!-- <label for="name">Group Name</label>
+                          <input type="text" class="form-control" id="name" placeholder="<%= group.name %>" disabled> -->
+                            <p>Monday</p>
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <div class="form-group">
+                            <label for="mstime">Start Time</label>
+                            <input type="text" class="form-control" id="mstime" name="mstime" value="<%= group.mstart_time %>" placeholder="HH:MM:SS">
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <div class="form-group">
+                            <label for="metime">End Time</label>
+                            <input type="text" class="form-control" id="metime" name="metime" value="<%= group.mend_time %>" placeholder="HH:MM:SS">
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <% if (group.mallday) { %>
+                              <input class="form-check-input" type="checkbox" value="1" name="mallday" checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                              <% } else { %>
+                              <input class="form-check-input" type="checkbox" value="1" name="mallday">
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                              <% } %>
+                              All Day
+                            </label>
+                          </div>
+                        </div>
+                        <div class="col-md-1">
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <% if (group.menabled) { %>
+                              <input class="form-check-input" type="checkbox" value="1" name="menabled" checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                              <% } else { %>
+                              <input class="form-check-input" type="checkbox" value="1" name="menabled">
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                              <% } %>
+                              Enabled
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-2">
+                          <p></p>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-2">
+                          <p></p>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-2">
+                          <div class="form-group">
+                            <!-- <label for="name">Group Name</label>
+                          <input type="text" class="form-control" id="name" placeholder="<%= group.name %>" disabled> -->
+                            <p>Tuesday</p>
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <div class="form-group">
+                            <label for="tustime">Start Time</label>
+                            <input type="text" class="form-control" id="tustime" name="tustime" value="<%= group.tustart_time %>" placeholder="HH:MM:SS">
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <div class="form-group">
+                            <label for="tuetime">End Time</label>
+                            <input type="text" class="form-control" id="tuetime" name="tuetime" value="<%= group.tuend_time %>" placeholder="HH:MM:SS">
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <% if (group.tuallday) { %>
+                              <input class="form-check-input" type="checkbox" value="1" name="tuallday" checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                              <% } else { %>
+                              <input class="form-check-input" type="checkbox" value="1" name="tuallday">
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                              <% } %>
+                              All Day
+                            </label>
+                          </div>
+                        </div>
+                        <div class="col-md-1">
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <% if (group.tuenabled) { %>
+                              <input class="form-check-input" type="checkbox" value="1" name="tuenabled" checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                              <% } else { %>
+                              <input class="form-check-input" type="checkbox" value="1" name="tuenabled">
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                              <% } %>
+                              Enabled
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-2">
+                          <p></p>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-2">
+                          <p></p>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-2">
+                          <div class="form-group">
+                            <!-- <label for="name">Group Name</label>
+                          <input type="text" class="form-control" id="name" placeholder="<%= group.name %>" disabled> -->
+                            <p>Wednesday</p>
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <div class="form-group">
+                            <label for="wstime">Start Time</label>
+                            <input type="text" class="form-control" id="wstime" name="wstime" value="<%= group.wstart_time %>" placeholder="HH:MM:SS">
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <div class="form-group">
+                            <label for="wetime">End Time</label>
+                            <input type="text" class="form-control" id="wetime" name="wetime" value="<%= group.wend_time %>" placeholder="HH:MM:SS">
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <% if (group.wallday) { %>
+                              <input class="form-check-input" type="checkbox" value="1" name="wallday" checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                              <% } else { %>
+                              <input class="form-check-input" type="checkbox" value="1" name="wallday">
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                              <% } %>
+                              All Day
+                            </label>
+                          </div>
+                        </div>
+                        <div class="col-md-1">
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <% if (group.wenabled) { %>
+                              <input class="form-check-input" type="checkbox" value="1" name="wenabled" checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                              <% } else { %>
+                              <input class="form-check-input" type="checkbox" value="1" name="wenabled">
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                              <% } %>
+                              Enabled
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-2">
+                          <p></p>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-2">
+                          <p></p>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-2">
+                          <div class="form-group">
+                            <!-- <label for="name">Group Name</label>
+                          <input type="text" class="form-control" id="name" placeholder="<%= group.name %>" disabled> -->
+                            <p>Thursday</p>
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <div class="form-group">
+                            <label for="thstime">Start Time</label>
+                            <input type="text" class="form-control" id="thstime" name="thstime" value="<%= group.thstart_time %>" placeholder="HH:MM:SS">
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <div class="form-group">
+                            <label for="thetime">End Time</label>
+                            <input type="text" class="form-control" id="thetime" name="thetime" value="<%= group.thend_time %>" placeholder="HH:MM:SS">
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <% if (group.thallday) { %>
+                              <input class="form-check-input" type="checkbox" value="1" name="thallday" checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                              <% } else { %>
+                              <input class="form-check-input" type="checkbox" value="1" name="thallday">
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                              <% } %>
+                              All Day
+                            </label>
+                          </div>
+                        </div>
+                        <div class="col-md-1">
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <% if (group.thenabled) { %>
+                              <input class="form-check-input" type="checkbox" value="1" name="thenabled" checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                              <% } else { %>
+                              <input class="form-check-input" type="checkbox" value="1" name="thenabled">
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                              <% } %>
+                              Enabled
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-2">
+                          <p></p>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-2">
+                          <p></p>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-2">
+                          <div class="form-group">
+                            <!-- <label for="name">Group Name</label>
+                          <input type="text" class="form-control" id="name" placeholder="<%= group.name %>" disabled> -->
+                            <p>Friday</p>
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <div class="form-group">
+                            <label for="fstime">Start Time</label>
+                            <input type="text" class="form-control" id="fstime" name="fstime" value="<%= group.fstart_time %>" placeholder="HH:MM:SS">
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <div class="form-group">
+                            <label for="fetime">End Time</label>
+                            <input type="text" class="form-control" id="fetime" name="fetime" value="<%= group.fend_time %>" placeholder="HH:MM:SS">
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <% if (group.fallday) { %>
+                              <input class="form-check-input" type="checkbox" value="1" name="fallday" checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                              <% } else { %>
+                              <input class="form-check-input" type="checkbox" value="1" name="fallday">
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                              <% } %>
+                              All Day
+                            </label>
+                          </div>
+                        </div>
+                        <div class="col-md-1">
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <% if (group.fenabled) { %>
+                              <input class="form-check-input" type="checkbox" value="1" name="fenabled" checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                              <% } else { %>
+                              <input class="form-check-input" type="checkbox" value="1" name="fenabled">
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                              <% } %>
+                              Enabled
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-2">
+                          <p></p>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-2">
+                          <p></p>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-2">
+                          <div class="form-group">
+                            <!-- <label for="name">Group Name</label>
+                          <input type="text" class="form-control" id="name" placeholder="<%= group.name %>" disabled> -->
+                            <p>Saturday</p>
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <div class="form-group">
+                            <label for="sastime">Start Time</label>
+                            <input type="text" class="form-control" id="sastime" name="sastime" value="<%= group.sastart_time %>" placeholder="HH:MM:SS">
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <div class="form-group">
+                            <label for="saetime">End Time</label>
+                            <input type="text" class="form-control" id="saetime" name="saetime" value="<%= group.saend_time %>" placeholder="HH:MM:SS">
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <% if (group.saallday) { %>
+                              <input class="form-check-input" type="checkbox" value="1" id="saallday" name="saallday" checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                              <% } else { %>
+                              <input class="form-check-input" type="checkbox" value="1" name="saallday">
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                              <% } %>
+                              All Day
+                            </label>
+                          </div>
+                        </div>
+                        <div class="col-md-1">
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <% if (group.saenabled) { %>
+                              <input class="form-check-input" type="checkbox" value="1" name="saenabled" checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                              <% } else { %>
+                              <input class="form-check-input" type="checkbox" value="1" name="saenabled">
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                              <% } %>
+                              Enabled
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-2">
+                          <p></p>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-2">
+                          <p></p>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-2">
+                          <div class="form-group">
+                            <!-- <label for="name">Group Name</label>
+                          <input type="text" class="form-control" id="name" placeholder="<%= group.name %>" disabled> -->
+                            <p>Sunday</p>
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <div class="form-group">
+                            <label for="sustime">Start Time</label>
+                            <input type="text" class="form-control" id="sustime" name="sustime" value="<%= group.sustart_time %>" placeholder="HH:MM:SS">
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <div class="form-group">
+                            <label for="suetime">End Time</label>
+                            <input type="text" class="form-control" id="suetime" name="suetime" value="<%= group.suend_time %>" placeholder="HH:MM:SS">
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <% if (group.suallday) { %>
+                              <input class="form-check-input" type="checkbox" value="1" name="suallday" checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                              <% } else { %>
+                              <input class="form-check-input" type="checkbox" value="1" name="suallday">
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                              <% } %>
+                              All Day
+                            </label>
+                          </div>
+                        </div>
+                        <div class="col-md-1">
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <% if (group.suenabled) { %>
+                              <input class="form-check-input" type="checkbox" value="1" name="suenabled" checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                              <% } else { %>
+                              <input class="form-check-input" type="checkbox" value="1" name="suenabled">
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                              <% } %>
+                              Enabled
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="clearfix"></div>
+                </div>
+              </div>
+          </form>
         </div>
       </div>
     </div>
+  </div>
 
-    <%- include('./partials/footer'); %>
+  <%- include('./partials/footer'); %>
 
-    <%- include('./partials/foot'); %>
+  <%- include('./partials/foot'); %>
 
 
 
 </body>
 
 <script>
-
   async function tryEditing() {
     const formData = new FormData(document.getElementById('editGroupForm'))
     data = {};
@@ -153,8 +661,7 @@
     for (const [key, value] of formData) {
       if (key == "doorgroups" || key == "usergroups") {
         data[key].push(value);
-      }
-      else {
+      } else {
         data[key] = value;
       }
     }
@@ -172,8 +679,8 @@
       referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
       body: JSON.stringify(data) // body data type must match "Content-Type" header
     });
-  window.location.href = '/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>/groups/<%= group.id %>';
-}
+    window.location.href = '/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>/groups/<%= group.id %>';
+  }
 </script>
 
 </html>
