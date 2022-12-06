@@ -37,78 +37,115 @@
                       </h4>
                     </div>
                     <div class="col-md-10">
-                      <button class="btn btn-primary pull-right" onclick=tryDeleting()>Delete</button></a>
-                      <a href="<%= thisURL %>/controls"><button class="btn btn-primary pull-right">Door
-                          Controls</button></a>
-                      <a href="<%= thisURL %>/edit"><button class="btn btn-primary pull-right">Edit
-                          Door</button></a>
+                      <a href="<%= thisURL %>/edit">
+                        <button class="btn btn-primary pull-right">Edit
+                          Door
+                        </button>
+                      </a>
+                      <!-- <a href="<%= thisURL %>/controls">
+                        <button class="btn btn-primary pull-right">Door
+                          Controls
+                        </button>
+                        </a> -->
+                      <div class="nav-tabs-navigation pull-right">
+                        <div class="nav-tabs-wrapper">
+                          <ul class="nav nav-tabs" data-tabs="tabs">
+                            <li class="nav-item">
+                              <a class="nav-link active" href="#door" data-toggle="tab">Door</a>
+                            </li>
+                            <li class="nav-item">
+                              <a class="nav-link" href="#controls" data-toggle="tab">Controls</a>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <p class="card-category">
                     <%= panelSubtext %>
                   </p>
                 </div>
-                  <div class="card text-right">
-                    <div class="card-body">
-                      <div class="row">
-                        <div class="col-md-2">
-                          <div class="form-group">
-                            <label for="ip">IP Address</label>
-                            <input type="text" class="form-control" id="ip" placeholder=<%=door.ip %> disabled>
+                <div class="tab-content">
+                  <div class="tab-pane active" id="door">
+                    <div class="card text-right">
+                      <div class="card-body">
+                        <div class="row">
+                          <div class="col-md-2">
+                            <div class="form-group">
+                              <label for="ip">IP Address</label>
+                              <input type="text" class="form-control" id="ip" placeholder=<%=door.ip %> disabled>
+                            </div>
                           </div>
-                        </div>
-                        <div class="col-md-2">
-                          <div class="form-group">
-                            <label for="status">Status</label>
-                            <input type="text" class="form-control" id="status" placeholder=<%=door.status %> disabled>
+                          <div class="col-md-2">
+                            <div class="form-group">
+                              <label for="status">Status</label>
+                              <input type="text" class="form-control" id="status" placeholder=<%=door.status %> disabled>
+                            </div>
                           </div>
-                        </div>
-                        <div class="col-md-2">
-                          <div class="form-group">
-                            <label for="alarm">Alarm State</label>
-                            <input type="email" class="form-control" id="alarm" placeholder=<%=door.alarm %> disabled>
+                          <div class="col-md-2">
+                            <div class="form-group">
+                              <label for="alarm">Alarm State</label>
+                              <input type="email" class="form-control" id="alarm" placeholder=<%=door.alarm %> disabled>
+                            </div>
                           </div>
-                        </div>
-                        <div class="col-md-2">
-                          <div class="form-group">
-                            <label for="access">Last Access</label>
-                            <input type="text" class="form-control" id="access" placeholder="5/17/2022 3:55:04PM" disabled>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="card-header card-header-primary col-md-11">
-                    <div class="card-title">
-                      <h4>Groups</h4>
-                    </div>
-                  </div>
-                  <div class="card">
-                    <div class="card-body">
-                      <div class="row">
-                        <% door.groups.forEach(function(group) { %>
-                        <div class="col-md-2">
-                          <div class="form-group">
-                            <div class="form-check">
-                              <label class="form-check-label">
-                                <% if (door.doorgroupIDs.includes(group.id)) { %>
-                                <input class="form-check-input" type="checkbox" value="<%= group.id %>" name="groups" disabled checked>
-                                <%} else { %>
-                                <input class="form-check-input" type="checkbox" value="<%= group.id %>" name="groups" disabled>
-                                <% } %>
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
-                                <%= group.name %>
-                              </label>
+                          <div class="col-md-2">
+                            <div class="form-group">
+                              <label for="access">Last Access</label>
+                              <input type="text" class="form-control" id="access" placeholder="5/17/2022 3:55:04PM" disabled>
                             </div>
                           </div>
                         </div>
-                        <% }); %>
+                      </div>
+                    </div>
+                    <div class="card-header card-header-primary col-md-11">
+                      <div class="card-title">
+                        <h4>Groups</h4>
+                      </div>
+                    </div>
+                    <div class="card">
+                      <div class="card-body">
+                        <div class="row">
+                          <% door.groups.forEach(function(group) { %>
+                          <div class="col-md-2">
+                            <div class="form-group">
+                              <div class="form-check">
+                                <label class="form-check-label">
+                                  <% if (door.doorgroupIDs.includes(group.id)) { %>
+                                  <input class="form-check-input" type="checkbox" value="<%= group.id %>" name="groups" disabled checked>
+                                  <%} else { %>
+                                  <input class="form-check-input" type="checkbox" value="<%= group.id %>" name="groups" disabled>
+                                  <% } %>
+                                  <span class="form-check-sign">
+                                    <span class="check"></span>
+                                  </span>
+                                  <%= group.name %>
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                          <% }); %>
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <div class="clearfix"></div>
+                  <div class="tab-pane" id="controls">
+                    <div class="card">
+                      <div class="card-body">
+                        <div class="row">
+                          <div class="col-md-10">
+                            <button class="btn btn-primary" onclick=tryAccess()>Access</button></a>
+                            <button class="btn btn-primary" onclick=tryUnlock()>Unlock</button></a>
+                            <button class="btn btn-primary" onclick=tryLock()>Lock</button></a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-10">
+                  <button class="btn btn-primary pull-right" onclick=tryDeleting()>Delete</button></a>
+                </div>
+                <div class="clearfix"></div>
               </div>
             </div>
             <div class="col-md-6">
@@ -128,15 +165,15 @@
                         <div class="form-check">
                           <label class="form-check-label">
                             <% if (door.alwayson) { %>
-                              <input class="form-check-input" type="checkbox" value="<%= door.alwayson %>" disabled checked>
-                              <span class="form-check-sign">
-                                <span class="check"></span>
-                              </span>
+                            <input class="form-check-input" type="checkbox" value="<%= door.alwayson %>" disabled checked>
+                            <span class="form-check-sign">
+                              <span class="check"></span>
+                            </span>
                             <% } else { %>
-                              <input class="form-check-input" type="checkbox" value="<%= door.alwayson %>" disabled>
-                              <span class="form-check-sign">
-                                <span class="check"></span>
-                              </span>
+                            <input class="form-check-input" type="checkbox" value="<%= door.alwayson %>" disabled>
+                            <span class="form-check-sign">
+                              <span class="check"></span>
+                            </span>
                             <% } %>
                             Always On
                           </label>
@@ -177,15 +214,15 @@
                         <div class="form-check">
                           <label class="form-check-label">
                             <% if (door.mallday) { %>
-                              <input class="form-check-input" type="checkbox" value="<%= door.mallday %>" disabled checked>
-                              <span class="form-check-sign">
-                                <span class="check"></span>
-                              </span>
+                            <input class="form-check-input" type="checkbox" value="<%= door.mallday %>" disabled checked>
+                            <span class="form-check-sign">
+                              <span class="check"></span>
+                            </span>
                             <% } else { %>
-                              <input class="form-check-input" type="checkbox" value="<%= door.mallday %>" disabled>
-                              <span class="form-check-sign">
-                                <span class="check"></span>
-                              </span>
+                            <input class="form-check-input" type="checkbox" value="<%= door.mallday %>" disabled>
+                            <span class="form-check-sign">
+                              <span class="check"></span>
+                            </span>
                             <% } %>
                             All Day
                           </label>
@@ -195,15 +232,15 @@
                         <div class="form-check">
                           <label class="form-check-label">
                             <% if (door.menabled) { %>
-                              <input class="form-check-input" type="checkbox" value="<%= door.menabled %>" disabled checked>
-                              <span class="form-check-sign">
-                                <span class="check"></span>
-                              </span>
+                            <input class="form-check-input" type="checkbox" value="<%= door.menabled %>" disabled checked>
+                            <span class="form-check-sign">
+                              <span class="check"></span>
+                            </span>
                             <% } else { %>
-                              <input class="form-check-input" type="checkbox" value="<%= door.menabled %>" disabled>
-                              <span class="form-check-sign">
-                                <span class="check"></span>
-                              </span>
+                            <input class="form-check-input" type="checkbox" value="<%= door.menabled %>" disabled>
+                            <span class="form-check-sign">
+                              <span class="check"></span>
+                            </span>
                             <% } %>
                             Enabled
                           </label>
@@ -244,15 +281,15 @@
                         <div class="form-check">
                           <label class="form-check-label">
                             <% if (door.tuallday) { %>
-                              <input class="form-check-input" type="checkbox" value="<%= door.tuallday %>" disabled checked>
-                              <span class="form-check-sign">
-                                <span class="check"></span>
-                              </span>
+                            <input class="form-check-input" type="checkbox" value="<%= door.tuallday %>" disabled checked>
+                            <span class="form-check-sign">
+                              <span class="check"></span>
+                            </span>
                             <% } else { %>
-                              <input class="form-check-input" type="checkbox" value="<%= door.tuallday %>" disabled>
-                              <span class="form-check-sign">
-                                <span class="check"></span>
-                              </span>
+                            <input class="form-check-input" type="checkbox" value="<%= door.tuallday %>" disabled>
+                            <span class="form-check-sign">
+                              <span class="check"></span>
+                            </span>
                             <% } %>
                             All Day
                           </label>
@@ -262,15 +299,15 @@
                         <div class="form-check">
                           <label class="form-check-label">
                             <% if (door.tuenabled) { %>
-                              <input class="form-check-input" type="checkbox" value="<%= door.tuenabled %>" disabled checked>
-                              <span class="form-check-sign">
-                                <span class="check"></span>
-                              </span>
+                            <input class="form-check-input" type="checkbox" value="<%= door.tuenabled %>" disabled checked>
+                            <span class="form-check-sign">
+                              <span class="check"></span>
+                            </span>
                             <% } else { %>
-                              <input class="form-check-input" type="checkbox" value="<%= door.tuenabled %>" disabled>
-                              <span class="form-check-sign">
-                                <span class="check"></span>
-                              </span>
+                            <input class="form-check-input" type="checkbox" value="<%= door.tuenabled %>" disabled>
+                            <span class="form-check-sign">
+                              <span class="check"></span>
+                            </span>
                             <% } %>
                             Enabled
                           </label>
@@ -311,15 +348,15 @@
                         <div class="form-check">
                           <label class="form-check-label">
                             <% if (door.wallday) { %>
-                              <input class="form-check-input" type="checkbox" value="<%= door.wallday %>" disabled checked>
-                              <span class="form-check-sign">
-                                <span class="check"></span>
-                              </span>
+                            <input class="form-check-input" type="checkbox" value="<%= door.wallday %>" disabled checked>
+                            <span class="form-check-sign">
+                              <span class="check"></span>
+                            </span>
                             <% } else { %>
-                              <input class="form-check-input" type="checkbox" value="<%= door.wallday %>" disabled>
-                              <span class="form-check-sign">
-                                <span class="check"></span>
-                              </span>
+                            <input class="form-check-input" type="checkbox" value="<%= door.wallday %>" disabled>
+                            <span class="form-check-sign">
+                              <span class="check"></span>
+                            </span>
                             <% } %>
                             All Day
                           </label>
@@ -329,15 +366,15 @@
                         <div class="form-check">
                           <label class="form-check-label">
                             <% if (door.wenabled) { %>
-                              <input class="form-check-input" type="checkbox" value="<%= door.wenabled %>" disabled checked>
-                              <span class="form-check-sign">
-                                <span class="check"></span>
-                              </span>
+                            <input class="form-check-input" type="checkbox" value="<%= door.wenabled %>" disabled checked>
+                            <span class="form-check-sign">
+                              <span class="check"></span>
+                            </span>
                             <% } else { %>
-                              <input class="form-check-input" type="checkbox" value="<%= door.wenabled %>" disabled>
-                              <span class="form-check-sign">
-                                <span class="check"></span>
-                              </span>
+                            <input class="form-check-input" type="checkbox" value="<%= door.wenabled %>" disabled>
+                            <span class="form-check-sign">
+                              <span class="check"></span>
+                            </span>
                             <% } %>
                             Enabled
                           </label>
@@ -378,15 +415,15 @@
                         <div class="form-check">
                           <label class="form-check-label">
                             <% if (door.thallday) { %>
-                              <input class="form-check-input" type="checkbox" value="<%= door.thallday %>" disabled checked>
-                              <span class="form-check-sign">
-                                <span class="check"></span>
-                              </span>
+                            <input class="form-check-input" type="checkbox" value="<%= door.thallday %>" disabled checked>
+                            <span class="form-check-sign">
+                              <span class="check"></span>
+                            </span>
                             <% } else { %>
-                              <input class="form-check-input" type="checkbox" value="<%= door.thallday %>" disabled>
-                              <span class="form-check-sign">
-                                <span class="check"></span>
-                              </span>
+                            <input class="form-check-input" type="checkbox" value="<%= door.thallday %>" disabled>
+                            <span class="form-check-sign">
+                              <span class="check"></span>
+                            </span>
                             <% } %>
                             All Day
                           </label>
@@ -396,15 +433,15 @@
                         <div class="form-check">
                           <label class="form-check-label">
                             <% if (door.thenabled) { %>
-                              <input class="form-check-input" type="checkbox" value="<%= door.thenabled %>" disabled checked>
-                              <span class="form-check-sign">
-                                <span class="check"></span>
-                              </span>
+                            <input class="form-check-input" type="checkbox" value="<%= door.thenabled %>" disabled checked>
+                            <span class="form-check-sign">
+                              <span class="check"></span>
+                            </span>
                             <% } else { %>
-                              <input class="form-check-input" type="checkbox" value="<%= door.thenabled %>" disabled>
-                              <span class="form-check-sign">
-                                <span class="check"></span>
-                              </span>
+                            <input class="form-check-input" type="checkbox" value="<%= door.thenabled %>" disabled>
+                            <span class="form-check-sign">
+                              <span class="check"></span>
+                            </span>
                             <% } %>
                             Enabled
                           </label>
@@ -445,15 +482,15 @@
                         <div class="form-check">
                           <label class="form-check-label">
                             <% if (door.fallday) { %>
-                              <input class="form-check-input" type="checkbox" value="<%= door.fallday %>" disabled checked>
-                              <span class="form-check-sign">
-                                <span class="check"></span>
-                              </span>
+                            <input class="form-check-input" type="checkbox" value="<%= door.fallday %>" disabled checked>
+                            <span class="form-check-sign">
+                              <span class="check"></span>
+                            </span>
                             <% } else { %>
-                              <input class="form-check-input" type="checkbox" value="<%= door.fallday %>" disabled>
-                              <span class="form-check-sign">
-                                <span class="check"></span>
-                              </span>
+                            <input class="form-check-input" type="checkbox" value="<%= door.fallday %>" disabled>
+                            <span class="form-check-sign">
+                              <span class="check"></span>
+                            </span>
                             <% } %>
                             All Day
                           </label>
@@ -463,15 +500,15 @@
                         <div class="form-check">
                           <label class="form-check-label">
                             <% if (door.fenabled) { %>
-                              <input class="form-check-input" type="checkbox" value="<%= door.fenabled %>" disabled checked>
-                              <span class="form-check-sign">
-                                <span class="check"></span>
-                              </span>
+                            <input class="form-check-input" type="checkbox" value="<%= door.fenabled %>" disabled checked>
+                            <span class="form-check-sign">
+                              <span class="check"></span>
+                            </span>
                             <% } else { %>
-                              <input class="form-check-input" type="checkbox" value="<%= door.fenabled %>" disabled>
-                              <span class="form-check-sign">
-                                <span class="check"></span>
-                              </span>
+                            <input class="form-check-input" type="checkbox" value="<%= door.fenabled %>" disabled>
+                            <span class="form-check-sign">
+                              <span class="check"></span>
+                            </span>
                             <% } %>
                             Enabled
                           </label>
@@ -512,15 +549,15 @@
                         <div class="form-check">
                           <label class="form-check-label">
                             <% if (door.saallday) { %>
-                              <input class="form-check-input" type="checkbox" value="<%= door.saallday %>" disabled checked>
-                              <span class="form-check-sign">
-                                <span class="check"></span>
-                              </span>
+                            <input class="form-check-input" type="checkbox" value="<%= door.saallday %>" disabled checked>
+                            <span class="form-check-sign">
+                              <span class="check"></span>
+                            </span>
                             <% } else { %>
-                              <input class="form-check-input" type="checkbox" value="<%= door.saallday %>" disabled>
-                              <span class="form-check-sign">
-                                <span class="check"></span>
-                              </span>
+                            <input class="form-check-input" type="checkbox" value="<%= door.saallday %>" disabled>
+                            <span class="form-check-sign">
+                              <span class="check"></span>
+                            </span>
                             <% } %>
                             All Day
                           </label>
@@ -530,15 +567,15 @@
                         <div class="form-check">
                           <label class="form-check-label">
                             <% if (door.saenabled) { %>
-                              <input class="form-check-input" type="checkbox" value="<%= door.saenabled %>" disabled checked>
-                              <span class="form-check-sign">
-                                <span class="check"></span>
-                              </span>
+                            <input class="form-check-input" type="checkbox" value="<%= door.saenabled %>" disabled checked>
+                            <span class="form-check-sign">
+                              <span class="check"></span>
+                            </span>
                             <% } else { %>
-                              <input class="form-check-input" type="checkbox" value="<%= door.saenabled %>" disabled>
-                              <span class="form-check-sign">
-                                <span class="check"></span>
-                              </span>
+                            <input class="form-check-input" type="checkbox" value="<%= door.saenabled %>" disabled>
+                            <span class="form-check-sign">
+                              <span class="check"></span>
+                            </span>
                             <% } %>
                             Enabled
                           </label>
@@ -579,15 +616,15 @@
                         <div class="form-check">
                           <label class="form-check-label">
                             <% if (door.suallday) { %>
-                              <input class="form-check-input" type="checkbox" value="<%= door.suallday %>" disabled checked>
-                              <span class="form-check-sign">
-                                <span class="check"></span>
-                              </span>
+                            <input class="form-check-input" type="checkbox" value="<%= door.suallday %>" disabled checked>
+                            <span class="form-check-sign">
+                              <span class="check"></span>
+                            </span>
                             <% } else { %>
-                              <input class="form-check-input" type="checkbox" value="<%= door.suallday %>" disabled>
-                              <span class="form-check-sign">
-                                <span class="check"></span>
-                              </span>
+                            <input class="form-check-input" type="checkbox" value="<%= door.suallday %>" disabled>
+                            <span class="form-check-sign">
+                              <span class="check"></span>
+                            </span>
                             <% } %>
                             All Day
                           </label>
@@ -597,15 +634,15 @@
                         <div class="form-check">
                           <label class="form-check-label">
                             <% if (door.suenabled) { %>
-                              <input class="form-check-input" type="checkbox" value="<%= door.suenabled %>" disabled checked>
-                              <span class="form-check-sign">
-                                <span class="check"></span>
-                              </span>
+                            <input class="form-check-input" type="checkbox" value="<%= door.suenabled %>" disabled checked>
+                            <span class="form-check-sign">
+                              <span class="check"></span>
+                            </span>
                             <% } else { %>
-                              <input class="form-check-input" type="checkbox" value="<%= door.suenabled %>" disabled>
-                              <span class="form-check-sign">
-                                <span class="check"></span>
-                              </span>
+                            <input class="form-check-input" type="checkbox" value="<%= door.suenabled %>" disabled>
+                            <span class="form-check-sign">
+                              <span class="check"></span>
+                            </span>
                             <% } %>
                             Enabled
                           </label>
@@ -645,6 +682,50 @@
     });
     window.location.href = `${window.location.href}/processing`;
   }
+  // async function tryAccess() {
+  //   await fetch(window.location.href, {
+  //     method: 'GET', // *GET, POST, PUT, DELETE, etc.
+  //     mode: 'cors', // no-cors, *cors, same-origin
+  //     cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+  //     credentials: 'same-origin', // include, *same-origin, omit
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //       // 'Content-Type': 'application/x-www-form-urlencoded',
+  //     },
+  //     redirect: 'follow', // manual, *follow, error
+  //     referrerPolicy: 'no-referrer' // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+  //     // body: JSON.stringify(data) // body data type must match "Content-Type" header
+  //   });
+  //   window.location.href = `${window.location.href}/controls/access`;
+  // }
+</script>
+
+<script type="text/javascript"
+  src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js">
+</script>
+
+<script type="text/javascript">
+  function tryAccess() {
+    // AJAX call that initiates access request
+    $.ajax({
+    type: "get",
+    url: `${window.location.href}/controls/access`,
+    });
+  };
+  function tryUnlock() {
+    // AJAX call that initiates access request
+    $.ajax({
+    type: "get",
+    url: `${window.location.href}/controls/unlock`,
+    });
+  };
+  function tryLock() {
+    // AJAX call that initiates access request
+    $.ajax({
+    type: "get",
+    url: `${window.location.href}/controls/lock`,
+    });
+  };
 </script>
 
 </html>

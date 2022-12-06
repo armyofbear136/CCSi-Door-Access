@@ -988,7 +988,7 @@ doorsRouter.put('/:doorID/edit', async function (req, res, next) {
 
 
 /* GET door_edit page. */
-doorsRouter.get('/:doorID/controls', async function (req, res, next) {
+doorsRouter.get('/:doorID/controls/:command', async function (req, res, next) {
 
 
   /* link to database */
@@ -997,99 +997,100 @@ doorsRouter.get('/:doorID/controls', async function (req, res, next) {
 
   // /* load data from database */
 
-  const response = await APIFun.doorControls('access', "Axis-accc8e75260e:1667922341.563428000");
-  console.log("response");
-  console.log(response);
+  const response = await APIFun.doorControls(`${req.params.command}`, "Axis-accc8e75260e:1667922341.563428000");
+  // console.log("response");
+  // console.log(response);
+  res.send(200);
 
 
-  try {
+  // try {
 
-    console.log('Pulling data on doors edit GET route');
-    await db.query(
+  //   console.log('Pulling data on doors edit GET route');
+  //   await db.query(
 
-      `SELECT
-       u.*,
-       d.companyName,
-       d.orgName,
-       d.siteName
+  //     `SELECT
+  //      u.*,
+  //      d.companyName,
+  //      d.orgName,
+  //      d.siteName
  
-     FROM doors u
-       JOIN (
-         SELECT
-           c.id as id,
-           c.name as companyName,
-           c.org as orgName,
-           s.id as siteID,
-           s.name as siteName
+  //    FROM doors u
+  //      JOIN (
+  //        SELECT
+  //          c.id as id,
+  //          c.name as companyName,
+  //          c.org as orgName,
+  //          s.id as siteID,
+  //          s.name as siteName
  
-         FROM companies c
-         JOIN (
-           SELECT
-             sit.id as id,
-             sit.name as name,
-             sit.company_id_sites as company_id_sites
+  //        FROM companies c
+  //        JOIN (
+  //          SELECT
+  //            sit.id as id,
+  //            sit.name as name,
+  //            sit.company_id_sites as company_id_sites
 
-           FROM sites sit
-         ) s ON (c.id = s.company_id_sites)
+  //          FROM sites sit
+  //        ) s ON (c.id = s.company_id_sites)
  
-       ) d ON (u.site_id_doors = d.siteID)
+  //      ) d ON (u.site_id_doors = d.siteID)
  
-       WHERE u.id = ${req.params.doorID}
-       GROUP BY u.id
-       `,
+  //      WHERE u.id = ${req.params.doorID}
+  //      GROUP BY u.id
+  //      `,
 
-      async function (err, result, fields) {
-        if (err) {
-          console.log(typeof (err));
-          for (var k in err) {
-            console.log(`${k}: ${err[k]}`);
-          }
-          res.render('error', {
-            error: "Server Error", message: "Please try again", sidebar: [
-              { status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"
-          });
-          // throw err
-        };
+  //     async function (err, result, fields) {
+  //       if (err) {
+  //         console.log(typeof (err));
+  //         for (var k in err) {
+  //           console.log(`${k}: ${err[k]}`);
+  //         }
+  //         res.render('error', {
+  //           error: "Server Error", message: "Please try again", sidebar: [
+  //             { status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"
+  //         });
+  //         // throw err
+  //       };
 
-        let doorData = result[0];
-
-
-        const funSites = await mySQLFun.getSites(db, req.params.companyID)
-
-        var sidebarList = [
-          { status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home" },
-          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${doorData.companyName}` }
-        ];
-        for (i in funSites) {
-          if (funSites[i].id == req.params.siteID) {
-            sidebarList.push({ status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}` });
-          }
-          else {
-            sidebarList.push({ status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}` });
-          }
-        }
-
-        var tabBarList = [
-          { status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/doors`, icon: "meeting_room", text: "Doors" },
-          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`, icon: "person", text: "Users" },
-          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/groups`, icon: "supervisor_account", text: "Groups" },
-          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports" }
-        ]
-        var varName;
-
-        // console.log(doorData);
-        varName = "CCSI Door Access" //optional title override
-        res.render('door_controls', { door: doorData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${doorData.companyName} - ${doorData.siteName}`, panelTitle: `${doorData.name} - Controls`, panelSubtext: `Door Control Panel`, companyID: req.params.companyID, siteID: req.params.siteID, orgID: req.params.orgID });
+  //       let doorData = result[0];
 
 
-      });
+  //       const funSites = await mySQLFun.getSites(db, req.params.companyID)
+
+  //       var sidebarList = [
+  //         { status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home" },
+  //         { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${doorData.companyName}` }
+  //       ];
+  //       for (i in funSites) {
+  //         if (funSites[i].id == req.params.siteID) {
+  //           sidebarList.push({ status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}` });
+  //         }
+  //         else {
+  //           sidebarList.push({ status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}` });
+  //         }
+  //       }
+
+  //       var tabBarList = [
+  //         { status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/doors`, icon: "meeting_room", text: "Doors" },
+  //         { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`, icon: "person", text: "Users" },
+  //         { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/groups`, icon: "supervisor_account", text: "Groups" },
+  //         { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports" }
+  //       ]
+  //       var varName;
+
+  //       // console.log(doorData);
+  //       varName = "CCSI Door Access" //optional title override
+  //       res.render('door_controls', { door: doorData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${doorData.companyName} - ${doorData.siteName}`, panelTitle: `${doorData.name} - Controls`, panelSubtext: `Door Control Panel`, companyID: req.params.companyID, siteID: req.params.siteID, orgID: req.params.orgID });
 
 
-  } catch (err) {
-    console.log(err)
-  } finally {
-    //await db.close();
-  }
+  //     });
+
+
+  // } catch (err) {
+  //   console.log(err)
+  // } finally {
+  //   //await db.close();
+  // }
 
 });
 
