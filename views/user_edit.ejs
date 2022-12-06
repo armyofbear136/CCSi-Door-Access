@@ -27,16 +27,18 @@
         <div class="container-fluid">
           <%- include('./partials/tabBar', {tabs: tabBar}) %>
           <div class="row">
+            <div class="col-md-2">
+              <button type="submit" class="btn btn-primary pull-right" onclick="tryEditing()" value="Submit">Submit</button>
+              <a href="/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>/users/<%= user.id %>"><button class="btn btn-primary pull-right">Cancel</button></a>
+            </div>
+          </div>
+          <div class="row">
             <div class="col-md-8">
               <div class="card">
                 <div class="card-header card-header-primary">
                   <div class="row">
                     <div class="col-md-6">
                       <h4 class="card-title"><%= panelTitle %></h4>
-                    </div>
-                    <div class="col-md-6">
-                      <button type="submit" class="btn btn-primary pull-right" onclick="tryEditing()" value="Submit">Submit</button>
-                      <a href="/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>/users/<%= user.id %>"><button class="btn btn-primary pull-right">Cancel</button></a>
                     </div>
                   </div>
                   <p class="card-category"><%= panelSubtext %></p>

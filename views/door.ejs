@@ -36,18 +36,8 @@
                         <%= panelTitle %>
                       </h4>
                     </div>
-                    <div class="col-md-10">
-                      <a href="<%= thisURL %>/edit">
-                        <button class="btn btn-primary pull-right">Edit
-                          Door
-                        </button>
-                      </a>
-                      <!-- <a href="<%= thisURL %>/controls">
-                        <button class="btn btn-primary pull-right">Door
-                          Controls
-                        </button>
-                        </a> -->
-                      <div class="nav-tabs-navigation pull-right">
+                    <div class="col-md-5">
+                      <div class="nav-tabs-navigation">
                         <div class="nav-tabs-wrapper">
                           <ul class="nav nav-tabs" data-tabs="tabs">
                             <li class="nav-item">
@@ -60,6 +50,21 @@
                         </div>
                       </div>
                     </div>
+                    <div class="col-md-5">
+                      <!-- <div class="col-md-12"> -->
+                      <button class="btn btn-primary pull-right" onclick=tryDeleting()>Delete</button></a>
+                      <!-- </div> -->
+                      <a href="<%= thisURL %>/edit">
+                        <button class="btn btn-primary pull-right">Edit
+                          Door
+                        </button>
+                      </a>
+                      <!-- <a href="<%= thisURL %>/controls">
+                        <button class="btn btn-primary pull-right">Door
+                          Controls
+                        </button>
+                        </a> -->
+                    </div>
                   </div>
                   <p class="card-category">
                     <%= panelSubtext %>
@@ -67,31 +72,35 @@
                 </div>
                 <div class="tab-content">
                   <div class="tab-pane active" id="door">
-                    <div class="card text-right">
+                    <div class="card">
                       <div class="card-body">
                         <div class="row">
-                          <div class="col-md-2">
-                            <div class="form-group">
-                              <label for="ip">IP Address</label>
-                              <input type="text" class="form-control" id="ip" placeholder=<%=door.ip %> disabled>
-                            </div>
-                          </div>
-                          <div class="col-md-2">
-                            <div class="form-group">
-                              <label for="status">Status</label>
-                              <input type="text" class="form-control" id="status" placeholder=<%=door.status %> disabled>
-                            </div>
-                          </div>
-                          <div class="col-md-2">
-                            <div class="form-group">
-                              <label for="alarm">Alarm State</label>
-                              <input type="email" class="form-control" id="alarm" placeholder=<%=door.alarm %> disabled>
-                            </div>
-                          </div>
-                          <div class="col-md-2">
-                            <div class="form-group">
-                              <label for="access">Last Access</label>
-                              <input type="text" class="form-control" id="access" placeholder="5/17/2022 3:55:04PM" disabled>
+                          <div class="col-md-12">
+                            <div class="row">
+                              <div class="col-md-2">
+                                <div class="form-group">
+                                  <label for="ip">IP Address</label>
+                                  <input type="text" class="form-control" id="ip" placeholder=<%=door.ip %> disabled>
+                                </div>
+                              </div>
+                              <div class="col-md-2">
+                                <div class="form-group">
+                                  <label for="status">Status</label>
+                                  <input type="text" class="form-control" id="status" placeholder=<%=door.status %> disabled>
+                                </div>
+                              </div>
+                              <div class="col-md-2">
+                                <div class="form-group">
+                                  <label for="alarm">Alarm State</label>
+                                  <input type="email" class="form-control" id="alarm" placeholder=<%=door.alarm %> disabled>
+                                </div>
+                              </div>
+                              <div class="col-md-2">
+                                <div class="form-group">
+                                  <label for="access">Last Access</label>
+                                  <input type="text" class="form-control" id="access" placeholder=<%=door.last_access %> disabled>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -141,9 +150,6 @@
                       </div>
                     </div>
                   </div>
-                </div>
-                <div class="col-md-10">
-                  <button class="btn btn-primary pull-right" onclick=tryDeleting()>Delete</button></a>
                 </div>
                 <div class="clearfix"></div>
               </div>
@@ -704,28 +710,6 @@
   src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js">
 </script>
 
-<script type="text/javascript">
-  function tryAccess() {
-    // AJAX call that initiates access request
-    $.ajax({
-    type: "get",
-    url: `${window.location.href}/controls/access`,
-    });
-  };
-  function tryUnlock() {
-    // AJAX call that initiates access request
-    $.ajax({
-    type: "get",
-    url: `${window.location.href}/controls/unlock`,
-    });
-  };
-  function tryLock() {
-    // AJAX call that initiates access request
-    $.ajax({
-    type: "get",
-    url: `${window.location.href}/controls/lock`,
-    });
-  };
-</script>
+<script src="/assets/js/control.js"></script>
 
 </html>

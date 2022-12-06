@@ -26,7 +26,13 @@
       <div class="content">
         <div class="container-fluid">
           <%- include('./partials/tabBar', {tabs: tabBar}) %>
-          <form id="editDoorForm" method="post">
+          <div class="row">
+            <div class="col-md-2">
+              <button type="submit" class="btn btn-primary pull-right" onclick="tryEditing()" value="Submit">Submit</button>
+              <a href="/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>/doors/<%= door.id %>"><button class="btn btn-primary pull-right">Cancel</button></a>
+            </div>
+          </div>
+          <form id="editDoorForm" method="put">
             <div class="row">
               <div class="col-md-6">
                 <div class="card">
@@ -36,10 +42,6 @@
                         <h4 class="card-title">
                           <%= panelTitle %> (Editing)
                         </h4>
-                      </div>
-                      <div class="col-md-6">
-                        <button type="submit" class="btn btn-primary pull-right" onclick="tryEditing()" value="Submit">Submit</button>
-                        <a href="/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>/doors/<%= door.id %>"><button class="btn btn-primary pull-right">Cancel</button></a>
                       </div>
                     </div>
                     <p class="card-category">

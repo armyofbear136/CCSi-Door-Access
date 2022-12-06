@@ -56,6 +56,9 @@ th {
 .card-body {
   color: #3c3c3c !important;
 }
+.card-header-ccsi {
+  color:  #3c3c3c !important
+}
 .card-safe {
   background-color: #3dc5cc !important;
 }
