@@ -265,7 +265,7 @@ usersRouter.post('/add', async function (req, res, next) {
     await db.query(
 
       `INSERT INTO users
-    VALUES (NULL, "${req.body.fname}", "${req.body.lname}", "${req.body.email}", ${req.body.fob}, ${req.params.companyID}, ${req.params.siteID}, ${req.body.eid}, NULL, ${Date.now()})`,
+    VALUES (NULL, "${req.body.fname}", "${req.body.lname}", "${req.body.email}", ${req.body.fob}, ${req.params.companyID}, ${req.params.siteID}, ${req.body.eid}, NULL, "${new Date().toISOString().slice(0, 19).replace('T', ' ')}")`,
 
       async function (err, result, fields) {
         if (err) {

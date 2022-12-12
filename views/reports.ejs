@@ -27,7 +27,7 @@
         <div class="container-fluid">
           <%- include('./partials/tabBar', {tabs: tabBar}) %>
           <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-10">
               <div class="card">
                 <div class="card-header card-header-primary">
                   <h4 class="card-title"><%= panelTitle %></h4>
@@ -62,6 +62,9 @@
                             </div>
                             <form id="siteReportForm" method="post">
                               <div class="row">
+                                <div class="col-md-1">
+
+                                </div>
                                 <div class="col-md-2">
                                   <div class="form-group">
                                     <label class="bmd-label-floating" >Report Title</label>
@@ -74,7 +77,7 @@
                                     <input type="text" class="form-control" name="stime">
                                   </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                   <div class="form-group">
                                     <label class="bmd-label-floating" >Start Date YYYY-MM-DD</label>
                                     <input type="text" class="form-control" name="sdate">
@@ -98,7 +101,8 @@
                               </div>
                               <div class="row">
                                 <% group.allDoors.forEach(function(door) { %>
-                                  <div class="col-md-6">
+                                  <div class="col-md-1"></div>
+                                  <div class="col-md-3">
                                     <div class="form-group">
                                       <div class="form-check">
                                         <label class="form-check-label">
@@ -118,7 +122,8 @@
                               </div>
                               <div class="row">
                                 <% group.allUsers.forEach(function(user) { %>
-                                  <div class="col-md-6">
+                                  <div class="col-md-1"></div>
+                                  <div class="col-md-3">
                                     <div class="form-group">
                                       <div class="form-check">
                                         <label class="form-check-label">
@@ -145,6 +150,7 @@
                             </div>
                             <form id="doorsReportForm" method="post">
                               <div class="row">
+                                <div class="col-md-1"></div>
                                 <div class="col-md-2">
                                   <div class="form-group">
                                     <label class="bmd-label-floating" >Report Title</label>
@@ -157,7 +163,7 @@
                                     <input type="text" class="form-control" name="stime">
                                   </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                   <div class="form-group">
                                     <label class="bmd-label-floating" >Start Date YYYY-MM-DD</label>
                                     <input type="text" class="form-control" name="sdate">
@@ -181,7 +187,8 @@
                               </div>
                               <div class="row">
                                 <% group.allDoors.forEach(function(door) { %>
-                                  <div class="col-md-6">
+                                  <div class="col-md-1"></div>
+                                  <div class="col-md-3">
                                     <div class="form-group">
                                       <div class="form-check">
                                         <label class="form-check-label">
@@ -207,6 +214,7 @@
                             </div>
                             <form id="usersReportForm" method="post">
                               <div class="row">
+                                <div class="col-md-1"></div>
                                 <div class="col-md-2">
                                   <div class="form-group">
                                     <label class="bmd-label-floating" >Report Title</label>
@@ -219,7 +227,7 @@
                                     <input type="text" class="form-control" name="stime">
                                   </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                   <div class="form-group">
                                     <label class="bmd-label-floating" >Start Date YYYY-MM-DD</label>
                                     <input type="text" class="form-control" name="sdate">
@@ -243,7 +251,8 @@
                               </div>
                               <div class="row">
                                 <% group.allUsers.forEach(function(user) { %>
-                                  <div class="col-md-6">
+                                  <div class="col-md-1"></div>
+                                  <div class="col-md-2">
                                     <div class="form-group">
                                       <div class="form-check">
                                         <label class="form-check-label">

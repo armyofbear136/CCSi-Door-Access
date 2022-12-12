@@ -60,13 +60,13 @@ th {
   color:  #3c3c3c !important
 }
 .card-safe {
-  background-color: #3dc5cc !important;
+  background-color: #FFBF00 !important;
 }
 .card-safe-2 {
   background-color: #4caf50 !important;
 }
 .card-warning {
-  background-color: #FFBF00 !important;
+  background-color: #3dc5cc !important;
 }
 .card-danger {
   background-color: #f44336 !important;
@@ -143,6 +143,9 @@ th {
 }
 .sidebar-background{
   background: #3c3c3c !important;
+}
+.sort{
+  border-color: #3c3c3c !important;
 }
 .text-primary {
   color: #3c3c3c !important;

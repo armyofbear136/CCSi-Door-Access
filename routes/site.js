@@ -9,6 +9,7 @@ const siteRouter = asyncify(express.Router({ mergeParams: true }));
 const doorsRouter = require('./doors');
 const usersRouter = require('./users');
 const groupsRouter = require('./groups');
+const rolesRouter = require('./roles');
 const reportsRouter = require('./reports');
 
 
@@ -18,6 +19,8 @@ siteRouter.use('/:siteID/doors', doorsRouter);
 siteRouter.use('/:siteID/users', usersRouter);
 
 siteRouter.use('/:siteID/groups', groupsRouter);
+
+siteRouter.use('/:siteID/roles', rolesRouter);
 
 siteRouter.use('/:siteID/reports', reportsRouter);
 
@@ -208,6 +211,7 @@ siteRouter.get('/:siteID', async function (req, res, next) {
           { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/doors`, icon: "meeting_room", text: "Doors" },
           { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`, icon: "person", text: "Users" },
           { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/groups`, icon: "supervisor_account", text: "Groups" },
+          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/roles`, icon: "settings_accessibility", text: "Roles" },
           { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports" }
         ]
 

@@ -36,7 +36,7 @@
                 </div>
                 <div class="card-body">
                   <div class="col-md-5">
-                    <a href="<%= thisURL %>/add"><button class="btn btn-primary">Add New Group</button></a>
+                    <a href="<%= thisURL %>/add"><button class="btn btn-primary">Add New Role</button></a>
                   </div>
                 </div>
                 <div class="card-body">
@@ -71,10 +71,10 @@
                       </thead>
                       <tbody class=" text-primary">
                         <th>
-                          Group Name
+                          Role Name
                         </th>
                         <th>
-                          Schedule
+                          Description
                         </th>
                         <th>
                           Users
@@ -90,7 +90,8 @@
                             <%= group.name %>
                           </td>
                           <td>
-                            <%= group.start_time %> - <%= group.end_time %>
+                            <!-- <%= group.start_time %> - <%= group.end_time %> -->
+                            This Role Gives Managers Control
                           </td>
                           <td>
                             <%= group.users %>

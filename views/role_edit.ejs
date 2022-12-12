@@ -26,6 +26,13 @@
       <div class="content">
         <div class="container-fluid">
           <%- include('./partials/tabBar', {tabs: tabBar}) %>
+          <div class ="row">
+          <div class="col-md-2">
+            <button type="submit" class="btn btn-primary pull-right" onclick="tryEditing()" value="Submit">Submit</button>
+            <a href="/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>/groups/<%= group.id %>"><button class="btn btn-primary pull-right">Cancel</button></a>
+          </div>
+          </div>
+          <form id="editGroupForm" method="put">
             <div class="row">
               <div class="col-md-6">
                 <div class="card">
@@ -34,11 +41,7 @@
                       <div class="col-md-6">
                         <h4 class="card-title"><%= panelTitle %></h4>
                       </div>
-                      <div class="col-md-6">
-                        <button class="btn btn-primary pull-right" onclick=tryDeleting()>Delete</button></a>
-                        <button class="btn btn-primary pull-right">Disable</button></a>
-                        <a href="<%= thisURL %>/edit"><button class="btn btn-primary pull-right">Edit</button></a>
-                      </div>
+                      
                     </div>
                     <p class="card-category"><%= panelSubtext %></p>
                   </div>
@@ -48,19 +51,19 @@
                         <div class="col-md-2">
                           <div class="form-group">
                             <label for="name">Group Name</label>
-                            <input type="text" class="form-control" id="name" placeholder="<%= group.name %>" disabled>
+                            <input type="text" class="form-control" id="name" name="name" value="<%= group.name %>" placeholder="Access Group">
                           </div>
                         </div>
                         <div class="col-md-2">
                           <div class="form-group">
                             <label for="stime">Start Time</label>
-                            <input type="text" class="form-control" id="stime" placeholder="<%= group.start_time %>" disabled>
+                            <input type="text" class="form-control" id="stime" name="stime" value="<%= group.start_time %>" placeholder="XX:XX:XX">
                           </div>
                         </div>
                         <div class="col-md-2">
                           <div class="form-group">
-                            <label for="etime">End Time</label>
-                            <input type="text" class="form-control" id="etime" placeholder="<%= group.end_time %>" disabled>
+                            <label cfor="etime">End Time</label>
+                            <input type="text" class="form-control" id="etime" name="etime" value="<%= group.end_time %>" placeholder="XX:XX:XX">
                           </div>
                         </div>
                       </div>
@@ -80,9 +83,9 @@
                             <div class="form-check">
                               <label class="form-check-label">
                                 <% if (group.doorIDs.includes(door.id)) { %>
-                                <input class="form-check-input" type="checkbox" value="<%= door.id %>" disabled checked>
+                                <input class="form-check-input" type="checkbox" value="<%= door.id %>" name="doorgroups" checked>
                                 <%} else { %>
-                                <input class="form-check-input" type="checkbox" value="<%= door.id %>" disabled>
+                                <input class="form-check-input" type="checkbox" value="<%= door.id %>" name="doorgroups">
                                 <% } %>
                                 <span class="form-check-sign">
                                   <span class="check"></span>
@@ -110,9 +113,9 @@
                             <div class="form-check">
                               <label class="form-check-label">
                                 <% if (group.userIDs.includes(user.id)) { %>
-                                <input class="form-check-input" type="checkbox" value="<%= user.id %>" disabled checked>
+                                <input class="form-check-input" type="checkbox" value="<%= user.id %>" name="usergroups" checked>
                                 <%} else { %>
-                                <input class="form-check-input" type="checkbox" value="<%= user.id %>" disabled>
+                                <input class="form-check-input" type="checkbox" value="<%= user.id %>" name="usergroups">
                                 <% } %>
                                 <span class="form-check-sign">
                                   <span class="check"></span>
@@ -126,7 +129,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="clearfix"></div>
+                  <!-- <div class="clearfix"></div> -->
                 </div>
               </div>
               <div class="col-md-6">
@@ -146,15 +149,15 @@
                           <div class="form-check">
                             <label class="form-check-label">
                               <% if (group.alwayson) { %>
-                                <input class="form-check-input" type="checkbox" value="<%= group.alwayson %>" disabled checked>
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
+                              <input class="form-check-input" type="checkbox" value="1" name="alwayson" checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
                               <% } else { %>
-                                <input class="form-check-input" type="checkbox" value="<%= group.alwayson %>" disabled>
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
+                              <input class="form-check-input" type="checkbox" value="1" name="alwayson">
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
                               <% } %>
                               Always On
                             </label>
@@ -175,35 +178,35 @@
                         <div class="col-md-2">
                           <div class="form-group">
                             <!-- <label for="name">Group Name</label>
-                            <input type="text" class="form-control" id="name" placeholder="<%= group.name %>" disabled> -->
+                          <input type="text" class="form-control" id="name" placeholder="<%= group.name %>" disabled> -->
                             <p>Monday</p>
                           </div>
                         </div>
                         <div class="col-md-2">
                           <div class="form-group">
                             <label for="mstime">Start Time</label>
-                            <input type="text" class="form-control" id="mstime" placeholder="<%= group.mstart_time %>" disabled>
+                            <input type="text" class="form-control" id="mstime" name="mstime" value="<%= group.mstart_time %>" placeholder="HH:MM:SS">
                           </div>
                         </div>
                         <div class="col-md-2">
                           <div class="form-group">
                             <label for="metime">End Time</label>
-                            <input type="text" class="form-control" id="metime" placeholder="<%= group.mend_time %>" disabled>
+                            <input type="text" class="form-control" id="metime" name="metime" value="<%= group.mend_time %>" placeholder="HH:MM:SS">
                           </div>
                         </div>
                         <div class="col-md-2">
                           <div class="form-check">
                             <label class="form-check-label">
                               <% if (group.mallday) { %>
-                                <input class="form-check-input" type="checkbox" value="<%= group.mallday %>" disabled checked>
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
+                              <input class="form-check-input" type="checkbox" value="1" name="mallday" checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
                               <% } else { %>
-                                <input class="form-check-input" type="checkbox" value="<%= group.mallday %>" disabled>
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
+                              <input class="form-check-input" type="checkbox" value="1" name="mallday">
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
                               <% } %>
                               All Day
                             </label>
@@ -213,15 +216,15 @@
                           <div class="form-check">
                             <label class="form-check-label">
                               <% if (group.menabled) { %>
-                                <input class="form-check-input" type="checkbox" value="<%= group.menabled %>" disabled checked>
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
+                              <input class="form-check-input" type="checkbox" value="1" name="menabled" checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
                               <% } else { %>
-                                <input class="form-check-input" type="checkbox" value="<%= group.menabled %>" disabled>
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
+                              <input class="form-check-input" type="checkbox" value="1" name="menabled">
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
                               <% } %>
                               Enabled
                             </label>
@@ -242,35 +245,35 @@
                         <div class="col-md-2">
                           <div class="form-group">
                             <!-- <label for="name">Group Name</label>
-                            <input type="text" class="form-control" id="name" placeholder="<%= group.name %>" disabled> -->
+                          <input type="text" class="form-control" id="name" placeholder="<%= group.name %>" disabled> -->
                             <p>Tuesday</p>
                           </div>
                         </div>
                         <div class="col-md-2">
                           <div class="form-group">
                             <label for="tustime">Start Time</label>
-                            <input type="text" class="form-control" id="tustime" placeholder="<%= group.tustart_time %>" disabled>
+                            <input type="text" class="form-control" id="tustime" name="tustime" value="<%= group.tustart_time %>" placeholder="HH:MM:SS">
                           </div>
                         </div>
                         <div class="col-md-2">
                           <div class="form-group">
                             <label for="tuetime">End Time</label>
-                            <input type="text" class="form-control" id="tuetime" placeholder="<%= group.tuend_time %>" disabled>
+                            <input type="text" class="form-control" id="tuetime" name="tuetime" value="<%= group.tuend_time %>" placeholder="HH:MM:SS">
                           </div>
                         </div>
                         <div class="col-md-2">
                           <div class="form-check">
                             <label class="form-check-label">
                               <% if (group.tuallday) { %>
-                                <input class="form-check-input" type="checkbox" value="<%= group.tuallday %>" disabled checked>
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
+                              <input class="form-check-input" type="checkbox" value="1" name="tuallday" checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
                               <% } else { %>
-                                <input class="form-check-input" type="checkbox" value="<%= group.tuallday %>" disabled>
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
+                              <input class="form-check-input" type="checkbox" value="1" name="tuallday">
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
                               <% } %>
                               All Day
                             </label>
@@ -280,15 +283,15 @@
                           <div class="form-check">
                             <label class="form-check-label">
                               <% if (group.tuenabled) { %>
-                                <input class="form-check-input" type="checkbox" value="<%= group.tuenabled %>" disabled checked>
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
+                              <input class="form-check-input" type="checkbox" value="1" name="tuenabled" checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
                               <% } else { %>
-                                <input class="form-check-input" type="checkbox" value="<%= group.tuenabled %>" disabled>
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
+                              <input class="form-check-input" type="checkbox" value="1" name="tuenabled">
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
                               <% } %>
                               Enabled
                             </label>
@@ -309,35 +312,35 @@
                         <div class="col-md-2">
                           <div class="form-group">
                             <!-- <label for="name">Group Name</label>
-                            <input type="text" class="form-control" id="name" placeholder="<%= group.name %>" disabled> -->
+                          <input type="text" class="form-control" id="name" placeholder="<%= group.name %>" disabled> -->
                             <p>Wednesday</p>
                           </div>
                         </div>
                         <div class="col-md-2">
                           <div class="form-group">
                             <label for="wstime">Start Time</label>
-                            <input type="text" class="form-control" id="wstime" placeholder="<%= group.wstart_time %>" disabled>
+                            <input type="text" class="form-control" id="wstime" name="wstime" value="<%= group.wstart_time %>" placeholder="HH:MM:SS">
                           </div>
                         </div>
                         <div class="col-md-2">
                           <div class="form-group">
                             <label for="wetime">End Time</label>
-                            <input type="text" class="form-control" id="wetime" placeholder="<%= group.wend_time %>" disabled>
+                            <input type="text" class="form-control" id="wetime" name="wetime" value="<%= group.wend_time %>" placeholder="HH:MM:SS">
                           </div>
                         </div>
                         <div class="col-md-2">
                           <div class="form-check">
                             <label class="form-check-label">
                               <% if (group.wallday) { %>
-                                <input class="form-check-input" type="checkbox" value="<%= group.wallday %>" disabled checked>
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
+                              <input class="form-check-input" type="checkbox" value="1" name="wallday" checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
                               <% } else { %>
-                                <input class="form-check-input" type="checkbox" value="<%= group.wallday %>" disabled>
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
+                              <input class="form-check-input" type="checkbox" value="1" name="wallday">
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
                               <% } %>
                               All Day
                             </label>
@@ -347,15 +350,15 @@
                           <div class="form-check">
                             <label class="form-check-label">
                               <% if (group.wenabled) { %>
-                                <input class="form-check-input" type="checkbox" value="<%= group.wenabled %>" disabled checked>
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
+                              <input class="form-check-input" type="checkbox" value="1" name="wenabled" checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
                               <% } else { %>
-                                <input class="form-check-input" type="checkbox" value="<%= group.wenabled %>" disabled>
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
+                              <input class="form-check-input" type="checkbox" value="1" name="wenabled">
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
                               <% } %>
                               Enabled
                             </label>
@@ -376,35 +379,35 @@
                         <div class="col-md-2">
                           <div class="form-group">
                             <!-- <label for="name">Group Name</label>
-                            <input type="text" class="form-control" id="name" placeholder="<%= group.name %>" disabled> -->
+                          <input type="text" class="form-control" id="name" placeholder="<%= group.name %>" disabled> -->
                             <p>Thursday</p>
                           </div>
                         </div>
                         <div class="col-md-2">
                           <div class="form-group">
                             <label for="thstime">Start Time</label>
-                            <input type="text" class="form-control" id="thstime" placeholder="<%= group.thstart_time %>" disabled>
+                            <input type="text" class="form-control" id="thstime" name="thstime" value="<%= group.thstart_time %>" placeholder="HH:MM:SS">
                           </div>
                         </div>
                         <div class="col-md-2">
                           <div class="form-group">
                             <label for="thetime">End Time</label>
-                            <input type="text" class="form-control" id="thetime" placeholder="<%= group.thend_time %>" disabled>
+                            <input type="text" class="form-control" id="thetime" name="thetime" value="<%= group.thend_time %>" placeholder="HH:MM:SS">
                           </div>
                         </div>
                         <div class="col-md-2">
                           <div class="form-check">
                             <label class="form-check-label">
                               <% if (group.thallday) { %>
-                                <input class="form-check-input" type="checkbox" value="<%= group.thallday %>" disabled checked>
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
+                              <input class="form-check-input" type="checkbox" value="1" name="thallday" checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
                               <% } else { %>
-                                <input class="form-check-input" type="checkbox" value="<%= group.thallday %>" disabled>
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
+                              <input class="form-check-input" type="checkbox" value="1" name="thallday">
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
                               <% } %>
                               All Day
                             </label>
@@ -414,15 +417,15 @@
                           <div class="form-check">
                             <label class="form-check-label">
                               <% if (group.thenabled) { %>
-                                <input class="form-check-input" type="checkbox" value="<%= group.thenabled %>" disabled checked>
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
+                              <input class="form-check-input" type="checkbox" value="1" name="thenabled" checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
                               <% } else { %>
-                                <input class="form-check-input" type="checkbox" value="<%= group.thenabled %>" disabled>
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
+                              <input class="form-check-input" type="checkbox" value="1" name="thenabled">
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
                               <% } %>
                               Enabled
                             </label>
@@ -443,35 +446,35 @@
                         <div class="col-md-2">
                           <div class="form-group">
                             <!-- <label for="name">Group Name</label>
-                            <input type="text" class="form-control" id="name" placeholder="<%= group.name %>" disabled> -->
+                          <input type="text" class="form-control" id="name" placeholder="<%= group.name %>" disabled> -->
                             <p>Friday</p>
                           </div>
                         </div>
                         <div class="col-md-2">
                           <div class="form-group">
                             <label for="fstime">Start Time</label>
-                            <input type="text" class="form-control" id="fstime" placeholder="<%= group.fstart_time %>" disabled>
+                            <input type="text" class="form-control" id="fstime" name="fstime" value="<%= group.fstart_time %>" placeholder="HH:MM:SS">
                           </div>
                         </div>
                         <div class="col-md-2">
                           <div class="form-group">
                             <label for="fetime">End Time</label>
-                            <input type="text" class="form-control" id="fetime" placeholder="<%= group.fend_time %>" disabled>
+                            <input type="text" class="form-control" id="fetime" name="fetime" value="<%= group.fend_time %>" placeholder="HH:MM:SS">
                           </div>
                         </div>
                         <div class="col-md-2">
                           <div class="form-check">
                             <label class="form-check-label">
                               <% if (group.fallday) { %>
-                                <input class="form-check-input" type="checkbox" value="<%= group.fallday %>" disabled checked>
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
+                              <input class="form-check-input" type="checkbox" value="1" name="fallday" checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
                               <% } else { %>
-                                <input class="form-check-input" type="checkbox" value="<%= group.fallday %>" disabled>
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
+                              <input class="form-check-input" type="checkbox" value="1" name="fallday">
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
                               <% } %>
                               All Day
                             </label>
@@ -481,15 +484,15 @@
                           <div class="form-check">
                             <label class="form-check-label">
                               <% if (group.fenabled) { %>
-                                <input class="form-check-input" type="checkbox" value="<%= group.fenabled %>" disabled checked>
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
+                              <input class="form-check-input" type="checkbox" value="1" name="fenabled" checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
                               <% } else { %>
-                                <input class="form-check-input" type="checkbox" value="<%= group.fenabled %>" disabled>
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
+                              <input class="form-check-input" type="checkbox" value="1" name="fenabled">
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
                               <% } %>
                               Enabled
                             </label>
@@ -510,35 +513,35 @@
                         <div class="col-md-2">
                           <div class="form-group">
                             <!-- <label for="name">Group Name</label>
-                            <input type="text" class="form-control" id="name" placeholder="<%= group.name %>" disabled> -->
+                          <input type="text" class="form-control" id="name" placeholder="<%= group.name %>" disabled> -->
                             <p>Saturday</p>
                           </div>
                         </div>
                         <div class="col-md-2">
                           <div class="form-group">
                             <label for="sastime">Start Time</label>
-                            <input type="text" class="form-control" id="sastime" placeholder="<%= group.sastart_time %>" disabled>
+                            <input type="text" class="form-control" id="sastime" name="sastime" value="<%= group.sastart_time %>" placeholder="HH:MM:SS">
                           </div>
                         </div>
                         <div class="col-md-2">
                           <div class="form-group">
                             <label for="saetime">End Time</label>
-                            <input type="text" class="form-control" id="saetime" placeholder="<%= group.saend_time %>" disabled>
+                            <input type="text" class="form-control" id="saetime" name="saetime" value="<%= group.saend_time %>" placeholder="HH:MM:SS">
                           </div>
                         </div>
                         <div class="col-md-2">
                           <div class="form-check">
                             <label class="form-check-label">
                               <% if (group.saallday) { %>
-                                <input class="form-check-input" type="checkbox" value="<%= group.saallday %>" disabled checked>
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
+                              <input class="form-check-input" type="checkbox" value="1" id="saallday" name="saallday" checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
                               <% } else { %>
-                                <input class="form-check-input" type="checkbox" value="<%= group.saallday %>" disabled>
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
+                              <input class="form-check-input" type="checkbox" value="1" name="saallday">
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
                               <% } %>
                               All Day
                             </label>
@@ -548,15 +551,15 @@
                           <div class="form-check">
                             <label class="form-check-label">
                               <% if (group.saenabled) { %>
-                                <input class="form-check-input" type="checkbox" value="<%= group.saenabled %>" disabled checked>
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
+                              <input class="form-check-input" type="checkbox" value="1" name="saenabled" checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
                               <% } else { %>
-                                <input class="form-check-input" type="checkbox" value="<%= group.saenabled %>" disabled>
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
+                              <input class="form-check-input" type="checkbox" value="1" name="saenabled">
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
                               <% } %>
                               Enabled
                             </label>
@@ -577,35 +580,35 @@
                         <div class="col-md-2">
                           <div class="form-group">
                             <!-- <label for="name">Group Name</label>
-                            <input type="text" class="form-control" id="name" placeholder="<%= group.name %>" disabled> -->
+                          <input type="text" class="form-control" id="name" placeholder="<%= group.name %>" disabled> -->
                             <p>Sunday</p>
                           </div>
                         </div>
                         <div class="col-md-2">
                           <div class="form-group">
                             <label for="sustime">Start Time</label>
-                            <input type="text" class="form-control" id="sustime" placeholder="<%= group.sustart_time %>" disabled>
+                            <input type="text" class="form-control" id="sustime" name="sustime" value="<%= group.sustart_time %>" placeholder="HH:MM:SS">
                           </div>
                         </div>
                         <div class="col-md-2">
                           <div class="form-group">
                             <label for="suetime">End Time</label>
-                            <input type="text" class="form-control" id="suetime" placeholder="<%= group.suend_time %>" disabled>
+                            <input type="text" class="form-control" id="suetime" name="suetime" value="<%= group.suend_time %>" placeholder="HH:MM:SS">
                           </div>
                         </div>
                         <div class="col-md-2">
                           <div class="form-check">
                             <label class="form-check-label">
                               <% if (group.suallday) { %>
-                                <input class="form-check-input" type="checkbox" value="<%= group.suallday %>" disabled checked>
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
+                              <input class="form-check-input" type="checkbox" value="1" name="suallday" checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
                               <% } else { %>
-                                <input class="form-check-input" type="checkbox" value="<%= group.suallday %>" disabled>
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
+                              <input class="form-check-input" type="checkbox" value="1" name="suallday">
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
                               <% } %>
                               All Day
                             </label>
@@ -615,15 +618,15 @@
                           <div class="form-check">
                             <label class="form-check-label">
                               <% if (group.suenabled) { %>
-                                <input class="form-check-input" type="checkbox" value="<%= group.suenabled %>" disabled checked>
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
+                              <input class="form-check-input" type="checkbox" value="1" name="suenabled" checked>
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
                               <% } else { %>
-                                <input class="form-check-input" type="checkbox" value="<%= group.suenabled %>" disabled>
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
+                              <input class="form-check-input" type="checkbox" value="1" name="suenabled">
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
                               <% } %>
                               Enabled
                             </label>
@@ -635,7 +638,7 @@
                   <div class="clearfix"></div>
                 </div>
               </div>
-            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -643,17 +646,28 @@
 
   <%- include('./partials/footer'); %>
 
-
   <%- include('./partials/foot'); %>
+
 
 
 </body>
 
-
 <script>
-  async function tryDeleting() {
+  async function tryEditing() {
+    const formData = new FormData(document.getElementById('editGroupForm'))
+    data = {};
+    data.doorgroups = [];
+    data.usergroups = [];
+    for (const [key, value] of formData) {
+      if (key == "doorgroups" || key == "usergroups") {
+        data[key].push(value);
+      } else {
+        data[key] = value;
+      }
+    }
+
     await fetch(window.location.href, {
-      method: 'DELETE', // *GET, POST, PUT, DELETE, etc.
+      method: 'PUT', // *GET, POST, PUT, DELETE, etc.
       mode: 'cors', // no-cors, *cors, same-origin
       cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
       credentials: 'same-origin', // include, *same-origin, omit
@@ -662,10 +676,10 @@
         // 'Content-Type': 'application/x-www-form-urlencoded',
       },
       redirect: 'follow', // manual, *follow, error
-      referrerPolicy: 'no-referrer' // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-      // body: JSON.stringify(data) // body data type must match "Content-Type" header
+      referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+      body: JSON.stringify(data) // body data type must match "Content-Type" header
     });
-    window.location.href = `${window.location.href}/processing`;
+    window.location.href = '/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>/groups/<%= group.id %>';
   }
 </script>
 

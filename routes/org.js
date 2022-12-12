@@ -144,15 +144,15 @@ orgRouter.get('/:orgID/users', async function (req, res, next) {
 
         if (userData.length) {
           if (userData.length === 1) {
-            panelTitleT = `${userData.length} User at ${orgName}`;
+            panelTitleT = `${userData.length} Global User`;
           }
           else {
-            panelTitleT = `${userData.length} Users at ${orgName}`;
+            panelTitleT = `${userData.length} Global Users`;
           }
           panelSubtextT = "Please Select a User";
         }
         else {
-          panelTitleT = `No Users at ${orgName}`;
+          panelTitleT = `No Global Users`;
           panelSubtextT = "Please Add a User";
         }
 
