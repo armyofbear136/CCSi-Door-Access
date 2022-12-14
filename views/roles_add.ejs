@@ -26,98 +26,102 @@
       <div class="content">
         <div class="container-fluid">
           <%- include('./partials/tabBar', {tabs: tabBar}) %>
-          <div class="row">
-            <div class="col-md-8">
-              <div class="card">
-                <div class="card-header card-header-primary">
-                  <h4 class="card-title"><%= panelTitle %></h4>
-                  <p class="card-category"><%= panelSubtext %></p>
-                </div>
-                <div class="card-body">
-                  <div class="col-md-5">
-                    <button type="submit" class="btn btn-primary" onclick="tryAdding()" value="Submit">Submit</button>
-                    <a href="/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>/groups"><button class="btn btn-primary">Cancel</button></a>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="card">
+                  <div class="card-header card-header-primary">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <h4 class="card-title"><%= panelTitle %></h4>
+                      </div>
+                      <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary pull-right" onclick="tryAdding()" value="Submit">Submit</button>
+                        <a href="/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>/roles"><button class="btn btn-primary pull-right">Cancel</button></a>
+                      </div>
+                    </div>
+                    <p class="card-category"><%= panelSubtext %></p>
                   </div>
-                </div>
-                <div class="card-body">
-                  <form id="addGroupForm" method="post">
-                    <div class="row">
-                      <div class="col-md-2">
-                        <div class="form-group">
-                          <label class="bmd-label-floating" >Group Name</label>
-                          <input type="text" class="form-control" name="name">
-                        </div>
-                      </div>
-                      <div class="col-md-2">
-                        <div class="form-group">
-                          <label class="bmd-label-floating" >Start Time HH:MM:SS</label>
-                          <input type="text" class="form-control" name="stime">
-                        </div>
-                      </div>
-                      <div class="col-md-2">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">End Time HH:MM:SS</label>
-                          <input type="text" class="form-control" name="etime">
-                        </div>
-                      </div>
-                    </div>
-                    <div class="card-body">
-                      <h5>Doors</h5>
-                    </div>
-                    <div class="row">
-                      <% group.allDoors.forEach(function(door) { %>
-                        <div class="col-md-6">
-                          <div class="form-group">
-                            <div class="form-check">
-                              <label class="form-check-label">
-                                <input class="form-check-input" type="checkbox" value="<%= door.id %>" name="doorgroups">
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
-                                <%= door.name %>
-                              </label>
+                  <form id="addRoleForm" method="post">
+                    <div class="card text-right">
+                      <div class="card-body">
+                        <div class="row">
+                          <div class="col-md-2">
+                            <div class="form-group">
+                              <label for="name">Role Name</label>
+                              <input type="text" class="form-control" id="name" name="name" placeholder="Role Name">
                             </div>
                           </div>
                         </div>
-                      <% }); %>
+                      </div>
                     </div>
-                    <div class="card-body">
-                      <h5>Users</h5>
+                    <div class="card-header card-header-primary col-md-11">
+                      <div class="card-title">
+                        <h4>Permissions</h4>
+                      </div>
                     </div>
-                    <div class="row">
-                      <% group.allUsers.forEach(function(user) { %>
-                        <div class="col-md-6">
-                          <div class="form-group">
-                            <div class="form-check">
-                              <label class="form-check-label">
-                                <input class="form-check-input" type="checkbox" value="<%= user.id %>" name="usergroups">
-                                <span class="form-check-sign">
-                                  <span class="check"></span>
-                                </span>
-                                <%= user.name %>
-                              </label>
+                    <div class="card">
+                      <div class="card-body">
+                        <div class="row">
+                          <% role.allPerms.forEach(function(perm) { %>
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <div class="form-check">
+                                <label class="form-check-label">
+                                  <input class="form-check-input" type="checkbox" value="<%= perm.id %>" name="permgroups">
+                                  <span class="form-check-sign">
+                                    <span class="check"></span>
+                                  </span>
+                                  <%= perm.name %>
+                                </label>
+                              </div>
                             </div>
                           </div>
+                          <% }); %>
                         </div>
-                      <% }); %>
+                      </div>
                     </div>
-                    <div class="clearfix"></div>
+                    <div class="card-header card-header-primary col-md-11">
+                      <div class="card-title">
+                        <h4>Users</h4>
+                      </div>
+                    </div>
+                    <div class="card">
+                      <div class="card-body">
+                        <div class="row">
+                          <% role.allUsers.forEach(function(user) { %>
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <div class="form-check">
+                                <label class="form-check-label">
+                                  <input class="form-check-input" type="checkbox" value="<%= user.id %>" name="usergroups">
+                                  <span class="form-check-sign">
+                                    <span class="check"></span>
+                                  </span>
+                                  <%= user.name %>
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                          <% }); %>
+                        </div>
+                      </div>
+                    </div>
                   </form>
+                  <div class="clearfix"></div>
                 </div>
               </div>
             </div>
-          </div>
         </div>
       </div>
-      
-      <%- include('./partials/footer'); %>
     </div>
+    <%- include('./partials/footer'); %>
   </div>
+</div>
   
   <%- include('./partials/foot'); %>
   <script>
     function tryAdding() {
-      document.getElementById("addGroupForm").submit();
+      document.getElementById("addRoleForm").submit();
     }
   </script>
 

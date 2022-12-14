@@ -83,21 +83,21 @@
 
                         </th>
                       </tbody>
-                      <tbody id ="groupsData">
-                        <% groups.forEach(function(group) { %>
+                      <tbody id ="rolesData">
+                        <% roles.forEach(function(role) { %>
                         <tr>
                           <td>
-                            <%= group.name %>
+                            <%= role.name %>
                           </td>
                           <td>
-                            <!-- <%= group.start_time %> - <%= group.end_time %> -->
+                            <!-- <%= role.start_time %> - <%= role.end_time %> -->
                             This Role Gives Managers Control
                           </td>
                           <td>
-                            <%= group.users %>
+                            <!-- <%= role.users %> -->
                           </td>
                           <td>
-                            <a href="/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>/groups/<%= group.id %>"><button class="btn btn-primary">Select</button></a>
+                            <a href="/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>/roles/<%= role.id %>"><button class="btn btn-primary">Select</button></a>
                           </td>
                         </tr>
                         <% }); %>
@@ -119,7 +119,7 @@
 </body>
 
 <script>
-  const tbody = document.getElementById("groupsData");
+  const tbody = document.getElementById("rolesData");
 
   // Helper function for sorting on a given column, with a given comparator
   function tableSort(colNum, cmp) {
