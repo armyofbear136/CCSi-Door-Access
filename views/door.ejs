@@ -52,7 +52,7 @@
                     </div>
                     <div class="col-md-5">
                       <!-- <div class="col-md-12"> -->
-                      <button class="btn btn-primary pull-right" onclick=tryDeleting()>Delete</button></a>
+                      <!-- <button class="btn btn-primary pull-right" onclick=tryDeleting()>Delete</button></a> -->
                       <!-- </div> -->
                       <a href="<%= thisURL %>/edit">
                         <button class="btn btn-primary pull-right">Edit
@@ -141,10 +141,42 @@
                     <div class="card">
                       <div class="card-body">
                         <div class="row">
+                          <div class="col-md-2">
+                            <div class="form-group">
+                              <label class="bmd-label-floating" for="ip">IP Address</label>
+                              <input type="text" class="form-control" id="ip" value=<%=door.ip %> disabled>
+                            </div>
+                          </div>
+                          <div class="col-md-2">
+                            <div class="form-group">
+                              <label class="bmd-label-floating" for="status">Status</label>
+                              <input type="text" class="form-control" id="status" value=<%=door.status %> disabled>
+                            </div>
+                          </div>
+                          <div class="col-md-2">
+                            <div class="form-group">
+                              <label class="bmd-label-floating" for="alarm">Alarm State</label>
+                              <input type="email" class="form-control" id="alarm" value=<%=door.alarm %> disabled>
+                            </div>
+                          </div>
+                          <div class="col-md-2">
+                            <div class="form-group">
+                              <label class="bmd-label-floating" for="access">Last Access</label>
+                              <input type="text" class="form-control" id="access" value=<%=door.last_access %> disabled>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
                           <div class="col-md-10">
                             <button class="btn btn-primary" onclick=tryAccess()>Access</button></a>
                             <button class="btn btn-primary" onclick=tryUnlock()>Unlock</button></a>
                             <button class="btn btn-primary" onclick=tryLock()>Lock</button></a>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-10">
+                            <button class="btn btn-primary" onclick=tryEnable()>Enable</button></a>
+                            <button class="btn btn-primary" onclick=tryDisable()>Disable</button></a>
                           </div>
                         </div>
                       </div>
