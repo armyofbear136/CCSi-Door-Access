@@ -52,6 +52,7 @@ APIfun.doorControls = async function(command, token){
   }
   
   return new Promise(async function(resolve, reject) {
+    if (token == null){reject("bad token")};
     var response;
     if (command == 'unlock'){
       response = await APIfun.digestor('http://10.0.1.246/vapix/doorcontrol/UnlockDoor', 'root', 'pass', option);

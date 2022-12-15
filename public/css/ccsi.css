@@ -23,6 +23,10 @@ body {
   color: #b2b2b2 !important;
 }
 
+button {
+  border: 0px;
+}
+
 label {
   color: #3c3c3c !important;
 }

@@ -59,13 +59,28 @@
                             </button>
                           </th>
                           <th>
-  
+                            <button onclick="sortIPDescending()">
+                              <i class="material-icons">expand_more</i>
+                            </button>
+                            <button onclick="sortIPAscending()">
+                              <i class="material-icons">expand_less</i>
+                            </button>
                           </th>
                           <th>
-  
+                            <button onclick="sortStatusDescending()">
+                              <i class="material-icons">expand_more</i>
+                            </button>
+                            <button onclick="sortStatusAscending()">
+                              <i class="material-icons">expand_less</i>
+                            </button>
                           </th>
                           <th>
-  
+                            <button onclick="sortAlarmDescending()">
+                              <i class="material-icons">expand_more</i>
+                            </button>
+                            <button onclick="sortAlarmAscending()">
+                              <i class="material-icons">expand_less</i>
+                            </button>
                           </th>
                           <th>
   
@@ -90,9 +105,6 @@
                         <tbody id ="doorsData">
                           <% doors.forEach(function(door) { %>
                           <tr>
-                            <td>
-                              <%= door.id %>
-                            </td>
                             <td>
                               <%= door.name %>
                             </td>
@@ -137,20 +149,44 @@
       .map(row => tbody.appendChild(row));
   }
 
-  function sortIDAscending() {
-    tableSort(0, (a, b) => a - b); // assuming that school column has number representations
-  }
+  // function sortIDAscending() {
+  //   tableSort(0, (a, b) => a - b); // assuming that school column has number representations
+  // }
 
-  function sortIDDescending() {
-    tableSort(0, (a, b) => b - a); // assuming that school column has number representations
-  }
+  // function sortIDDescending() {
+  //   tableSort(0, (a, b) => b - a); // assuming that school column has number representations
+  // }
 
   function sortDoorNameAscending() {
-    tableSort(1, (a, b) => a.localeCompare(b)); // assuming that school column has number representations
+    tableSort(0, (a, b) => a.localeCompare(b)); // assuming that school column has number representations
   }
 
   function sortDoorNameDescending() {
+    tableSort(0, (a, b) => b.localeCompare(a)); // assuming that school column has number representations
+  }
+
+  function sortIPAscending() {
+    tableSort(1, (a, b) => a.localeCompare(b)); // assuming that school column has number representations
+  }
+
+  function sortIPDescending() {
     tableSort(1, (a, b) => b.localeCompare(a)); // assuming that school column has number representations
+  }
+
+  function sortStatusAscending() {
+    tableSort(2, (a, b) => a.localeCompare(b)); // assuming that school column has number representations
+  }
+
+  function sortStatusDescending() {
+    tableSort(2, (a, b) => b.localeCompare(a)); // assuming that school column has number representations
+  }
+
+  function sortAlarmAscending() {
+    tableSort(3, (a, b) => a.localeCompare(b)); // assuming that school column has number representations
+  }
+
+  function sortAlarmDescending() {
+    tableSort(3, (a, b) => b.localeCompare(a)); // assuming that school column has number representations
   }
 </script>
 

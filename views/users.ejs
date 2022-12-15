@@ -52,7 +52,7 @@
                         </th> -->
                         <th>
                           <button onclick="sortLastNameDescending()">
-                            <i class="material-icons sort">expand_more</i>
+                            <i class="material-icons sort" >expand_more</i>
                           </button>
                           <button onclick="sortLastNameAscending()">
                             <i class="material-icons">expand_less</i>
@@ -157,44 +157,44 @@ function tableSort(colNum, cmp) {
     .map(row => tbody.appendChild(row));
 }
 
-function sortIDAscending() {
-  tableSort(0, (a, b) => a - b); // assuming that school column has number representations
-}
+// function sortIDAscending() {
+//   tableSort(0, (a, b) => a - b); // assuming that school column has number representations
+// }
 
-function sortIDDescending() {
-  tableSort(0, (a, b) => b - a); // assuming that school column has number representations
-}
+// function sortIDDescending() {
+//   tableSort(0, (a, b) => b - a); // assuming that school column has number representations
+// }
 
 function sortLastNameAscending() {
-  tableSort(1, (a, b) => a.localeCompare(b)); // assuming that school column has number representations
+  tableSort(0, (a, b) => a.localeCompare(b)); // assuming that school column has number representations
 }
 
 function sortLastNameDescending() {
-  tableSort(1, (a, b) => b.localeCompare(a)); // assuming that school column has number representations
+  tableSort(0, (a, b) => b.localeCompare(a)); // assuming that school column has number representations
 }
 
 function sortFirstNameAscending() {
-  tableSort(2, (a, b) => a.localeCompare(b)); // assuming that location column has strings
+  tableSort(1, (a, b) => a.localeCompare(b)); // assuming that location column has strings
 }
 
 function sortFirstNameDescending() {
-  tableSort(2, (a, b) => b.localeCompare(a)); // assuming that location column has strings
+  tableSort(1, (a, b) => b.localeCompare(a)); // assuming that location column has strings
 }
 
 function sortFOBAscending() {
-  tableSort(3, (a, b) => a - b); // assuming that school column has number representations
+  tableSort(2, (a, b) => a - b); // assuming that school column has number representations
 }
 
 function sortFOBDescending() {
-  tableSort(3, (a, b) => b - a); // assuming that school column has number representations
+  tableSort(2, (a, b) => b - a); // assuming that school column has number representations
 }
 
 function sortEIDAscending() {
-  tableSort(4, (a, b) => a - b); // assuming that school column has number representations
+  tableSort(3, (a, b) => a - b); // assuming that school column has number representations
 }
 
 function sortEIDDescending() {
-  tableSort(4, (a, b) => b - a); // assuming that school column has number representations
+  tableSort(3, (a, b) => b - a); // assuming that school column has number representations
 }
 </script>
 

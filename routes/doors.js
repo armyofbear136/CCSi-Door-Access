@@ -1067,11 +1067,18 @@ doorsRouter.get('/:doorID/controls/:command', async function (req, res, next) {
         // // console.log(doorData);
         // varName = "CCSI Door Access" //optional title override
         // res.render('door_controls', { door: doorData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${doorData.companyName} - ${doorData.siteName}`, panelTitle: `${doorData.name} - Controls`, panelSubtext: `Door Control Panel`, companyID: req.params.companyID, siteID: req.params.siteID, orgID: req.params.orgID });
-
-        const response = await APIFun.doorControls(`${req.params.command}`, `${readerData.lock_key}`);
-        // console.log("response");
-        // console.log(response);
-        res.send(200);
+        try {
+          if (readerData?.lock_key){
+            const response = await APIFun.doorControls(`${req.params.command}`, `${readerData.lock_key}`);
+          // console.log("response");
+          // console.log(response);
+          res.send(200);
+          }
+        }catch (err) {
+          console.log(err)
+        } finally {
+          //await db.close();
+        }
 
       });
 

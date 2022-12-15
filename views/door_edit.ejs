@@ -48,19 +48,19 @@
                       <%= panelSubtext %>
                     </p>
                   </div>
-                  <div class="card text-right">
+                  <div class="card">
                     <div class="card-body">
                       <div class="row">
                         <div class="col-md-3">
                           <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text" class="form-control" id="name" name="name" placeholder="Door Name" value="<%= door.name %>">
+                            <label class="bmd-label-floating" for="name">Door Name</label>
+                            <input type="text" class="form-control" id="name" name="name" value="<%= door.name %>">
                           </div>
                         </div>
                         <div class="col-md-3">
                           <div class="form-group">
-                            <label for="ip">IP Address</label>
-                            <input type="text" class="form-control" id="ip" name="ip" placeholder="XXX.XXX.XXX" value=<%= door.ip %>>
+                            <label class="bmd-label-floating" for="ip">IP Address</label>
+                            <input type="text" class="form-control" id="ip" name="ip" value=<%= door.ip %>>
                           </div>
                         </div>
                       </div>

@@ -44,20 +44,15 @@
                     <table class="table">
                       <thead>
                         <th>
-                          <button onclick="sortIDDescending()">
-                            <i class="material-icons">expand_more</i>
-                          </button>
-                          <button onclick="sortIDAscending()">
-                            <i class="material-icons">expand_less</i>
-                          </button>
-                        </th>
-                        <th>
                           <button onclick="sortGroupNameDescending()">
                             <i class="material-icons">expand_more</i>
                           </button>
                           <button onclick="sortGroupNameAscending()">
                             <i class="material-icons">expand_less</i>
                           </button>
+                        </th>
+                        <th>
+                          
                         </th>
                         <th>
 
@@ -76,9 +71,9 @@
                         <th>
                           Schedule
                         </th>
-                        <th>
+                        <!-- <th>
                           Users
-                        </th>
+                        </th> -->
                         <th>
 
                         </th>
@@ -127,20 +122,20 @@
       .map(row => tbody.appendChild(row));
   }
 
-  function sortIDAscending() {
-    tableSort(0, (a, b) => a - b); // assuming that school column has number representations
-  }
+  // function sortIDAscending() {
+  //   tableSort(0, (a, b) => a - b); // assuming that school column has number representations
+  // }
 
-  function sortIDDescending() {
-    tableSort(0, (a, b) => b - a); // assuming that school column has number representations
-  }
+  // function sortIDDescending() {
+  //   tableSort(0, (a, b) => b - a); // assuming that school column has number representations
+  // }
 
   function sortGroupNameAscending() {
-    tableSort(1, (a, b) => a.localeCompare(b)); // assuming that school column has number representations
+    tableSort(0, (a, b) => a.localeCompare(b)); // assuming that school column has number representations
   }
 
   function sortGroupNameDescending() {
-    tableSort(1, (a, b) => b.localeCompare(a)); // assuming that school column has number representations
+    tableSort(0, (a, b) => b.localeCompare(a)); // assuming that school column has number representations
   }
 </script>
 

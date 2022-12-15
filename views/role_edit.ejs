@@ -42,13 +42,13 @@
                     <p class="card-category"><%= panelSubtext %></p>
                   </div>
                   <form id="editRoleForm" method="put">
-                    <div class="card text-right">
+                    <div class="card">
                       <div class="card-body">
                         <div class="row">
                           <div class="col-md-2">
                             <div class="form-group">
-                              <label for="name">Role Name</label>
-                              <input type="text" class="form-control" id="name" name="name" value="<%= role.name %>" placeholder="Role Name">
+                              <label class="bmd-label-floating" for="name">Role Name</label>
+                              <input type="text" class="form-control" id="name" name="name" value="<%= role.name %>">
                             </div>
                           </div>
                         </div>

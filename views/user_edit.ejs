@@ -46,56 +46,56 @@
                   <p class="card-category"><%= panelSubtext %></p>
                 </div>
                 <form id="editUserForm" method="put">
-                  <div class="card text-right">
+                  <div class="card">
                     <div class="card-body">
                       <div class="row">
                         <div class="col-md-2">
                           <div class="form-group">
-                            <label for="fname">First Name</label>
+                            <label class="bmd-label-floating" for="fname">First Name</label>
                             <% if (user.first_name && user.first_name != "null") { %>
-                            <input type="text" class="form-control" id="fname" name="fname" value="<%= user.first_name %>" placeholder="John">
+                            <input type="text" class="form-control" id="fname" name="fname" value="<%= user.first_name %>">
                             <% } else { %>
-                            <input type="text" class="form-control" id="fname" name="fname" placeholder="John">
+                            <input type="text" class="form-control" id="fname" name="fname">
                             <% } %>
                           </div>
                         </div>
                         <div class="col-md-2">
                           <div class="form-group">
-                            <label for="lname">Last Name</label>
+                            <label class="bmd-label-floating" for="lname">Last Name</label>
                             <% if (user.last_name && user.last_name != "null") { %>
-                            <input type="text" class="form-control" id="lname" name="lname" value="<%= user.last_name %>" placeholder="Doe">
+                            <input type="text" class="form-control" id="lname" name="lname" value="<%= user.last_name %>">
                             <% } else { %>
-                            <input type="text" class="form-control" id="lname" name="lname" placeholder="Doe">
+                            <input type="text" class="form-control" id="lname" name="lname">
                             <% } %>
                           </div>
                         </div>
                         <div class="col-md-2">
                           <div class="form-group">
-                            <label for="fob">Fob Number</label>
+                            <label class="bmd-label-floating" for="fob">Fob Number</label>
                             <% if (user.fob_id) { %>
-                            <input type="text" class="form-control" id="fob" name="fob" value="<%= user.fob_id %>" placeholder="#####">
+                            <input type="text" class="form-control" id="fob" name="fob" value="<%= user.fob_id %>">
                             <% } else { %>
-                            <input type="text" class="form-control" id="fob" name="fob" placeholder="#####">
+                            <input type="text" class="form-control" id="fob" name="fob">
                             <% } %>
                           </div>
                         </div>
                         <div class="col-md-2">
                           <div class="form-group">
-                            <label for="eid">Employee ID</label>
+                            <label class="bmd-label-floating" for="eid">Employee ID</label>
                             <% if (user.employee_id) { %>
-                            <input type="text" class="form-control" id="eid" name="eid" value="<%= user.employee_id %>" placeholder="#####">
+                            <input type="text" class="form-control" id="eid" name="eid" value="<%= user.employee_id %>">
                             <% } else { %>
-                            <input type="text" class="form-control" id="eid" name="eid" placeholder="#####">
+                            <input type="text" class="form-control" id="eid" name="eid">
                             <% } %>
                           </div>
                         </div>
                         <div class="col-md-3">
                           <div class="form-group">
-                            <label for="email">Email Address</label>
+                            <label class="bmd-label-floating" for="email">Email Address</label>
                             <% if (user.email && user.email != "null") {%>
-                            <input type="email" class="form-control" id="email" name="email" value="<%= user.email %>" placeholder="User@Email.com">
+                            <input type="email" class="form-control" id="email" name="email" value="<%= user.email %>">
                             <% } else { %>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="User@Email.com">
+                            <input type="email" class="form-control" id="email" name="email">
                             <% } %>
                           </div>
                         </div>

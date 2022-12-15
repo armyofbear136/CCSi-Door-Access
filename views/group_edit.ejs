@@ -45,25 +45,25 @@
                     </div>
                     <p class="card-category"><%= panelSubtext %></p>
                   </div>
-                  <div class="card text-right">
+                  <div class="card">
                     <div class="card-body">
                       <div class="row">
                         <div class="col-md-2">
                           <div class="form-group">
-                            <label for="name">Group Name</label>
-                            <input type="text" class="form-control" id="name" name="name" value="<%= group.name %>" placeholder="Access Group">
+                            <label class="bmd-label-floating" for="name">Group Name</label>
+                            <input type="text" class="form-control" id="name" name="name" value="<%= group.name %>">
                           </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                           <div class="form-group">
-                            <label for="stime">Start Time</label>
-                            <input type="text" class="form-control" id="stime" name="stime" value="<%= group.start_time %>" placeholder="XX:XX:XX">
+                            <label class="bmd-label-floating" for="stime">Start Time HH:MM:SS</label>
+                            <input type="text" class="form-control" id="stime" name="stime" value="<%= group.start_time %>">
                           </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                           <div class="form-group">
-                            <label cfor="etime">End Time</label>
-                            <input type="text" class="form-control" id="etime" name="etime" value="<%= group.end_time %>" placeholder="XX:XX:XX">
+                            <label class="bmd-label-floating" for="etime">End Time HH:MM:SS</label>
+                            <input type="text" class="form-control" id="etime" name="etime" value="<%= group.end_time %>">
                           </div>
                         </div>
                       </div>

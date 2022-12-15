@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <script>
-    trimSlashes = str => str.split('/').filter(v => v !== '').join('/');
-  
-    let sanitized = window.location.pathname;
-    sanitized = trimSlashes(sanitized);
-    
-    const newURL = window.location.protocol + '//' + window.location.host + '/'+ sanitized;
-  
-    if (window.location.href !== newURL) {
-       window.location.href = newURL;
-    }
-  </script>
+<script>
+  trimSlashes = str => str.split('/').filter(v => v !== '').join('/');
+
+  let sanitized = window.location.pathname;
+  sanitized = trimSlashes(sanitized);
+
+  const newURL = window.location.protocol + '//' + window.location.host + '/' + sanitized;
+
+  if (window.location.href !== newURL) {
+    window.location.href = newURL;
+  }
+</script>
 
 <head>
   <%- include('./partials/head'); %>
@@ -44,50 +44,50 @@
                         </th>
                       </thead>
                       <tbody>
-                              <tr>
-                                  <td>
-                                    <div class="card text-right">
-                                      <div class="card-body">
-                                        <div class="row">
-                                    <div class="col-md-2">
-                                      <div class="form-group">
-                                        <label for="name">Username</label>
-                                        <input type="text" class="form-control" id="name" name="name" placeholder="Username">
-                                      </div>
+                        <tr>
+                          <td>
+                            <div class="card">
+                              <div class="card-body">
+                                <div class="row">
+                                  <div class="col-md-2">
+                                    <div class="form-group">
+                                      <label class="bmd-label-floating" for="name">Username</label>
+                                      <input type="text" class="form-control" id="name" name="name">
                                     </div>
-                                    <div class="col-md-2">
-                                      <div class="form-group">
-                                        <label for="name">Password</label>
-                                        <input type="text" class="form-control" id="name" name="name" placeholder="Password">
-                                      </div>
+                                  </div>
+                                  <div class="col-md-2">
+                                    <div class="form-group">
+                                      <label class="bmd-label-floating" for="name">Password</label>
+                                      <input type="text" class="form-control" id="name" name="name">
                                     </div>
-                                    <div class="col-md-2">
-                                      <a  href="org/1"><button class="btn btn-primary">Enter</button></a> 
-                                    </div>
-                                  </td>
-                                   <td> 
-                                   </td> 
-                                  <td> 
-                                     
-                                   </td>                                   
-                              </tr>
+                                  </div>
+                                  <div class="col-md-2">
+                                    <a href="org/1"><button class="btn btn-primary">Enter</button></a>
+                                  </div>
+                          </td>
+                          <td>
+                          </td>
+                          <td>
+
+                          </td>
+                        </tr>
                       </tbody>
                     </table>
                   </div>
                 </div>
-                
-                      
-                    
-                    </div>
-                  </div>
-                </div>
+
+
+
               </div>
             </div>
           </div>
         </div>
       </div>
-      <%- include('./partials/footer') %>
     </div>
+  </div>
+  </div>
+  <%- include('./partials/footer') %>
+  </div>
   </div>
   <%- include('./partials/foot') %>
 </body>
