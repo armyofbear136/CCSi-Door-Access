@@ -51,51 +51,51 @@
                       <div class="row">
                         <div class="col-md-2">
                           <div class="form-group">
-                            <label for="fname">First Name</label>
+                            <label class="bmd-label-floating" for="fname">First Name</label>
                             <% if (user.first_name) { %>
-                            <input type="text" class="form-control" id="fname" name="fname" value="<%= user.first_name %>" placeholder="John" disabled>
+                            <input type="text" class="form-control" id="fname" name="fname" value="<%= user.first_name %>" value="John" disabled>
                             <% } else { %>
-                            <input type="text" class="form-control" id="fname" name="fname" placeholder="John" disabled>
+                            <input type="text" class="form-control" id="fname" name="fname" value="John" disabled>
                             <% } %>
                           </div>
                         </div>
                         <div class="col-md-2">
                           <div class="form-group">
-                            <label for="lname">Last Name</label>
+                            <label class="bmd-label-floating" for="lname">Last Name</label>
                             <% if (user.last_name) { %>
-                            <input type="text" class="form-control" id="lname" name="lname" value="<%= user.last_name %>" placeholder="Doe" disabled>
+                            <input type="text" class="form-control" id="lname" name="lname" value="<%= user.last_name %>" value="Doe" disabled>
                             <% } else { %>
-                            <input type="text" class="form-control" id="lname" name="lname" placeholder="Doe" disabled>
+                            <input type="text" class="form-control" id="lname" name="lname" value="Doe" disabled>
                             <% } %>
                           </div>
                         </div>
                         <div class="col-md-2">
                           <div class="form-group">
-                            <label for="fob">Fob Number</label>
+                            <label class="bmd-label-floating" for="fob">Fob Number</label>
                             <% if (user.fob_id) { %>
-                            <input type="text" class="form-control" id="fob" name="fob" value="<%= user.fob_id %>" placeholder="#####" disabled>
+                            <input type="text" class="form-control" id="fob" name="fob" value="<%= user.fob_id %>" value="#####" disabled>
                             <% } else { %>
-                            <input type="text" class="form-control" id="fob" name="fob" placeholder="#####" disabled>
+                            <input type="text" class="form-control" id="fob" name="fob" value="#####" disabled>
                             <% } %>
                           </div>
                         </div>
                         <div class="col-md-2">
                           <div class="form-group">
-                            <label for="eid">Employee ID</label>
+                            <label class="bmd-label-floating" for="eid">Employee ID</label>
                             <% if (user.employee_id) { %>
-                            <input type="text" class="form-control" id="eid" name="eid" value="<%= user.employee_id %>" placeholder="#####" disabled>
+                            <input type="text" class="form-control" id="eid" name="eid" value="<%= user.employee_id %>" value="#####" disabled>
                             <% } else { %>
-                            <input type="text" class="form-control" id="eid" name="eid" placeholder="#####" disabled>
+                            <input type="text" class="form-control" id="eid" name="eid" value="#####" disabled>
                             <% } %>
                           </div>
                         </div>
                         <div class="col-md-3">
                           <div class="form-group">
-                            <label for="email">Email Address</label>
+                            <label class="bmd-label-floating" for="email">Email Address</label>
                             <% if (user.email) {%>
-                            <input type="email" class="form-control" id="email" name="email" value="<%= user.email %>" placeholder="User@Email.com" disabled>
+                            <input type="email" class="form-control" id="email" name="email" value="<%= user.email %>" value="User@Email.com" disabled>
                             <% } else { %>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="User@Email.com" disabled>
+                            <input type="email" class="form-control" id="email" name="email" value="User@Email.com" disabled>
                             <% } %>
                           </div>
                         </div>
