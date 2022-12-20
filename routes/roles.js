@@ -323,7 +323,7 @@ rolesRouter.post('/add', async function (req, res, next) {
         var permValues = [];
         var userValues = [];
 
-        if (req.body.permgroups) {
+        if (req.body?.permgroups) {
           if (typeof req.body.permgroups === 'string') {
             permValues.push([null, roleID, req.body.permgroups]);
           }
@@ -336,7 +336,7 @@ rolesRouter.post('/add', async function (req, res, next) {
           }
         }
 
-        if (req.body.usergroups) {
+        if (req.body?.usergroups) {
           if (typeof req.body.usergroups === 'string') {
             userValues.push([null, req.body.usergroups, roleID]);
           }
