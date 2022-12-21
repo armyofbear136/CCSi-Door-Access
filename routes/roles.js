@@ -51,69 +51,77 @@ rolesRouter.get('/', async function (req, res, next) {
         };
 
         let rolesData = result;
-        var companyName;
-        var siteName;
 
-        if (rolesData.length)
-        {
-          companyName = rolesData[0].companyName;
-          siteName = rolesData[0].siteName;
-        }
-        else
-        {
-          let siteInfo = await mySQLFun.getSiteInfo(db, req.params.siteID);
-          console.log(siteInfo);
-          companyName = siteInfo[0].companyName;
-          siteName = siteInfo[0].name;
-        }
+        if (rolesData){
+          var companyName;
+          var siteName;
 
-        const funSites = await mySQLFun.getSites(db, req.params.companyID)
+          if (rolesData.length)
+          {
+            companyName = rolesData[0].companyName;
+            siteName = rolesData[0].siteName;
+          }
+          else
+          {
+            let siteInfo = await mySQLFun.getSiteInfo(db, req.params.siteID);
+            console.log(siteInfo);
+            companyName = siteInfo[0].companyName;
+            siteName = siteInfo[0].name;
+          }
 
-        var sidebarList = [
-          { status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home" },
-          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${companyName}` }
-        ];
-        for (i in funSites) {
-          if (funSites[i].id == req.params.siteID) {
-            sidebarList.push({ status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}` });
+          const funSites = await mySQLFun.getSites(db, req.params.companyID)
+
+          var sidebarList = [
+            { status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home" },
+            { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${companyName}` }
+          ];
+          for (i in funSites) {
+            if (funSites[i].id == req.params.siteID) {
+              sidebarList.push({ status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}` });
+            }
+            else {
+              sidebarList.push({ status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}` });
+            }
+          }
+
+          var tabBarList = [
+            { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/doors`, icon: "meeting_room", text: "Doors" },
+            { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`, icon: "person", text: "Users" },
+            { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/groups`, icon: "supervisor_account", text: "Groups" },
+            { status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/roles`, icon: "settings_accessibility", text: "Roles" },
+            { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports" },
+            { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/events`, icon: "view_timeline", text: "Events" }
+          ]
+
+          var varName;
+          varName = "CCSI Door Access" //optional title override
+
+          var panelTitle;
+          var panelSubtext;
+          if (rolesData.length) {
+            if (rolesData.length === 1) {
+              panelTitle = `${rolesData.length} Role (${siteName})`;
+            }
+            else {
+              panelTitle = `${rolesData.length} Roles (${siteName})`;
+            }
+            panelSubtext = "Please Select a Role";
           }
           else {
-            sidebarList.push({ status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}` });
+            panelTitle = `No Roles (${siteName})`;
+            panelSubtext = "Please Add a Role";
           }
-        }
 
-        var tabBarList = [
-          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/doors`, icon: "meeting_room", text: "Doors" },
-          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`, icon: "person", text: "Users" },
-          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/groups`, icon: "supervisor_account", text: "Groups" },
-          { status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/roles`, icon: "settings_accessibility", text: "Roles" },
-          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports" },
-          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/events`, icon: "view_timeline", text: "Events" }
-        ]
+          // console.log(funSites);
 
-        var varName;
-        varName = "CCSI Door Access" //optional title override
-
-        var panelTitle;
-        var panelSubtext;
-        if (rolesData.length) {
-          if (rolesData.length === 1) {
-            panelTitle = `${rolesData.length} Role (${siteName})`;
-          }
-          else {
-            panelTitle = `${rolesData.length} Roles (${siteName})`;
-          }
-          panelSubtext = "Please Select a Role";
+          res.render('roles', { roles: rolesData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: panelTitle, panelSubtext: panelSubtext, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID, thisURL: req.originalUrl});
         }
         else {
-          panelTitle = `No Roles (${siteName})`;
-          panelSubtext = "Please Add a Role";
+          res.render('error', {
+            error: "Server Error", message: "Please try again", sidebar: [
+              { status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"
+          });
         }
-
-        // console.log(funSites);
-
-        res.render('roles', { roles: rolesData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: panelTitle, panelSubtext: panelSubtext, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID, thisURL: req.originalUrl});
-
       });
 
 
@@ -209,60 +217,68 @@ rolesRouter.get('/add', async function (req, res, next) {
 
 
         let roleData = result[0];
-        
-        roleData.allPerms = [];
-        roleData.allUsers = [];
 
-        if (roleData.permNameIDList) {
-          let permNameIDArray = roleData.permNameIDList.split(", ");
-          for (i in permNameIDArray) {
-            let permNameAndID = permNameIDArray[i].split("~");
-            roleData.allPerms.push({ name: permNameAndID[0], id: permNameAndID[1] });
+          if (roleData){
+          
+          roleData.allPerms = [];
+          roleData.allUsers = [];
+
+          if (roleData.permNameIDList) {
+            let permNameIDArray = roleData.permNameIDList.split(", ");
+            for (i in permNameIDArray) {
+              let permNameAndID = permNameIDArray[i].split("~");
+              roleData.allPerms.push({ name: permNameAndID[0], id: permNameAndID[1] });
+            }
           }
+
+          if (roleData.userFullNamesList) {
+            let userNamesArray = roleData.userFullNamesList.split(", ");
+            let userIDsArray = roleData.userIDsList.split(", ");
+            for (i in userNamesArray) {
+              roleData.allUsers.push({ name: userNamesArray[i], id: userIDsArray[i] });
+            }
+          }
+
+          console.log(roleData);
+          let companyName = roleData.name;
+          let siteName = roleData.siteName;
+
+          const funSites = await mySQLFun.getSites(db, req.params.companyID)
+
+          var sidebarList = [
+            { status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home" },
+            { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${companyName}` }
+          ];
+          for (i in funSites) {
+            if (funSites[i].id == req.params.siteID) {
+              sidebarList.push({ status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}` });
+            }
+            else {
+              sidebarList.push({ status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}` });
+            }
+          }
+
+          var tabBarList = [
+            { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/doors`, icon: "meeting_room", text: "Doors" },
+            { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`, icon: "person", text: "Users" },
+            { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/groups`, icon: "supervisor_account", text: "Groups" },
+            { status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/roles`, icon: "settings_accessibility", text: "Roles" },
+            { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports" },
+            { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/events`, icon: "view_timeline", text: "Events" }
+          ];
+
+          var varName;
+          varName = "CCSI Door Access" //optional title override
+
+
+          res.render('roles_add', { role: roleData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: `Add Role`, panelSubtext: "Please add some Permissions and Users", orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID });
         }
-
-        if (roleData.userFullNamesList) {
-          let userNamesArray = roleData.userFullNamesList.split(", ");
-          let userIDsArray = roleData.userIDsList.split(", ");
-          for (i in userNamesArray) {
-            roleData.allUsers.push({ name: userNamesArray[i], id: userIDsArray[i] });
-          }
+        else{ 
+          res.render('error', {
+            error: "Server Error", message: "Please try again", sidebar: [
+              { status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"
+          });
         }
-
-        console.log(roleData);
-        let companyName = roleData.name;
-        let siteName = roleData.siteName;
-
-        const funSites = await mySQLFun.getSites(db, req.params.companyID)
-
-        var sidebarList = [
-          { status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home" },
-          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${companyName}` }
-        ];
-        for (i in funSites) {
-          if (funSites[i].id == req.params.siteID) {
-            sidebarList.push({ status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}` });
-          }
-          else {
-            sidebarList.push({ status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}` });
-          }
-        }
-
-        var tabBarList = [
-          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/doors`, icon: "meeting_room", text: "Doors" },
-          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`, icon: "person", text: "Users" },
-          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/groups`, icon: "supervisor_account", text: "Groups" },
-          { status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/roles`, icon: "settings_accessibility", text: "Roles" },
-          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports" },
-          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/events`, icon: "view_timeline", text: "Events" }
-        ];
-
-        var varName;
-        varName = "CCSI Door Access" //optional title override
-
-
-        res.render('roles_add', { role: roleData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: `Add Role`, panelSubtext: "Please add some Permissions and Users", orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID });
-
 
       });
 
@@ -352,7 +368,6 @@ rolesRouter.post('/add', async function (req, res, next) {
         try {
 
           console.log('Posting data to door_group_list table on groups_add route');
-          console.log(permValues);
           if (permValues.length > 0) {
             await db.query(
 
@@ -530,81 +545,90 @@ rolesRouter.get('/:roleID', async function (req, res, next) {
 
 
         let roleData = result[0];
-        
-        roleData.allPerms = [];
-        roleData.allUsers = [];
 
-        if (roleData.permNameIDList) {
-          let permNameIDArray = roleData.permNameIDList.split(", ");
-          for (i in permNameIDArray) {
-            let permNameAndID = permNameIDArray[i].split("~");
-            roleData.allPerms.push({ name: permNameAndID[0], id: permNameAndID[1] });
+          if (roleData){
+          
+          roleData.allPerms = [];
+          roleData.allUsers = [];
+
+          if (roleData.permNameIDList) {
+            let permNameIDArray = roleData.permNameIDList.split(", ");
+            for (i in permNameIDArray) {
+              let permNameAndID = permNameIDArray[i].split("~");
+              roleData.allPerms.push({ name: permNameAndID[0], id: permNameAndID[1] });
+            }
           }
+
+          if (roleData.userFullNamesList) {
+            let userNamesArray = roleData.userFullNamesList.split(", ");
+            let userIDsArray = roleData.userIDsList.split(", ");
+            for (i in userNamesArray) {
+              roleData.allUsers.push({ name: userNamesArray[i], id: userIDsArray[i] });
+            }
+          }
+
+          roleData.permIDs = [];
+
+          if (roleData.rolePerms) {
+            if (roleData.rolePerms.length <= 1) {
+              roleData.permIDs = [`${roleData.rolePerms}`];
+            }
+            else {
+              roleData.permIDs = roleData.rolePerms.split(", ");
+            }
+          }
+
+          roleData.userIDs = [];
+
+          if (roleData.roleUsers) {
+            if (roleData.roleUsers.length <= 1) {
+              roleData.userIDs = [`${roleData.roleUsers}`];
+            }
+            else {
+              roleData.userIDs = roleData.roleUsers.split(", ");
+            }
+          }
+
+          console.log(roleData);
+          let companyName = roleData.companyName;
+          let siteName = roleData.siteName;
+
+          const funSites = await mySQLFun.getSites(db, req.params.companyID)
+
+          var sidebarList = [
+            { status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home" },
+            { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${companyName}` }
+          ];
+          for (i in funSites) {
+            if (funSites[i].id == req.params.siteID) {
+              sidebarList.push({ status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}` });
+            }
+            else {
+              sidebarList.push({ status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}` });
+            }
+          }
+
+          var tabBarList = [
+            { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/doors`, icon: "meeting_room", text: "Doors" },
+            { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`, icon: "person", text: "Users" },
+            { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/groups`, icon: "supervisor_account", text: "Groups" },
+            { status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/roles`, icon: "settings_accessibility", text: "Roles" },
+            { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports" },
+            { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/events`, icon: "view_timeline", text: "Events" }
+          ];
+
+          var varName;
+          varName = "CCSI Door Access" //optional title override
+          
+
+          res.render('role', { role: roleData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: `Role - ${roleData.name}`, panelSubtext: `${roleData.userIDs.length} - Users`, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID, thisURL: req.originalUrl });
         }
-
-        if (roleData.userFullNamesList) {
-          let userNamesArray = roleData.userFullNamesList.split(", ");
-          let userIDsArray = roleData.userIDsList.split(", ");
-          for (i in userNamesArray) {
-            roleData.allUsers.push({ name: userNamesArray[i], id: userIDsArray[i] });
-          }
+        else {
+          res.render('error', {
+            error: "Server Error", message: "Please try again", sidebar: [
+              { status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"
+          });
         }
-
-        roleData.permIDs = [];
-
-        if (roleData.rolePerms) {
-          if (roleData.rolePerms.length <= 1) {
-            roleData.permIDs = [`${roleData.rolePerms}`];
-          }
-          else {
-            roleData.permIDs = roleData.rolePerms.split(", ");
-          }
-        }
-
-        roleData.userIDs = [];
-
-        if (roleData.roleUsers) {
-          if (roleData.roleUsers.length <= 1) {
-            roleData.userIDs = [`${roleData.roleUsers}`];
-          }
-          else {
-            roleData.userIDs = roleData.roleUsers.split(", ");
-          }
-        }
-
-        console.log(roleData);
-        let companyName = roleData.companyName;
-        let siteName = roleData.siteName;
-
-        const funSites = await mySQLFun.getSites(db, req.params.companyID)
-
-        var sidebarList = [
-          { status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home" },
-          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${companyName}` }
-        ];
-        for (i in funSites) {
-          if (funSites[i].id == req.params.siteID) {
-            sidebarList.push({ status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}` });
-          }
-          else {
-            sidebarList.push({ status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}` });
-          }
-        }
-
-        var tabBarList = [
-          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/doors`, icon: "meeting_room", text: "Doors" },
-          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`, icon: "person", text: "Users" },
-          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/groups`, icon: "supervisor_account", text: "Groups" },
-          { status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/roles`, icon: "settings_accessibility", text: "Roles" },
-          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports" },
-          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/events`, icon: "view_timeline", text: "Events" }
-        ];
-
-        var varName;
-        varName = "CCSI Door Access" //optional title override
-
-        res.render('role', { role: roleData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: `Role - ${roleData.name}`, panelSubtext: `${roleData.userIDs.length} - Users`, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID, thisURL: req.originalUrl });
-
 
       });
 
@@ -785,81 +809,89 @@ rolesRouter.get('/:roleID/edit', async function (req, res, next) {
 
 
         let roleData = result[0];
-        
-        roleData.allPerms = [];
-        roleData.allUsers = [];
 
-        if (roleData.permNameIDList) {
-          let permNameIDArray = roleData.permNameIDList.split(", ");
-          for (i in permNameIDArray) {
-            let permNameAndID = permNameIDArray[i].split("~");
-            roleData.allPerms.push({ name: permNameAndID[0], id: permNameAndID[1] });
+          if (roleData){
+          
+          roleData.allPerms = [];
+          roleData.allUsers = [];
+
+          if (roleData.permNameIDList) {
+            let permNameIDArray = roleData.permNameIDList.split(", ");
+            for (i in permNameIDArray) {
+              let permNameAndID = permNameIDArray[i].split("~");
+              roleData.allPerms.push({ name: permNameAndID[0], id: permNameAndID[1] });
+            }
           }
+
+          if (roleData.userFullNamesList) {
+            let userNamesArray = roleData.userFullNamesList.split(", ");
+            let userIDsArray = roleData.userIDsList.split(", ");
+            for (i in userNamesArray) {
+              roleData.allUsers.push({ name: userNamesArray[i], id: userIDsArray[i] });
+            }
+          }
+
+          roleData.permIDs = [];
+
+          if (roleData.rolePerms) {
+            if (roleData.rolePerms.length <= 1) {
+              roleData.permIDs = [`${roleData.rolePerms}`];
+            }
+            else {
+              roleData.permIDs = roleData.rolePerms.split(", ");
+            }
+          }
+
+          roleData.userIDs = [];
+
+          if (roleData.roleUsers) {
+            if (roleData.roleUsers.length <= 1) {
+              roleData.userIDs = [`${roleData.roleUsers}`];
+            }
+            else {
+              roleData.userIDs = roleData.roleUsers.split(", ");
+            }
+          }
+
+          console.log(roleData);
+          let companyName = roleData.companyName;
+          let siteName = roleData.siteName;
+
+          const funSites = await mySQLFun.getSites(db, req.params.companyID)
+
+          var sidebarList = [
+            { status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home" },
+            { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${companyName}` }
+          ];
+          for (i in funSites) {
+            if (funSites[i].id == req.params.siteID) {
+              sidebarList.push({ status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}` });
+            }
+            else {
+              sidebarList.push({ status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}` });
+            }
+          }
+
+          var tabBarList = [
+            { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/doors`, icon: "meeting_room", text: "Doors" },
+            { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`, icon: "person", text: "Users" },
+            { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/groups`, icon: "supervisor_account", text: "Groups" },
+            { status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/roles`, icon: "settings_accessibility", text: "Roles" },
+            { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports" },
+            { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/events`, icon: "view_timeline", text: "Events" }
+          ];
+
+          var varName;
+          varName = "CCSI Door Access" //optional title override
+
+          res.render('role_edit', { role: roleData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: `${roleData.name} (Editing)`, panelSubtext: `${roleData.userIDs.length} - Users`, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID });
         }
-
-        if (roleData.userFullNamesList) {
-          let userNamesArray = roleData.userFullNamesList.split(", ");
-          let userIDsArray = roleData.userIDsList.split(", ");
-          for (i in userNamesArray) {
-            roleData.allUsers.push({ name: userNamesArray[i], id: userIDsArray[i] });
-          }
+        else {
+          res.render('error', {
+            error: "Server Error", message: "Please try again", sidebar: [
+              { status: 0, url: `/`, icon: "logout", text: "Portal" }], sideTitle: "CCSI Door Access", navTitle: "Server Error 500"
+          });
         }
-
-        roleData.permIDs = [];
-
-        if (roleData.rolePerms) {
-          if (roleData.rolePerms.length <= 1) {
-            roleData.permIDs = [`${roleData.rolePerms}`];
-          }
-          else {
-            roleData.permIDs = roleData.rolePerms.split(", ");
-          }
-        }
-
-        roleData.userIDs = [];
-
-        if (roleData.roleUsers) {
-          if (roleData.roleUsers.length <= 1) {
-            roleData.userIDs = [`${roleData.roleUsers}`];
-          }
-          else {
-            roleData.userIDs = roleData.roleUsers.split(", ");
-          }
-        }
-
-        console.log(roleData);
-        let companyName = roleData.companyName;
-        let siteName = roleData.siteName;
-
-        const funSites = await mySQLFun.getSites(db, req.params.companyID)
-
-        var sidebarList = [
-          { status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home" },
-          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${companyName}` }
-        ];
-        for (i in funSites) {
-          if (funSites[i].id == req.params.siteID) {
-            sidebarList.push({ status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}` });
-          }
-          else {
-            sidebarList.push({ status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${funSites[i].id}`, icon: "store", text: `${funSites[i].name}` });
-          }
-        }
-
-        var tabBarList = [
-          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/doors`, icon: "meeting_room", text: "Doors" },
-          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/users`, icon: "person", text: "Users" },
-          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/groups`, icon: "supervisor_account", text: "Groups" },
-          { status: 1, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/roles`, icon: "settings_accessibility", text: "Roles" },
-          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/reports`, icon: "summarize", text: "Reports" },
-          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/events`, icon: "view_timeline", text: "Events" }
-        ];
-
-        var varName;
-        varName = "CCSI Door Access" //optional title override
-
-        res.render('role_edit', { role: roleData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: varName, navTitle: `${companyName} - ${siteName}`, panelTitle: `${roleData.name} (Editing)`, panelSubtext: `${roleData.userIDs.length} - Users`, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID });
-
 
       });
 
