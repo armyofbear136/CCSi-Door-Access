@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<script>
+  trimSlashes = str => str.split('/').filter(v => v !== '').join('/');
+
+  let sanitized = window.location.pathname;
+  sanitized = trimSlashes(sanitized);
+
+  const newURL = window.location.protocol + '//' + window.location.host + '/' + sanitized;
+
+  if (window.location.href !== newURL) {
+    window.location.href = newURL;
+  }
+</script>
+
+<head>
+  <%- include('./partials/head'); %>
+</head>
+
+<body class="dark-edition">
+  <div class="wrapper ">
+    <%- include('./partials/sidebar', {links: sidebar, logo: sideTitle}) %>
+    <div class="main-panel">
+      <%- include('./partials/navbar', {title: navTitle}) %>
+      <div class="content">
+        <div class="container-fluid">
+          <%- include('./partials/tabBar', {tabs: tabBar}) %>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header card-header-primary">
+                  <h4 class="card-title"><%= panelTitle %></h4>
+                  <p class="card-category"><%= panelSubtext %></p>
+                </div>
+                <div class="card-body">
+                  <div class="col-md-5">
+                    <a href="<%= thisURL %>/download"><button class="btn btn-primary">Download</button></a>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                        <th>
+                          <button onclick="sortDoorNameDescending()">
+                            <i class="material-icons">expand_more</i>
+                          </button>
+                          <button onclick="sortDoorNameAscending()">
+                            <i class="material-icons">expand_less</i>
+                          </button>
+                        </th>
+                        <th>
+                          <button onclick="sortIPDescending()">
+                            <i class="material-icons">expand_more</i>
+                          </button>
+                          <button onclick="sortIPAscending()">
+                            <i class="material-icons">expand_less</i>
+                          </button>
+                        </th>
+                        <th>
+                          <button onclick="sortStatusDescending()">
+                            <i class="material-icons">expand_more</i>
+                          </button>
+                          <button onclick="sortStatusAscending()">
+                            <i class="material-icons">expand_less</i>
+                          </button>
+                        </th>
+                        <th>
+                          <button onclick="sortAlarmDescending()">
+                            <i class="material-icons">expand_more</i>
+                          </button>
+                          <button onclick="sortAlarmAscending()">
+                            <i class="material-icons">expand_less</i>
+                          </button>
+                        </th>
+                        <th>
+                          <button onclick="sortDoorNameDescending()">
+                            <i class="material-icons">expand_more</i>
+                          </button>
+                          <button onclick="sortDoorNameAscending()">
+                            <i class="material-icons">expand_less</i>
+                          </button>
+                        </th>
+                        <th>
+                          <button onclick="sortIPDescending()">
+                            <i class="material-icons">expand_more</i>
+                          </button>
+                          <button onclick="sortIPAscending()">
+                            <i class="material-icons">expand_less</i>
+                          </button>
+                        </th>
+                        <th>
+                          <button onclick="sortStatusDescending()">
+                            <i class="material-icons">expand_more</i>
+                          </button>
+                          <button onclick="sortStatusAscending()">
+                            <i class="material-icons">expand_less</i>
+                          </button>
+                        </th>
+                        <th>
+                          <button onclick="sortAlarmDescending()">
+                            <i class="material-icons">expand_more</i>
+                          </button>
+                          <button onclick="sortAlarmAscending()">
+                            <i class="material-icons">expand_less</i>
+                          </button>
+                        </th>
+                        <th>
+                          <button onclick="sortDoorNameDescending()">
+                            <i class="material-icons">expand_more</i>
+                          </button>
+                          <button onclick="sortDoorNameAscending()">
+                            <i class="material-icons">expand_less</i>
+                          </button>
+                        </th>
+                        <th>
+                          <button onclick="sortIPDescending()">
+                            <i class="material-icons">expand_more</i>
+                          </button>
+                          <button onclick="sortIPAscending()">
+                            <i class="material-icons">expand_less</i>
+                          </button>
+                        </th>
+                        <th>
+                          <button onclick="sortStatusDescending()">
+                            <i class="material-icons">expand_more</i>
+                          </button>
+                          <button onclick="sortStatusAscending()">
+                            <i class="material-icons">expand_less</i>
+                          </button>
+                        </th>
+                        <th>
+                          <button onclick="sortAlarmDescending()">
+                            <i class="material-icons">expand_more</i>
+                          </button>
+                          <button onclick="sortAlarmAscending()">
+                            <i class="material-icons">expand_less</i>
+                          </button>
+                        </th>
+                        <th>
+                          <button onclick="sortAlarmDescending()">
+                            <i class="material-icons">expand_more</i>
+                          </button>
+                          <button onclick="sortAlarmAscending()">
+                            <i class="material-icons">expand_less</i>
+                          </button>
+                        </th>
+                      </thead>
+                      <tbody class=" text-primary">
+                        <% eventLabels.forEach(function(label) { %>
+                        <th>
+                          <%= label %>
+                        </th>
+                        <% }); %>
+                      </tbody>
+                      <% events.forEach(function(event) { %>
+                      <tbody>
+                        <% event.forEach(function(detail) { %>
+                        <th>
+                          <%= detail %>
+                        </th>
+                        <% }); %>
+                      </tbody>
+                      <% }); %>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%- include('./partials/footer'); %>
+  </div>
+  </div>
+
+  <%- include('./partials/foot'); %>
+  <!-- <script>
+    function tryGenSite() {
+      let form = document.getElementById("siteReportForm")
+      form.submit();
+    }
+    function tryGenDoorEvent() {
+      let form = document.getElementById("doorsReportForm")
+      let input = document.createElement('input');
+      input.setAttribute('name', 'logtype');
+      input.setAttribute('value', 'event');
+      input.setAttribute('type', 'hidden');
+
+      form.appendChild(input);
+      form.submit();
+    }
+    function tryGenDoorAccess() {
+      let form = document.getElementById("doorsReportForm")
+      let input = document.createElement('input');
+      input.setAttribute('name', 'logtype');
+      input.setAttribute('value', 'access');
+      input.setAttribute('type', 'hidden');
+
+      form.appendChild(input);
+      form.submit();
+    }
+    function tryGenUsers() {
+      let form = document.getElementById("usersReportForm")
+      form.submit();
+    }
+  </script> -->
+
+
+</body>
+
+</html>

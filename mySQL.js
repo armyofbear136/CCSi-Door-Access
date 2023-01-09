@@ -175,6 +175,25 @@ SQLfun.getCompanyInfo = async function(db, companyID) {
       )}
     )};
 
+    SQLfun.getDoorsInfoSimple = async function(db, siteID) {
+      console.log("getting doors info");
+  
+      return new Promise(function(resolve, reject){
+        db.query(
+          ` SELECT ds.id, ds.name, ds.ip, ds.status, ds.alarm, ds.site_id_doors, ds.last_access, ds.tamper, ds.reader
+          FROM doors ds
+          WHERE ds.site_id_doors = ${siteID}
+          ORDER BY name ASC`,
+          function(err, result){                                                
+            if(result === undefined){
+                reject(new Error("Error result is undefined"));
+            }else{
+                resolve(result);
+            }
+          }
+      )}
+    )};
+
 module.exports = SQLfun;
   
   //exports.getList = getList;

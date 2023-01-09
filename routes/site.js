@@ -11,6 +11,7 @@ const usersRouter = require('./users');
 const groupsRouter = require('./groups');
 const rolesRouter = require('./roles');
 const reportsRouter = require('./reports');
+const eventsRouter = require('./events');
 
 
 
@@ -23,6 +24,8 @@ siteRouter.use('/:siteID/groups', groupsRouter);
 siteRouter.use('/:siteID/roles', rolesRouter);
 
 siteRouter.use('/:siteID/reports', reportsRouter);
+
+siteRouter.use('/:siteID/events', eventsRouter);
 
 
 
