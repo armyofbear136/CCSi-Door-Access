@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <script>
-    trimSlashes = str => str.split('/').filter(v => v !== '').join('/');
-  
-    let sanitized = window.location.pathname;
-    sanitized = trimSlashes(sanitized);
-    
-    const newURL = window.location.protocol + '//' + window.location.host + '/'+ sanitized;
-  
-    if (window.location.href !== newURL) {
-       window.location.href = newURL;
-    }
-  </script>
+<script>
+  trimSlashes = str => str.split('/').filter(v => v !== '').join('/');
+
+  let sanitized = window.location.pathname;
+  sanitized = trimSlashes(sanitized);
+
+  const newURL = window.location.protocol + '//' + window.location.host + '/' + sanitized;
+
+  if (window.location.href !== newURL) {
+    window.location.href = newURL;
+  }
+</script>
 
 <head>
   <%- include('./partials/head'); %>
@@ -34,109 +34,162 @@
               </a>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-8">
-              <div class="card">
-                <div class="card-header card-header-primary">
-                  <div class="row">
-                    <div class="col-md-6">
-                      <h4 class="card-title"><%= panelTitle %></h4>
+          <form id="editUserForm" method="put">
+            <div class="row">
+              <div class="col-md-7">
+                <div class="card">
+                  <div class="card-header card-header-primary">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <h4 class="card-title"><%= panelTitle %></h4>
+                      </div>
                     </div>
+                    <p class="card-category"><%= panelSubtext %></p>
                   </div>
-                  <p class="card-category"><%= panelSubtext %></p>
-                </div>
-                <form id="editUserForm" method="put">
-                  <div class="card">
-                    <div class="card-body">
-                      <div class="row">
-                        <div class="col-md-2">
-                          <div class="form-group">
-                            <label class="bmd-label-floating" for="fname">First Name</label>
-                            <% if (user.first_name && user.first_name != "null") { %>
-                            <input type="text" class="form-control" id="fname" name="fname" value="<%= user.first_name %>">
-                            <% } else { %>
-                            <input type="text" class="form-control" id="fname" name="fname">
-                            <% } %>
+                    <div class="card">
+                      <div class="card-body">
+                        <div class="row">
+                          <div class="col-md-2">
+                            <div class="form-group">
+                              <label class="bmd-label-floating" for="fname">First Name</label>
+                              <% if (user.first_name && user.first_name != "null") { %>
+                              <input type="text" class="form-control" id="fname" name="fname" value="<%= user.first_name %>">
+                              <% } else { %>
+                              <input type="text" class="form-control" id="fname" name="fname">
+                              <% } %>
+                            </div>
                           </div>
-                        </div>
-                        <div class="col-md-2">
-                          <div class="form-group">
-                            <label class="bmd-label-floating" for="lname">Last Name</label>
-                            <% if (user.last_name && user.last_name != "null") { %>
-                            <input type="text" class="form-control" id="lname" name="lname" value="<%= user.last_name %>">
-                            <% } else { %>
-                            <input type="text" class="form-control" id="lname" name="lname">
-                            <% } %>
+                          <div class="col-md-2">
+                            <div class="form-group">
+                              <label class="bmd-label-floating" for="lname">Last Name</label>
+                              <% if (user.last_name && user.last_name != "null") { %>
+                              <input type="text" class="form-control" id="lname" name="lname" value="<%= user.last_name %>">
+                              <% } else { %>
+                              <input type="text" class="form-control" id="lname" name="lname">
+                              <% } %>
+                            </div>
                           </div>
-                        </div>
-                        <div class="col-md-2">
-                          <div class="form-group">
-                            <label class="bmd-label-floating" for="fob">Fob Number</label>
-                            <% if (user.fob_id) { %>
-                            <input type="text" class="form-control" id="fob" name="fob" value="<%= user.fob_id %>">
-                            <% } else { %>
-                            <input type="text" class="form-control" id="fob" name="fob">
-                            <% } %>
+                          <div class="col-md-2">
+                            <div class="form-group">
+                              <label class="bmd-label-floating" for="fob">Fob Number</label>
+                              <% if (user.fob_id) { %>
+                              <input type="text" class="form-control" id="fob" name="fob" value="<%= user.fob_id %>">
+                              <% } else { %>
+                              <input type="text" class="form-control" id="fob" name="fob">
+                              <% } %>
+                            </div>
                           </div>
-                        </div>
-                        <div class="col-md-2">
-                          <div class="form-group">
-                            <label class="bmd-label-floating" for="eid">Employee ID</label>
-                            <% if (user.employee_id) { %>
-                            <input type="text" class="form-control" id="eid" name="eid" value="<%= user.employee_id %>">
-                            <% } else { %>
-                            <input type="text" class="form-control" id="eid" name="eid">
-                            <% } %>
+                          <div class="col-md-2">
+                            <div class="form-group">
+                              <label class="bmd-label-floating" for="eid">Employee ID</label>
+                              <% if (user.employee_id) { %>
+                              <input type="text" class="form-control" id="eid" name="eid" value="<%= user.employee_id %>">
+                              <% } else { %>
+                              <input type="text" class="form-control" id="eid" name="eid">
+                              <% } %>
+                            </div>
                           </div>
-                        </div>
-                        <div class="col-md-1">
-                          <div class="form-group">
-                            <label class="bmd-label-floating" for="sname">Resident Site</label>
-                            <% if (user.site_id_users) { %>
-                            <input type="text" class="form-control" id="sname" name="sname" value="<%= user.siteName %>" disabled>
-                            <% } else { %>
-                            <input type="text" class="form-control" id="sname" name="sname" disabled>
-                            <% } %>
+                          <div class="col-md-1">
+                            <div class="form-group">
+                              <label class="bmd-label-floating" for="sname">Resident Site</label>
+                              <% if (user.site_id_users) { %>
+                              <input type="text" class="form-control" id="sname" name="sname" value="<%= user.siteName %>" disabled>
+                              <% } else { %>
+                              <input type="text" class="form-control" id="sname" name="sname" disabled>
+                              <% } %>
+                            </div>
                           </div>
-                        </div>
-                        <div class="col-md-3">
-                          <div class="form-group">
-                            <label class="bmd-label-floating" for="email">Email Address</label>
-                            <% if (user.email && user.email != "null") {%>
-                            <input type="email" class="form-control" id="email" name="email" value="<%= user.email %>">
-                            <% } else { %>
-                            <input type="email" class="form-control" id="email" name="email">
-                            <% } %>
+                          <div class="col-md-3">
+                            <div class="form-group">
+                              <label class="bmd-label-floating" for="email">Email Address</label>
+                              <% if (user.email && user.email != "null") {%>
+                              <input type="email" class="form-control" id="email" name="email" value="<%= user.email %>">
+                              <% } else { %>
+                              <input type="email" class="form-control" id="email" name="email">
+                              <% } %>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <input type="hidden" id="sid" name="sid" value="<%= user.site_id_users %>">
-                  <input type="hidden" id="msid" name="msid" value="<%= siteID %>">
-                  <input type="hidden" id="cid" name="cid" value="<%= user.company_id_users %>">
-                  <div class="card-header card-header-primary col-md-11">
-                    <div class="card-title">
-                      <h4>Groups</h4>
+                    <input type="hidden" id="sid" name="sid" value="<%= user.site_id_users %>">
+                    <input type="hidden" id="msid" name="msid" value="<%= siteID %>">
+                    <input type="hidden" id="cid" name="cid" value="<%= user.company_id_users %>">
+                    <div class="card-header card-header-primary col-md-11">
+                      <div class="card-title">
+                        <h4><%= groupsTitle %></h4>
+                      </div>
+                    </div>
+                    <div class="card">
+                      <div class="card-body">
+                        <div class="row">
+                          <% user.groups.forEach(function(group) { %>
+                          <div class="col-md-2">
+                            <div class="form-group">
+                              <div class="form-check">
+                                <label class="form-check-label">
+                                  <% if (user.doorgroupIDs.includes(group.id)) { %>
+                                  <input class="form-check-input" type="checkbox" value="<%= group.id %>" name="groups" checked>
+                                  <%} else { %>
+                                  <input class="form-check-input" type="checkbox" value="<%= group.id %>" name="groups">
+                                  <% } %>
+                                  <span class="form-check-sign">
+                                    <span class="check"></span>
+                                  </span>
+                                  <%= group.name %>
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                          <% }); %>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div class="card">
+                </div>
+              </div>
+              <div class="col-md-5">
+                <div class="card">
+                  <div class="card-header card-header-primary">
+                    <div class="row">
+                      <div class="col-md-5">
+                        <h4 class="card-title">Available Sites</h4>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card text-left">
                     <div class="card-body">
+                      <% let tempComp = user.allSites[0].companyName; %>
                       <div class="row">
-                        <% user.groups.forEach(function(group) { %>
-                        <div class="col-md-2">
+                        <div class="col-md-12">
+                          <h3><%= tempComp %></h3>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <% user.allSites.forEach(function(site) { %>
+                        <% if (`${tempComp}` != `${site.companyName}`) { %>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <h3><%= site.companyName %></h3>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <% }; %>
+                        <% tempComp = site.companyName; %>
+                        <div class="col-md-3">
                           <div class="form-group">
                             <div class="form-check">
                               <label class="form-check-label">
-                                <% if (user.doorgroupIDs.includes(group.id)) { %>
-                                <input class="form-check-input" type="checkbox" value="<%= group.id %>" name="groups" checked>
+                                <% if (user.userSitesArray.includes(site.siteID)) { %>
+                                <input class="form-check-input" type="checkbox" value="<%= site.siteID %>" name="sites" disabled checked>
                                 <%} else { %>
-                                <input class="form-check-input" type="checkbox" value="<%= group.id %>" name="groups">
+                                <input class="form-check-input" type="checkbox" value="<%= site.siteID %>" name="sites" disabled>
                                 <% } %>
                                 <span class="form-check-sign">
                                   <span class="check"></span>
                                 </span>
-                                <%= group.name %>
+                                <%= site.siteName %>
                               </label>
                             </div>
                           </div>
@@ -144,12 +197,12 @@
                         <% }); %>
                       </div>
                     </div>
+                    <div class="clearfix"></div>
                   </div>
-                  <div class="clearfix"></div>
-                </form>
+                </div>
               </div>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>
@@ -159,12 +212,11 @@
   </div>
 
   <%- include('./partials/foot'); %>
-  
+
 
 </body>
 
 <script>
-
   async function tryEditing() {
     const formData = new FormData(document.getElementById('editUserForm'))
     data = {};
@@ -172,8 +224,7 @@
     for (const [key, value] of formData) {
       if (key == "groups") {
         data[key].push(value);
-      }
-      else {
+      } else {
         data[key] = value;
       }
     }
@@ -191,8 +242,8 @@
       referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
       body: JSON.stringify(data) // body data type must match "Content-Type" header
     });
-  window.location.href = '/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>/users/<%= user.id %>';
-}
+    window.location.href = '/org/<%= orgID %>/company/<%= companyID %>/site/<%= siteID %>/users/<%= user.id %>';
+  }
 </script>
 
 </html>

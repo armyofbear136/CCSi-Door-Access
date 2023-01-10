@@ -7,11 +7,11 @@
 
   let sanitized = window.location.pathname;
   sanitized = trimSlashes(sanitized);
-  
-  const newURL = window.location.protocol + '//' + window.location.host + '/'+ sanitized;
+
+  const newURL = window.location.protocol + '//' + window.location.host + '/' + sanitized;
 
   if (window.location.href !== newURL) {
-     window.location.href = newURL;
+    window.location.href = newURL;
   }
 </script>
 
@@ -30,22 +30,24 @@
         <div class="container-fluid">
           <%- include('./partials/tabBar', {tabs: tabBar}) %>
           <div class="row">
-            <div class="col-md-8">
-              <div class="card">
-                <div class="card-header card-header-primary">
-                  <div class="row">
-                    <div class="col-md-6">
-                      <h4 class="card-title"><%= panelTitle %></h4>
+            <div class="col-md-3">
+              <button class="btn btn-primary pull-right" onclick=tryDeleting()>Delete</button></a>
+              <button class="btn btn-primary pull-right" id="delete">Disable</button></a>
+              <a href="<%= thisURL %>/edit"><button class="btn btn-primary pull-right">Edit</button></a>
+            </div>
+          </div>
+          <form id="addUserForm" method="post">
+            <div class="row">
+              <div class="col-md-7">
+                <div class="card">
+                  <div class="card-header card-header-primary">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <h4 class="card-title"><%= panelTitle %></h4>
+                      </div>
                     </div>
-                    <div class="col-md-6">
-                      <button class="btn btn-primary pull-right" onclick=tryDeleting()>Delete</button></a>
-                      <button class="btn btn-primary pull-right" id="delete">Disable</button></a>
-                      <a href="<%= thisURL %>/edit"><button class="btn btn-primary pull-right">Edit</button></a>
-                    </div>
+                    <p class="card-category"><%= panelSubtext %></p>
                   </div>
-                  <p class="card-category"><%= panelSubtext %></p>
-                </div>
-                <form id="addUserForm" method="post">
                   <div class="card text-right">
                     <div class="card-body">
                       <div class="row">
@@ -104,7 +106,7 @@
                   </div>
                   <div class="card-header card-header-primary col-md-11">
                     <div class="card-title">
-                      <h4>Groups</h4>
+                      <h4><%= groupsTitle %></h4>
                     </div>
                   </div>
                   <div class="card">
@@ -132,11 +134,63 @@
                       </div>
                     </div>
                   </div>
-                  <div class="clearfix"></div>
-                </form>
+                </div>
+              </div>
+              <div class="col-md-5">
+                <div class="card">
+                  <div class="card-header card-header-primary">
+                    <div class="row">
+                      <div class="col-md-5">
+                        <h4 class="card-title">Available Sites</h4>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card text-left">
+                    <div class="card-body">
+                      <% let tempComp = user.allSites[0].companyName; %>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <h3><%= tempComp %></h3>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <% user.allSites.forEach(function(site) { %>
+                        <% if (`${tempComp}` != `${site.companyName}`) { %>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <h3><%= site.companyName %></h3>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <% }; %>
+                        <% tempComp = site.companyName; %>
+                        <div class="col-md-3">
+                          <div class="form-group">
+                            <div class="form-check">
+                              <label class="form-check-label">
+                                <% if (user.userSitesArray.includes(site.siteID)) { %>
+                                <input class="form-check-input" type="checkbox" value="<%= site.siteID %>" name="sites" disabled checked>
+                                <%} else { %>
+                                <input class="form-check-input" type="checkbox" value="<%= site.siteID %>" name="sites" disabled>
+                                <% } %>
+                                <span class="form-check-sign">
+                                  <span class="check"></span>
+                                </span>
+                                <%= site.siteName %>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                        <% }); %>
+                      </div>
+                    </div>
+                    <div class="clearfix"></div>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>
@@ -151,8 +205,7 @@
 </body>
 
 <script>
-  async function tryDeleting()
-  { 
+  async function tryDeleting() {
     await fetch(window.location.href, {
       method: 'DELETE', // *GET, POST, PUT, DELETE, etc.
       mode: 'cors', // no-cors, *cors, same-origin

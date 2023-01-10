@@ -484,14 +484,9 @@ usersRouter.get('/:userID', async function (req, res, next) {
               dgs.site_id_door_group as site_id_door_group,
               dgs.name as groupNames,
               dgs.id as groupIDs
-
             FROM door_groups dgs
-           
-
           ) dg ON (${req.params.siteID} = dg.site_id_door_group)
-
         ) s ON (c.id = s.company_id_sites)
-
       ) d ON (u.site_id_users = d.siteID)
 
       LEFT JOIN access_groups ag ON u.id = ag.user_id
@@ -536,6 +531,19 @@ usersRouter.get('/:userID', async function (req, res, next) {
 
         const funSites = await mySQLFun.getSites(db, req.params.companyID);
         const siteInfo = await mySQLFun.getSiteInfo(db, req.params.siteID);
+        const allSites = await mySQLFun.getAllSites(db);
+        const userSites = await mySQLFun.getUserSites(db, req.params.userID);
+        let userSitesArray = [];
+
+        userSites.forEach(function(site) {
+          userSitesArray.push(site.id);
+        });
+
+        console.log("usersites");
+        console.log(userSitesArray);
+
+        userData.allSites = allSites;
+        userData.userSitesArray = userSitesArray;
 
         var sidebarList = [
           { status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home" },
@@ -563,7 +571,7 @@ usersRouter.get('/:userID', async function (req, res, next) {
         var panelSubtextT = "User Info";
         var varName = "CCSI DOOR ACCESS"
 
-        res.render('user', { user: userData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: `${varName}`, navTitle: `${siteInfo[0].companyName} - ${siteInfo[0].name}`, panelTitle: panelTitleT, panelSubtext: panelSubtextT, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID, thisURL: req.originalUrl });
+        res.render('user', { user: userData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: `${varName}`, navTitle: `${siteInfo[0].companyName} - ${siteInfo[0].name}`, panelTitle: panelTitleT, panelSubtext: panelSubtextT, groupsTitle: `Groups for ${siteInfo[0].name}`, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID, thisURL: req.originalUrl });
 
 
       });
@@ -795,6 +803,17 @@ usersRouter.get('/:userID/edit', async function (req, res, next) {
 
         const funSites = await mySQLFun.getSites(db, req.params.companyID);
         const siteInfo = await mySQLFun.getSiteInfo(db, req.params.siteID);
+        const allSites = await mySQLFun.getAllSites(db);
+        const userSites = await mySQLFun.getUserSites(db, req.params.userID);
+        let userSitesArray = [];
+
+        userSites.forEach(function(site) {
+          userSitesArray.push(site.id);
+        });
+
+        userData.allSites = allSites;
+        userData.userSitesArray = userSitesArray;
+        
         console.log(siteInfo);
 
         var sidebarList = [
@@ -825,7 +844,7 @@ usersRouter.get('/:userID/edit', async function (req, res, next) {
 
         // console.log(userData);
 
-        res.render('user_edit', { user: userData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: `${varName}`, navTitle: `${siteInfo[0].companyName} - ${siteInfo[0].name}`, panelTitle: panelTitleT, panelSubtext: panelSubtextT, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID, thisURL: req.originalUrl });
+        res.render('user_edit', { user: userData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: `${varName}`, navTitle: `${siteInfo[0].companyName} - ${siteInfo[0].name}`, panelTitle: panelTitleT, panelSubtext: panelSubtextT, groupsTitle: `Groups for ${siteInfo[0].name}`, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID, thisURL: req.originalUrl });
 
 
       });

@@ -50,6 +50,34 @@ SQLfun.aSQL = async function(db, sql, insertARR) {
     });
   }
 
+SQLfun.getAllSites = async function(db) {
+  // console.log(orgID);
+
+  return new Promise(function(resolve, reject){
+    db.query(
+      `
+      SELECT 
+      s.id as siteID, s.name as siteName, s.company_id_sites,
+      c.id as companyID, c.name as companyName
+      FROM sites s
+      JOIN (
+        SELECT
+        com.id, com.name, com.org
+        FROM companies com
+      ) c on (s.company_id_sites = c.id)
+      GROUP BY s.id
+      ORDER BY c.name ASC;
+      `,
+        function(err, result){                                                
+            if(result === undefined){
+                reject(new Error("Error result is undefined"));
+            }else{
+                resolve(result);
+            }
+        }
+    )}
+  )};
+
 SQLfun.getSites = async function(db, companyID) {
 
   return new Promise(function(resolve, reject){
@@ -131,6 +159,33 @@ SQLfun.getCompanyInfo = async function(db, companyID) {
             }
         )}
       )};
+
+  SQLfun.getUserSites = async function(db, userID){
+    console.log("getting user sites info");
+
+    return new Promise(function(resolve, reject){
+      db.query(
+        `
+        SELECT
+        m.*,
+        s.id, s.name
+        FROM multisite m
+        JOIN (
+          SELECT 
+          sit.id, sit.name
+          FROM sites sit
+        ) s ON (m.site_id = s.id)
+        WHERE m.user_id = ${userID} 
+        ORDER BY m.site_id ASC`,
+          function(err, result){                                                
+            if(result === undefined){
+                reject(new Error("Error result is undefined"));
+            }else{
+                resolve(result);
+            }
+          }
+      )}
+    )};
 
   SQLfun.getUsersInfo = async function(db, siteID) {
     console.log("getting user info");
