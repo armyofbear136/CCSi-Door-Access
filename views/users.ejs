@@ -27,20 +27,20 @@
         <div class="container-fluid">
           <%- include('./partials/tabBar', {tabs: tabBar}) %>
           <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
               <div class="card">
                 <div class="card-header card-header-primary">
-                  <h4 class="card-title "><%= panelTitle %></h4>
+                  <h4 class="card-title"><%= panelTitle %></h4>
                   <p class="card-category"><%= panelSubtext %></p>
                 </div>
                 <div class="card-body">
-                  <div class="col-md-12">
+                  <div class="col-md-6">
                     <a href="<%= thisURL %>/add"><button class="btn btn-primary">Add New User</button></a>
                   </div>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
-                    <table class="table">
+                    <table class="table usertable">
                       <thead>
                         <!-- <th>
                           <button onclick="sortIDDescending()">
@@ -104,8 +104,6 @@
                         <th>
                           Groups
                         </th>
-                        <th>
-                        </th>
                       </tbody>
                       <tbody id ="usersData">
                         <% users.forEach(function(user) { %>
@@ -125,6 +123,115 @@
                             <td>
                               <%= user.doorgroups %>
                             </td>
+                            <!-- <td></td> -->
+                            <td>
+                              <a href="<%= thisURL %>/<%= user.id %>"><button class="btn btn-primary">Select</button></a>
+                            </td>
+                          </tr>
+                        <% }); %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header card-header-primary">
+                  <h4 class="card-title"><%= panel2Title %></h4>
+                  <p class="card-category"><%= panel2Subtext %></p>
+                </div>
+                <!-- <div class="card-body">
+                  <div class="col-md-6">
+                    <a href="<%= thisURL %>/add"><button class="btn btn-primary">Add New User</button></a>
+                  </div>
+                </div> -->
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table usertable">
+                      <thead>
+                        <!-- <th>
+                          <button onclick="sortIDDescending()">
+                            <i class="material-icons">expand_more</i>
+                          </button>
+                          <button onclick="sortIDAscending()">
+                            <i class="material-icons">expand_less</i>
+                          </button>
+                        </th> -->
+                        <th>
+                          <button onclick="sortLastNameDescending()">
+                            <i class="material-icons sort" >expand_more</i>
+                          </button>
+                          <button onclick="sortLastNameAscending()">
+                            <i class="material-icons">expand_less</i>
+                          </button>
+                        </th>
+                        <th>
+                          <button onclick="sortFirstNameDescending()">
+                            <i class="material-icons">expand_more</i>
+                          </button>
+                          <button onclick="sortFirstNameAscending()">
+                            <i class="material-icons">expand_less</i>
+                          </button>
+                        </th>
+                        <th>
+                          <button onclick="sortFOBDescending()">
+                            <i class="material-icons">expand_more</i>
+                          </button>
+                          <button onclick="sortFOBAscending()">
+                            <i class="material-icons">expand_less</i>
+                          </button>
+                        </th>
+                        <th>
+                          <button onclick="sortEIDDescending()">
+                            <i class="material-icons">expand_more</i>
+                          </button>
+                          <button onclick="sortEIDAscending()">
+                            <i class="material-icons">expand_less</i>
+                          </button>
+                        </th>
+                        <th>
+                          
+                        </th>
+                        <th>
+                        </th>
+                      </thead>
+                      <tbody class=" text-primary">
+                        <th>
+                          Last Name
+                        </th>
+                        <th>
+                          First Name
+                        </th>
+                        <th>
+                          FOB
+                        </th>
+                        <th>
+                          Employee ID
+                        </th>
+                        <th>
+                          Resident Site
+                        </th>
+                      </tbody>
+                      <tbody id ="multiUsersData">
+                        <% multiUsers.forEach(function(user) { %>
+                          <tr>
+                            <td>
+                              <%= user.last_name %>
+                            </td>
+                            <td>
+                              <%= user.first_name %>
+                            </td>
+                            <td>
+                              <%= user.fob_id %>
+                            </td>
+                            <td>
+                              <%= user.employee_id %>
+                            </td>
+                            <td>
+                              <%= user.siteName %>
+                            </td>
+                            <!-- <td></td> -->
                             <td>
                               <a href="<%= thisURL %>/<%= user.id %>"><button class="btn btn-primary">Select</button></a>
                             </td>

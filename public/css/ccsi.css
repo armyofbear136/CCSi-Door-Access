@@ -30,6 +30,7 @@ button {
 label {
   color: #3c3c3c !important;
 }
+
 td {
   color: #3c3c3c !important;
 }
@@ -151,6 +152,11 @@ th {
 .sort{
   border-color: #3c3c3c !important;
 }
+.usertable {
+  width: 100%;
+  table-layout: fixed;
+}
+
 .text-primary {
   color: #3c3c3c !important;
 }

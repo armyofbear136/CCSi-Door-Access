@@ -67,7 +67,9 @@ usersRouter.get('/', async function (req, res, next) {
           siteName = siteInfo[0].name;
         }
 
+        let multiUsersData = await mySQLFun.getMultisiteUsersInfo(db, req.params.siteID);
 
+        console.log(multiUsersData);
 
         const funSites = await mySQLFun.getSites(db, req.params.companyID)
 
@@ -113,9 +115,26 @@ usersRouter.get('/', async function (req, res, next) {
           panelSubtextT = "Please Add a User";
         }
 
+        var panel2TitleT;
+        var panel2SubtextT;
+
+        if (multiUsersData.length) {
+          if (multiUsersData.length === 1) {
+            panel2TitleT = `${multiUsersData.length} User from Other Sites`;
+          }
+          else {
+            panel2TitleT = `${multiUsersData.length} Users from Other Sites`;
+          }
+          panel2SubtextT = "Please Select a User";
+        }
+        else {
+          panel2TitleT = `No Users from Other Sites`;
+          panel2SubtextT = "Please Add a User";
+        }
+
         console.log(req.originalUrl);
 
-        res.render('users', { users: usersData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: orgName, navTitle: `${companyName} - ${siteName}`, panelTitle: panelTitleT, panelSubtext: panelSubtextT, companyID: req.params.companyID, siteID: req.params.siteID, orgID: req.params.orgID, thisURL: req.originalUrl });
+        res.render('users', { users: usersData, multiUsers: multiUsersData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: orgName, navTitle: `${companyName} - ${siteName}`, panelTitle: panelTitleT, panelSubtext: panelSubtextT, panel2Title: panel2TitleT, panel2Subtext: panel2SubtextT, companyID: req.params.companyID, siteID: req.params.siteID, orgID: req.params.orgID, thisURL: req.originalUrl });
 
 
       });
@@ -469,7 +488,7 @@ usersRouter.get('/:userID', async function (req, res, next) {
             FROM door_groups dgs
            
 
-          ) dg ON (sit.id = dg.site_id_door_group)
+          ) dg ON (${req.params.siteID} = dg.site_id_door_group)
 
         ) s ON (c.id = s.company_id_sites)
 
@@ -515,11 +534,12 @@ usersRouter.get('/:userID', async function (req, res, next) {
           // throw err
         };
 
-        const funSites = await mySQLFun.getSites(db, req.params.companyID)
+        const funSites = await mySQLFun.getSites(db, req.params.companyID);
+        const siteInfo = await mySQLFun.getSiteInfo(db, req.params.siteID);
 
         var sidebarList = [
           { status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home" },
-          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${userData.companyName}` }
+          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${siteInfo[0].companyName}` }
         ];
         for (i in funSites) {
           if (funSites[i].id == req.params.siteID) {
@@ -539,11 +559,11 @@ usersRouter.get('/:userID', async function (req, res, next) {
           { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/events`, icon: "view_timeline", text: "Events" }
         ];
 
-        var panelTitleT = `${userData.last_name}, ${userData.first_name} - ${userData.employee_id}`;
+        var panelTitleT = `${userData.last_name}, ${userData.first_name} - ${userData.employee_id} - ${userData.siteName}`;
         var panelSubtextT = "User Info";
         var varName = "CCSI DOOR ACCESS"
 
-        res.render('user', { user: userData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: `${varName}`, navTitle: `${userData.companyName} - ${userData.siteName}`, panelTitle: panelTitleT, panelSubtext: panelSubtextT, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID, thisURL: req.originalUrl });
+        res.render('user', { user: userData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: `${varName}`, navTitle: `${siteInfo[0].companyName} - ${siteInfo[0].name}`, panelTitle: panelTitleT, panelSubtext: panelSubtextT, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID, thisURL: req.originalUrl });
 
 
       });
@@ -727,7 +747,7 @@ usersRouter.get('/:userID/edit', async function (req, res, next) {
             FROM door_groups dgs
            
 
-          ) dg ON (sit.id = dg.site_id_door_group)
+          ) dg ON (${req.params.siteID} = dg.site_id_door_group)
 
         ) s ON (c.id = s.company_id_sites)
 
@@ -742,6 +762,7 @@ usersRouter.get('/:userID/edit', async function (req, res, next) {
 
       async function (err, result, fields) {
         let userData = result[0];
+        
 
         if (userData.groupNamesList) {
           userData.allDoorGroupNames = userData.groupNamesList.split(", ");
@@ -772,11 +793,13 @@ usersRouter.get('/:userID/edit', async function (req, res, next) {
           // throw err
         };
 
-        const funSites = await mySQLFun.getSites(db, req.params.companyID)
+        const funSites = await mySQLFun.getSites(db, req.params.companyID);
+        const siteInfo = await mySQLFun.getSiteInfo(db, req.params.siteID);
+        console.log(siteInfo);
 
         var sidebarList = [
           { status: 0, url: `/org/${req.params.orgID}`, icon: "home", text: "Home" },
-          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${userData.companyName}` }
+          { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}`, icon: "business", text: `${siteInfo[0].companyName}` }
         ];
         for (i in funSites) {
           if (funSites[i].id == req.params.siteID) {
@@ -796,13 +819,13 @@ usersRouter.get('/:userID/edit', async function (req, res, next) {
           { status: 0, url: `/org/${req.params.orgID}/company/${req.params.companyID}/site/${req.params.siteID}/events`, icon: "view_timeline", text: "Events" }
         ];
 
-        var panelTitleT = `${userData.last_name}, ${userData.first_name} - ${userData.employee_id} (Editing)`;
+        var panelTitleT = `${userData.last_name}, ${userData.first_name} - ${userData.employee_id} - ${userData.siteName} (Editing)`;
         var panelSubtextT = "Edit User";
         var varName = "CCSI DOOR ACCESS"
 
-      
+        // console.log(userData);
 
-        res.render('user_edit', { user: userData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: `${varName}`, navTitle: `${userData.companyName} - ${userData.siteName}`, panelTitle: panelTitleT, panelSubtext: panelSubtextT, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID, thisURL: req.originalUrl });
+        res.render('user_edit', { user: userData, sidebar: sidebarList, tabBar: tabBarList, sideTitle: `${varName}`, navTitle: `${siteInfo[0].companyName} - ${siteInfo[0].name}`, panelTitle: panelTitleT, panelSubtext: panelSubtextT, orgID: req.params.orgID, companyID: req.params.companyID, siteID: req.params.siteID, thisURL: req.originalUrl });
 
 
       });
@@ -829,6 +852,19 @@ usersRouter.put('/:userID/edit', async function (req, res, next) {
   console.log(req.body);
   // res.send("posting");
 
+  let groupIDs = await mySQLFun.getSiteGroupIDs(db, req.body.msid);
+  console.log(groupIDs);
+
+  var groupsToRemove = [];
+  groupIDs.forEach(function(group) {
+    if (!req.body.groups.includes(`${group.id}`))
+    {
+      groupsToRemove.push(`${group.id}`);
+    }
+  });
+
+  console.log(groupsToRemove);
+
   try {
 
     console.log('Posting data to users table on user edit PUT route');
@@ -841,8 +877,8 @@ usersRouter.put('/:userID/edit', async function (req, res, next) {
       last_name = "${req.body.lname}", 
       email = "${req.body.email}", 
       fob_id = ${req.body.fob}, 
-      company_id_users = ${req.params.companyID}, 
-      site_id_users = ${req.params.siteID}, 
+      company_id_users = ${req.body.cid}, 
+      site_id_users = ${req.body.sid}, 
       employee_id = ${req.body.eid}
     WHERE id = ${req.params.userID}`,
 
@@ -863,7 +899,7 @@ usersRouter.put('/:userID/edit', async function (req, res, next) {
 
           console.log('Deleting data from access_groups table on user edit route');
           await db.query(
-            `DELETE FROM access_groups WHERE user_id = ${req.params.userID}`,
+            `DELETE FROM access_groups WHERE group_id IN (${groupsToRemove.toString()}) AND user_id = ${req.params.userID}`,
             async function (err, result, fields) {
               if (err) {
                 console.log(typeof (err));

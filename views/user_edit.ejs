@@ -89,6 +89,16 @@
                             <% } %>
                           </div>
                         </div>
+                        <div class="col-md-1">
+                          <div class="form-group">
+                            <label class="bmd-label-floating" for="sname">Resident Site</label>
+                            <% if (user.site_id_users) { %>
+                            <input type="text" class="form-control" id="sname" name="sname" value="<%= user.siteName %>" disabled>
+                            <% } else { %>
+                            <input type="text" class="form-control" id="sname" name="sname" disabled>
+                            <% } %>
+                          </div>
+                        </div>
                         <div class="col-md-3">
                           <div class="form-group">
                             <label class="bmd-label-floating" for="email">Email Address</label>
@@ -102,6 +112,9 @@
                       </div>
                     </div>
                   </div>
+                  <input type="hidden" id="sid" name="sid" value="<%= user.site_id_users %>">
+                  <input type="hidden" id="msid" name="msid" value="<%= siteID %>">
+                  <input type="hidden" id="cid" name="cid" value="<%= user.company_id_users %>">
                   <div class="card-header card-header-primary col-md-11">
                     <div class="card-title">
                       <h4>Groups</h4>
@@ -164,6 +177,7 @@
         data[key] = value;
       }
     }
+    console.log(data);
     await fetch(window.location.href, {
       method: 'PUT', // *GET, POST, PUT, DELETE, etc.
       mode: 'cors', // no-cors, *cors, same-origin
